@@ -1212,7 +1212,7 @@ Object.assign(I18N_HTML,{
 "İdeal ve gerçek XRD desenlerinin karşılaştırması":"Comparison of ideal and real XRD patterns",
 "İdeal referans":"Ideal reference","Ölçüm":"Measurement",
 "Kristal":"Crystal","Bakır, Cu (YMK)":"Copper, Cu (FCC)","Silisyum, Si (elmas)":"Silicon, Si (diamond)","Anataz, TiO₂":"Anatase, TiO₂",
-"Etkiler":"Effects","Kristalit boyutu":"Crystallite size","Sayım gürültüsü":"Counting noise",
+"Etkiler":"Effects","Kristalit boyutu":"Crystallite size","Sayım gürültüsü":"Counting noise","doku":"texture","amorf":"amorphous","sayım":"counts",
 "Etkileri sıfırla":"Reset effects","Örnek problem oluştur":"Generate example problem",
 "Deseni nasıl okurum?":"How do I read the pattern?",
 "Önemli ayrım: numune etkisi mi, cihaz etkisi mi?":"Important distinction: sample effect or measurement effect?",
@@ -1221,6 +1221,7 @@ Object.assign(I18N_HTML,{
 });
 Object.assign(I18N_JS,{
 "İdeal":"Ideal","Ölçüm":"Measurement",
+"Numune yüksekliği":"Sample displacement","Tercihli yönelim":"Preferred orientation","Kristalit boyutu":"Crystallite size","Mikrogerinim":"Microstrain","Amorf katkı":"Amorphous contribution","Sayım gürültüsü":"Counting noise",
 "Etkin etkiler":"Active effects","Yok":"None",
 "Konum":"Position","Genişlik":"Width","Şiddet":"Intensity","Arka plan / belirsizlik":"Background / uncertainty",
 "Numune yüksekliği: piklerin konumunu sistematik ve açıya bağlı kaydırır.":"Sample displacement: shifts peak positions systematically and in an angle-dependent way.",
@@ -3225,7 +3226,7 @@ function draw7(){
 ['#mat7','#e7disp','#e7tex','#e7size','#e7strain','#e7am','#e7noise','#e7ka2','#disp7','#tex7','#size7','#strain7','#am7','#cnt7'].forEach(id=>$(id).addEventListener('input',draw7));
 $('#rst7').addEventListener('click',()=>{['e7disp','e7tex','e7size','e7strain','e7am','e7noise'].forEach(id=>$('#'+id).checked=false);$('#e7ka2').checked=true;S7.seed++;draw7();});
 $('#mix7').addEventListener('click',()=>{const r=rng(++S7.seed);['e7disp','e7tex','e7size','e7strain','e7am','e7noise'].forEach(id=>$('#'+id).checked=r()>.48);$('#e7ka2').checked=r()>.28;$('#disp7').value=(-.7+1.4*r()).toFixed(2);$('#tex7').value=(.5+2.3*r()).toFixed(2);$('#size7').value=Math.round(12+110*r());$('#strain7').value=(.03+.35*r()).toFixed(3);$('#am7').value=(.15+.7*r()).toFixed(2);$('#cnt7').value=Math.round((500+6500*r())/100)*100;draw7();});
-reg($('#c7x'),draw7); onTheme(draw7); draw7();
+reg($('#c7x'),draw7); onTheme(draw7); $('#tb7').addEventListener('click',()=>requestAnimationFrame(draw7)); draw7();
 
 /* ================= BAŞLAT ================= */
 $$('.subnav').forEach(nav=>{ const sec=nav.closest('.tab'), bs=$$('[role=tab]',nav);
