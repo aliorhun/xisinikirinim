@@ -117,7 +117,8 @@ Sayfa:
 - Türkçe ve İngilizce içerik,
 - açık/koyu tema,
 - masaüstü ve mobil uyumlu düzen,
-- etkileşimli 2B/3B görselleştirmeler
+- etkileşimli 2B/3B görselleştirmeler,
+- önemli kavram ve sonuç kutularında bağlamsal bilgi ikonları ve açıklama modalları
 
 sunar.
 
