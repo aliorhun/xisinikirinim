@@ -8,7 +8,7 @@ Amaç; kapsamlı bir kristalografi veya Rietveld yazılımının yerini almak de
 
 ## İçerik
 
-Ders özeti altı ana bölümden oluşur:
+Ders özeti yedi ana bölümden oluşur:
 
 1. **Kristalografi**
    - Birim hücre ve kafes parametreleri
@@ -51,9 +51,17 @@ Ders özeti altı ana bölümden oluşur:
    - Makine öğrenmesinin XRD'deki olası kullanım alanları
    - Sınıflandırma, faz tanıma, regresyon, denoising, NMF/PCA ve otomatik indeksleme örnekleri
 
+7. **Gerçek XRD verisini okumak**
+   - İdeal ve ölçülen desenin karşılaştırılması
+   - Numune yüksekliği / yer değiştirmesinin pik konumlarına etkisi
+   - Tercihli yönelim ve bağıl şiddet değişimleri
+   - Kristalit boyutu ve mikrogerinim kaynaklı pik genişlemesi
+   - Amorf arka plan, sayım istatistiği ve Kα₂ bileşeninin görsel etkileri
+   - Konum, genişlik, şiddet ve arka plan değişimlerini ayırt etmeye yönelik etkileşimli tanıma laboratuvarı
+
 ## Sayfa nasıl kullanılmalı?
 
-İçerik doğrusal biçimde **Kristalografi → Bragg → Toz yöntemi → Simülasyon → Veri analizi → Pratik kullanım** sırasıyla takip edilebilir. Ancak her bölüm bağımsız bir ders tekrarı olarak da kullanılabilir.
+İçerik doğrusal biçimde **Kristalografi → Bragg → Toz yöntemi → Simülasyon → Veri analizi → Pratik kullanım → Gerçek veriyi okuma** sırasıyla takip edilebilir. Ancak her bölüm bağımsız bir ders tekrarı olarak da kullanılabilir.
 
 Kaydırıcılar ve seçim kutuları yalnızca sonucu göstermek için değil, kavramlar arasındaki ilişkiyi görünür kılmak için tasarlanmıştır. Örneğin kafes parametresi değiştirildiğinde pik konumlarının, kristalit boyutu değiştirildiğinde pik genişliğinin ve atomik düzen değiştirildiğinde izinli/sönen yansımaların nasıl değiştiği gözlenebilir.
 
