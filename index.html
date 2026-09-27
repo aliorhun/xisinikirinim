@@ -3185,7 +3185,7 @@ function measured7(){
   refl.forEach((r,ri)=>{add(meas,r,A.ka1,1,true,ri);if(useKa2)add(meas,r,A.ka2,.5,true,ri);});
   let m0=0;for(const v of ideal)m0=Math.max(m0,v);
   const am=active7('e7am')?+$('#am7').value:0;
-  for(let i=0;i<n;i++){const t=x[i];meas[i]+=m0*(.018+.17*am*Math.exp(-.5*((t-27)/(7+3*am))**2));}
+  if(am>0) for(let i=0;i<n;i++){const t=x[i];meas[i]+=m0*(.018+.17*am*Math.exp(-.5*((t-27)/(7+3*am))**2));}
   if(active7('e7noise')){
     const counts=+$('#cnt7').value, r=rng(S7.seed);
     let mm=0;for(const v of meas)mm=Math.max(mm,v);
