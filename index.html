@@ -10,6 +10,8 @@
 <script>(function(){var l='tr';try{if(localStorage.getItem('xrd-lang')==='en')l='en';}catch(e){}document.documentElement.lang=l;})();</script>
 <script>(function(){var t='light';try{if(localStorage.getItem('xrd-theme')==='dark')t='dark';}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -181,6 +183,15 @@ textarea{width:100%;resize:vertical;font-variant-numeric:tabular-nums}
 .pipe button[aria-selected="true"] span{color:var(--onAccent)}
 pre.code,pre.log{margin:0;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);white-space:pre}
 pre.code{max-height:420px}pre.log{height:150px}
+pre.code code{font:inherit;color:inherit;text-shadow:none}
+pre.code .token.comment,pre.code .token.prolog,pre.code .token.doctype,pre.code .token.cdata{color:var(--muted);font-style:italic}
+pre.code .token.punctuation{color:var(--ink)}
+pre.code .token.keyword{color:var(--cobalt);font-weight:600}
+pre.code .token.boolean,pre.code .token.number{color:var(--copper)}
+pre.code .token.string,pre.code .token.char,pre.code .token.builtin{color:var(--ok)}
+pre.code .token.operator,pre.code .token.entity,pre.code .token.url,pre.code .token.variable{color:var(--teal)}
+pre.code .token.function,pre.code .token.class-name,pre.code .token.decorator{color:var(--forbid)}
+pre.code .token.constant,pre.code .token.symbol{color:var(--copper)}
 .stages{display:flex;flex-direction:column;gap:6px}
 .tbl.corr{font-size:12px}.tbl.corr td,.tbl.corr th{padding:4px 5px;text-align:center;white-space:nowrap}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -928,7 +939,7 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
 
     <div class="panel" style="margin-bottom:26px">
       <div class="lab-head"><h3>Aynı boru hattı Python ile</h3><button id="cp6">Kodu kopyala</button></div>
-      <pre class="code" id="code6"></pre>
+      <pre class="code"><code id="code6" class="language-python"></code></pre>
     </div>
   </div>
   <div class="subp" id="s6c" hidden>
@@ -2792,6 +2803,7 @@ def process(path):
 results = [process(f) for f in sorted(glob.glob("insitu/*.xy"))]
 with open("rapor.json", "w") as fh:
     json.dump(results, fh, indent=2, ensure_ascii=False)`;
+if (window.Prism?.highlightElement) Prism.highlightElement($('#code6'));
 $('#cp6').addEventListener('click',async()=>{ const b=$('#cp6'); try{ await navigator.clipboard.writeText($('#code6').textContent); b.textContent=__t`Kopyalandı`; }
   catch(e){ const r=document.createRange(); r.selectNodeContents($('#code6')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent=__t`Seçildi, Ctrl+C ile kopyalayın`; }
   setTimeout(()=>b.textContent=__t`Kodu kopyala`,2200); });
