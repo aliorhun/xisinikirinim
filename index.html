@@ -57,9 +57,10 @@ sup{font-size:.7em;line-height:0;vertical-align:.55em}sub{font-size:.72em;line-h
 .film figcaption{font-size:12px;line-height:1.4;color:var(--muted);margin-top:8px;text-align:center}
 
 /* tabs */
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(0,0,0,.03)}
 .tabs .wrap{display:flex;align-items:center}
-.tablist{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tablist{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0;padding:7px 0}
+.tablist::-webkit-scrollbar{display:none}
 .top-controls{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding-top:12px}
 .lgl{flex:0 0 auto;display:block;position:relative;width:66px;height:30px;padding:0;border-radius:999px;border:1px solid var(--muted);background:var(--panel2);cursor:pointer;font:600 12px/1 "IBM Plex Sans",system-ui,sans-serif}
 .lgl .lo,.lgl .hi{position:absolute;top:8px;z-index:1;color:var(--muted);pointer-events:none}.lgl .lo{left:10px}.lgl .hi{right:9px}
@@ -74,10 +75,10 @@ sup{font-size:.7em;line-height:0;vertical-align:.55em}sub{font-size:.72em;line-h
 .tgl[aria-checked="false"] .sun{stroke:var(--copper)}
 .tgl[aria-checked="true"] .moon{stroke:var(--cobalt)}
 @media (prefers-reduced-motion:reduce){.tgl .knob{transition:none}}
-.tabs button{flex:0 0 auto;background:none;border:0;border-bottom:3px solid transparent;border-radius:0;padding:14px 14px 11px;color:var(--muted);font:500 15px/1.2 "IBM Plex Sans",system-ui,sans-serif;cursor:pointer;display:flex;gap:9px;align-items:baseline}
+.tabs button{flex:0 0 auto;background:transparent;border:1px solid transparent;border-radius:8px;padding:10px 13px;color:var(--muted);font:500 15px/1.2 "IBM Plex Sans",system-ui,sans-serif;cursor:pointer;display:flex;gap:9px;align-items:baseline;transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
 .tabs button .n{font-family:"Spectral",Georgia,serif;font-size:1.25rem;font-weight:600}
-.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cobalt)}
-.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);background:var(--panel);border-color:var(--line);box-shadow:inset 0 -3px 0 var(--cobalt),0 1px 2px rgba(0,0,0,.08)}
+.tabs button:hover:not([aria-selected="true"]){color:var(--ink);background:var(--bg);border-color:var(--line)}
 
 main.wrap{padding-top:44px;padding-bottom:60px}
 .tab[hidden]{display:none}
