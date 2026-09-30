@@ -20,6 +20,11 @@ Ders özeti yedi ana bölümden oluşur:
    - X-ışınlarının oluşumu ve karakteristik çizgiler
    - Bragg yasası: \(n\lambda = 2d\sin\theta\)
    - Yapıcı girişim
+   - Gerçek uzay ↔ ters uzay dönüşümü
+   - Dual baz vektörleri ve gerçek örgü / ters örgü aralığı ilişkisi
+   - (hk) düzlem ailesi ↔ g_hk ters örgü noktası ve |g| = 1/d bağıntısı
+   - Eğik örgülerde ters bazın geometrisi
+   - Fourier bakışıyla ters örgü ve q = k − k₀ bağlantısı
    - Ters örgü ve Ewald yapısı
    - Yapı faktörü ve sistematik sönümler
 

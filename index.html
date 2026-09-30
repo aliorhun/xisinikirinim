@@ -475,6 +475,104 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
   </div>
 
+
+  <div class="lab panel" id="rr2lab">
+    <div class="lab-head">
+      <h3>Gerçek uzay ↔ ters uzay: aynı kristalin iki farklı dili</h3>
+      <p>Solda atomların gerçek uzaydaki periyodik tekrarı, sağda ise bu tekrarın uzaysal frekanslarını temsil eden ters örgü var. Bir taraf genişlerken diğer tarafın neden sıklaştığını ve bir (hk) düzlem ailesinin neden tek bir ters örgü noktasına dönüştüğünü birlikte izleyin.</p>
+    </div>
+
+    <div class="cols" style="align-items:start">
+      <div class="prose">
+        <h3>Önce fikir: ters uzay bir “ikinci kristal” değildir</h3>
+        <p>Gerçek uzay bize <b>atomların nerede tekrarlandığını</b> söyler. Ters uzay ise <b>bu tekrarın ne kadar sık olduğunu ve hangi yönde değiştiğini</b> söyler. Bu nedenle uzun bir gerçek-uzay periyodu, küçük bir uzaysal frekansa; küçük bir periyot ise büyük bir uzaysal frekansa karşılık gelir.</p>
+        <div class="eq"><b>a</b>*·<b>a</b> = 1,&nbsp; <b>a</b>*·<b>b</b> = 0 &nbsp;&nbsp;ve&nbsp;&nbsp; <b>b</b>*·<b>b</b> = 1,&nbsp; <b>b</b>*·<b>a</b> = 0</div>
+        <p>Yani <b>a</b>* yalnızca <b>a</b>'nın “tersi” değildir; diğer gerçek-uzay baz vektörüne dik olacak biçimde tanımlanır. Ortogonal bir hücrede bu sadeleşir: <b>a</b>* = <span class="frac sm"><span>1</span><span><i>a</i></span></span> ve <b>b</b>* = <span class="frac sm"><span>1</span><span><i>b</i></span></span>.</p>
+        <p>Üç boyutta dönüşümün tam biçimi, hücre hacmi <i>V</i> = <b>a</b>·(<b>b</b>×<b>c</b>) olmak üzere:</p>
+        <div class="eq">
+          <b>a</b>* = <span class="frac"><span><b>b</b>×<b>c</b></span><span><i>V</i></span></span>,
+          &nbsp; <b>b</b>* = <span class="frac"><span><b>c</b>×<b>a</b></span><span><i>V</i></span></span>,
+          &nbsp; <b>c</b>* = <span class="frac"><span><b>a</b>×<b>b</b></span><span><i>V</i></span></span>
+        </div>
+        <p class="cap">Matris diliyle aynı işlem, gerçek-uzay baz matrisinin tersinin transpozunu almaktır. Simülasyon bunun 2B kesitini gösterir.</p>
+        <p>Seçtiğiniz (hk) düzlem ailesi ters uzayda tek bir <b>g</b><sub>hk</sub> noktası/vektörü ile temsil edilir:</p>
+        <div class="eq"><b>g</b><sub>hk</sub> = h<b>a</b>* + k<b>b</b>*, &nbsp;&nbsp; |<b>g</b><sub>hk</sub>| = <span class="frac"><span>1</span><span><i>d</i><sub>hk</sub></span></span></div>
+        <p class="cap">Bu sayfada kristalografi geleneğini kullanıyoruz: |g| = <span class="frac sm"><span>1</span><span>d</span></span>. Bazı katıhal/fizik kaynaklarında ters vektörler 2π ile tanımlanır ve |G| = <span class="frac sm"><span>2π</span><span>d</span></span> yazılır; fizik aynıdır, yalnızca kullanılan konvansiyon farklıdır.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Dönüşümü üç cümlede oku</h3>
+        <div class="readout" style="grid-template-columns:1fr">
+          <div><span>1 · Gerçek uzay</span><b>Atomların / hücrelerin tekrar mesafesi</b></div>
+          <div><span>2 · Ters uzay</span><b>Bu tekrarın uzaysal frekansı</b></div>
+          <div><span>3 · Kırınım</span><b>(hk) düzlemi ↔ g<sub>hk</sub> ters örgü noktası</b></div>
+        </div>
+        <p class="cap" style="margin-top:10px">En önemli sezgi: gerçek uzayda çizgiler uzaklaşıyorsa ters uzay noktaları yaklaşır.</p>
+      </div>
+    </div>
+
+    <div class="rr2-visual" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px">
+      <div class="panel" style="min-width:0">
+        <h3>Gerçek uzay</h3>
+        <canvas id="c2real" class="cv" style="height:390px" role="img" aria-label="Gerçek uzay örgüsü ve seçili hk düzlem ailesi"></canvas>
+        <p class="cap" id="rr2realcap"></p>
+      </div>
+      <div class="panel" style="min-width:0">
+        <h3>Ters uzay</h3>
+        <canvas id="c2rec" class="cv" style="height:390px" role="img" aria-label="Ters örgü ve seçili g hk vektörü"></canvas>
+        <p class="cap" id="rr2reccap"></p>
+      </div>
+    </div>
+
+    <div class="lab-grid" style="margin-top:14px;grid-template-columns:minmax(0,1.35fr) minmax(300px,.8fr)">
+      <div class="ctl">
+        <div class="sl"><label for="rra2">a</label><input type="range" id="rra2" min="2" max="8" step="0.05" value="4"><output id="rra2o"></output></div>
+        <div class="sl"><label for="rrb2">b</label><input type="range" id="rrb2" min="2" max="8" step="0.05" value="4"><output id="rrb2o"></output></div>
+        <div class="sl"><label for="rrg2">γ</label><input type="range" id="rrg2" min="55" max="125" step="1" value="90"><output id="rrg2o"></output></div>
+        <fieldset>
+          <legend>Seçili düzlem (hk)</legend>
+          <div class="hkl">
+            <label>h<input type="number" id="rrh2" min="-4" max="4" step="1" value="1"></label>
+            <label>k<input type="number" id="rrk2" min="-4" max="4" step="1" value="1"></label>
+            <span></span><span></span>
+          </div>
+        </fieldset>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button type="button" data-rr2="10">(10)</button>
+          <button type="button" data-rr2="01">(01)</button>
+          <button type="button" data-rr2="11">(11)</button>
+          <button type="button" data-rr2="20">(20)</button>
+          <button type="button" data-rr2="21">(21)</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="readout" id="rr2out"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button type="button" id="rr2grow">a'yı 2× büyüt</button>
+          <button type="button" id="rr2skew">Eğik örgü göster</button>
+          <button type="button" id="rr2reset">Sıfırla</button>
+        </div>
+        <p class="cap" id="rr2lesson" style="margin-top:12px"></p>
+      </div>
+    </div>
+
+    <div class="cols" style="align-items:start;margin-top:14px">
+      <div class="prose">
+        <h3>Neden (hk) düzlemi g<sub>hk</sub>'ye diktir?</h3>
+        <p>Bir (hk) düzlemi üzerinde ilerlerken hx + ky değeri sabit kalır. Bu yüzden bu düzlem boyunca hareket etmek fazı değiştirmez. Fazın en hızlı değiştiği yön düzleme diktir; ters uzaydaki <b>g</b><sub>hk</sub> vektörü tam olarak bu yönü gösterir.</p>
+      </div>
+      <div class="prose">
+        <h3>Neden |g| = 1/d?</h3>
+        <p>Ardışık iki (hk) düzlemi arasında faz bir tam tur ilerler. Gerçek uzayda bu turu tamamlamak için gereken mesafe <i>d</i><sub>hk</sub> ise, birim uzunluk başına tur sayısı onun tersidir. Ters uzaydaki vektör uzunluğu bu uzaysal frekanstır.</p>
+      </div>
+    </div>
+    <div class="prose" style="max-width:none;margin-top:8px">
+      <h3>XRD neden doğal olarak ters uzayda düşünülür?</h3>
+      <p>Periyodik bir kristalin Fourier dönüşümü, sürekli bir bulut yerine belirli uzaysal frekanslarda keskin noktalar verir; bunlar ters örgü noktalarıdır. Kırınım deneyinde gelen ve saçılan dalga vektörlerinin farkı <b>q</b> = <b>k</b> − <b>k</b>₀ ölçülür. Kristal güçlü saçılmayı yalnızca bu <b>q</b> vektörü bir ters örgü vektörüne eşit olduğunda verir: <b>q</b> = <b>g</b>. Bir sonraki Ewald simülasyonu tam olarak bu geometrik koşulu gösterecek.</p>
+    </div>
+  </div>
+
   <div class="cols">
     <div class="prose">
       <h3>Ters örgü ve Ewald küresi</h3>
@@ -1302,6 +1400,8 @@ Object.assign(I18N_JS,{
 });
 Object.assign(I18N_HTML,{"Kırınımda ölçülen asıl büyüklük düzlemler arası mesafedir. Her kristal sistemi için <i class=\"v\">d</i><sub>hkl</sub>, örgü parametrelerinden geometrik olarak hesaplanır. Genel durumda <span class=\"frac sm\"><span>1</span><span><i class=\"v\">d</i>²</span></span> = <b>h</b><sup>T</sup> <b>G</b>* <b>h</b> bağıntısı kullanılır; burada <b>G</b>* ters metrik tensördür. Aşağıdaki formüllerin tümü bu bağıntının özel durumlarıdır. Seçili sistem vurgulanır.":"The quantity measured in diffraction is the interplanar spacing. For each crystal system, <i class=\"v\">d</i><sub>hkl</sub> is calculated geometrically from the lattice parameters. In the general case <span class=\"frac sm\"><span>1</span><span><i class=\"v\">d</i>²</span></span> = <b>h</b><sup>T</sup> <b>G</b>* <b>h</b> is used, where <b>G</b>* is the reciprocal metric tensor. All formulas below are special cases of this relation. The selected system is highlighted.","<b>Sürekli spektrum (frenleme ışınımı, Bremsstrahlung).</b> Elektronlar anot atomlarının alanında yavaşlarken her enerjide foton yayar. En kısa dalga boyu, elektronun tüm enerjisini tek fotona verdiği durumdur: λ<sub>min</sub> = <span class=\"frac sm\"><span><i class=\"v\">hc</i></span><span><i class=\"v\">eV</i></span></span> ≈ <span class=\"frac sm\"><span>12,398</span><span><i class=\"v\">V</i>[kV]</span></span> Å (Duane–Hunt sınırı).":"<b>Continuous spectrum (braking radiation, Bremsstrahlung).</b> As electrons slow down in the field of the anode atoms they emit photons of all energies. The shortest wavelength corresponds to an electron giving all its energy to a single photon: λ<sub>min</sub> = <span class=\"frac sm\"><span><i class=\"v\">hc</i></span><span><i class=\"v\">eV</i></span></span> ≈ <span class=\"frac sm\"><span>12.398</span><span><i class=\"v\">V</i>[kV]</span></span> Å (Duane–Hunt limit).","Seçili anot için geçiş enerjileri. Foton enerjisi ile dalga boyu arasında <i class=\"v\">E</i>[keV] = <span class=\"frac sm\"><span>12,398</span><span>λ[Å]</span></span> bağıntısı vardır.":"Transition energies for the selected anode. Photon energy and wavelength are related by <i class=\"v\">E</i>[keV] = <span class=\"frac sm\"><span>12.398</span><span>λ[Å]</span></span>.","Burada <i class=\"v\">n</i> yansıma mertebesidir. Difraktometre, gelen ve saçılan ışın arasındaki 2θ açısını ölçer. sin θ ≤ 1 olduğundan yalnızca <i class=\"v\">d</i> ≥ <span class=\"frac sm\"><span>λ</span><span>2</span></span> olan düzlemler yansıma verebilir. Pratikte <i class=\"v\">n</i> = 2 yansıması, <span class=\"frac sm\"><span><i class=\"v\">d</i></span><span>2</span></span> aralıklı hayali (2h 2k 2l) düzlemlerinin birinci mertebe yansıması olarak yazılır; bu yüzden desenlerde yalnızca λ = 2<i>d</i><sub>hkl</sub> sin θ kullanılır.":"Here <i class=\"v\">n</i> is the order of reflection. The diffractometer measures the 2θ angle between the incident and diffracted beams. Since sin θ ≤ 1, only planes with <i class=\"v\">d</i> ≥ <span class=\"frac sm\"><span>λ</span><span>2</span></span> can diffract. In practice an <i class=\"v\">n</i> = 2 reflection is written as a first-order reflection from fictitious (2h 2k 2l) planes spaced by <span class=\"frac sm\"><span><i class=\"v\">d</i></span><span>2</span></span>, so powder patterns normally use λ = 2<i>d</i><sub>hkl</sub> sin θ.","Her (hkl) düzlem ailesi, ters örgüde (karşıt uzayda) orijinden |<b>g</b>| = <span class=\"frac sm\"><span>1</span><span><i class=\"v\">d</i><sub>hkl</sub></span></span> uzaklıkta ve düzleme dik yönde tek bir noktayla temsil edilir. Gelen ışın dalga vektörü <b>k</b>₀ (|<b>k</b>₀| = <span class=\"frac sm\"><span>1</span><span>λ</span></span>) ile çizilir; ucu ters örgünün orijinine değecek biçimde yerleştirilir ve başlangıç noktası merkez olmak üzere <span class=\"frac sm\"><span>1</span><span>λ</span></span> yarıçaplı bir küre çizilir.":"Each (hkl) family of planes is represented in reciprocal space by a point perpendicular to the planes at a distance |<b>g</b>| = <span class=\"frac sm\"><span>1</span><span><i class=\"v\">d</i><sub>hkl</sub></span></span> from the origin. The incident wavevector <b>k</b>₀ has magnitude |<b>k</b>₀| = <span class=\"frac sm\"><span>1</span><span>λ</span></span>; placing its tip at the reciprocal-lattice origin and drawing a sphere of radius <span class=\"frac sm\"><span>1</span><span>λ</span></span> gives the Ewald sphere.","<b>Yansımaları listele.</b> Belirli bir 2θ sınırına kadar tüm (hkl) üçlüleri taranır; <i class=\"v\">d</i> ≥ <span class=\"frac sm\"><span>λ</span><span>2 sin θ<sub>maks</sub></span></span> olanlar alınır.":"<b>List reflections.</b> Scan all (hkl) triplets up to the chosen 2θ limit and keep those satisfying <i class=\"v\">d</i> ≥ <span class=\"frac sm\"><span>λ</span><span>2 sin θ<sub>max</sub></span></span>.","<b>Yapı faktörünü hesapla.</b> Atomik saçılma faktörü <i class=\"v\">f</i>(<span class=\"frac sm\"><span>sin θ</span><span>λ</span></span>), açıyla azalır; Cromer–Mann katsayılarıyla hesaplanır.":"<b>Calculate the structure factor.</b> The atomic scattering factor <i class=\"v\">f</i>(<span class=\"frac sm\"><span>sin θ</span><span>λ</span></span>) decreases with angle and is calculated with Cromer–Mann coefficients.","<i>f</i><sub>A</sub> = <span class=\"frac\"><span><i>I</i><sub>A(101)</sub></span><span><i>I</i><sub>A(101)</sub> + 1,26 · <i>I</i><sub>R(110)</sub></span></span>":"<i>f</i><sub>A</sub> = <span class=\"frac\"><span><i>I</i><sub>A(101)</sub></span><span><i>I</i><sub>A(101)</sub> + 1.26 · <i>I</i><sub>R(110)</sub></span></span>","Scherrer yaklaşımı en çok küçük koherent bölgelerin boyut genişlemesinin cihaz çözünürlüğüne göre belirgin olduğu durumda anlamlıdır; kesin bir 100–200 nm sınırı cihaz ve numuneden bağımsız değildir. Örgü mikrogerinimi de pikleri genişletebilir. Basit, izotropik bir yaklaşımda boyut ve mikrogerinim katkılarını ayırmak için Williamson–Hall bağıntısı kullanılabilir: β cos θ = <span class=\"frac sm\"><span><i class=\"v\">K</i>λ</span><span><i class=\"v\">D</i></span></span> + 4ε sin θ.":"The Scherrer approach is most meaningful when size broadening from small coherent domains is resolvable relative to instrumental broadening; there is no instrument- and sample-independent 100–200 nm cutoff. Lattice microstrain can also broaden peaks. In a simple isotropic approximation, Williamson–Hall can be used to separate size and microstrain contributions: β cos θ = <span class=\"frac sm\"><span><i class=\"v\">K</i>λ</span><span><i class=\"v\">D</i></span></span> + 4ε sin θ.","Kalın mavi eğri seçili boyuttur; kesikli eğriler 5, 20 ve 100 nm içindir. Tüm eğrilerin alanı aynıdır (aynı miktarda madde): pik genişledikçe alçalır. Aynı boyut için yüksek açıdaki pik daha geniştir (<span class=\"frac sm\"><span>1</span><span>cos θ</span></span>).":"The thick blue curve is the selected size; the dashed curves are for 5, 20 and 100 nm. All curves have the same area (the same amount of material): as a peak broadens it gets lower. For the same size, the peak at a higher angle is broader (<span class=\"frac sm\"><span>1</span><span>cos θ</span></span>).","<i>S</i> = Σ<sub><i>i</i></sub> <i>w<sub>i</sub></i> (<i>y</i><sub><i>i</i>,göz</sub> − <i>y</i><sub><i>i</i>,hes</sub>)², &nbsp; <i>w<sub>i</sub></i> ≈ <span class=\"frac\"><span>1</span><span><i>y</i><sub><i>i</i>,göz</sub></span></span>":"<i>S</i> = Σ<sub><i>i</i></sub> <i>w<sub>i</sub></i> (<i>y</i><sub><i>i</i>,obs</sub> − <i>y</i><sub><i>i</i>,calc</sub>)², &nbsp; <i>w<sub>i</sub></i> ≈ <span class=\"frac\"><span>1</span><span><i>y</i><sub><i>i</i>,obs</sub></span></span>","Uyumun kalitesi ağırlıklı profil faktörü <i class=\"v\">R</i><sub>wp</sub> ve beklenen değer <i class=\"v\">R</i><sub>exp</sub> ile izlenir; χ² = (<span class=\"frac sm\"><span><i class=\"v\">R</i><sub>wp</sub></span><span><i class=\"v\">R</i><sub>exp</sub></span></span>)² değeri, seçilen ağırlıklandırma ve belirsizlik modeli altında uyumu izlemek için kullanılır. χ²'nin 1'e yaklaşması istatistiksel olarak beklenen uyum düzeyine işaret edebilir; ancak tek başına yapısal modelin doğru olduğunu kanıtlamaz.":"Fit quality is monitored with the weighted profile factor <i class=\"v\">R</i><sub>wp</sub> and its expected value <i class=\"v\">R</i><sub>exp</sub>; χ² = (<span class=\"frac sm\"><span><i class=\"v\">R</i><sub>wp</sub></span><span><i class=\"v\">R</i><sub>exp</sub></span></span>)² is interpreted under the chosen weighting and uncertainty model. A value approaching 1 can indicate statistically expected agreement, but does not by itself prove that the structural model is correct.","Genişlik iki biçimde ölçülür: yarı yükseklikteki tam genişlik (FWHM) ve integral genişlik β<sub>i</sub> = <span class=\"frac sm\"><span>alan</span><span>tepe yüksekliği</span></span>. Oranları φ = <span class=\"frac sm\"><span>FWHM</span><span>β<sub>i</sub></span></span> profilin biçimini söyler: Gauss için 0,939, Lorentz için 0,637.":"Width is measured in two ways: the full width at half maximum (FWHM) and the integral breadth β<sub>i</sub> = <span class=\"frac sm\"><span>area</span><span>peak height</span></span>. Their ratio φ = <span class=\"frac sm\"><span>FWHM</span><span>β<sub>i</sub></span></span> indicates profile shape: 0.939 for Gaussian and 0.637 for Lorentzian.","Küçük kristalitler ve örgü gerinimi pikleri farklı açısal bağımlılıkla genişletir. Boyut genişlemesi <span class=\"frac sm\"><span>1</span><span>cos θ</span></span> ile, gerinim genişlemesi ise tan θ ile artar:":"Small crystallites and lattice strain broaden peaks with different angular dependences. Size broadening grows as <span class=\"frac sm\"><span>1</span><span>cos θ</span></span> and strain broadening as tan θ:","<b>Tercihli yönelim <i class=\"v\">P<sub>k</sub></i>:</b> levha ya da iğne biçimli taneler belli düzlemleri yüzeye paralel dizer. March–Dollase fonksiyonu <i class=\"v\">P</i> = (<i class=\"v\">r</i>² cos²α + <span class=\"frac sm\"><span>sin²α</span><span><i class=\"v\">r</i></span></span>)<sup>−3⁄2</sup> ile düzeltilir; α, (hkl) normalinin yönelim ekseniyle açısıdır, <i class=\"v\">r</i> = 1 yönelimsizdir.":"<b>Preferred orientation <i class=\"v\">P<sub>k</sub></i>:</b> plate- or needle-like grains can align certain planes preferentially. The March–Dollase function <i class=\"v\">P</i> = (<i class=\"v\">r</i>² cos²α + <span class=\"frac sm\"><span>sin²α</span><span><i class=\"v\">r</i></span></span>)<sup>−3⁄2</sup> is used for correction; α is the angle between the (hkl) normal and the preferred-orientation axis, and <i class=\"v\">r</i> = 1 corresponds to random orientation.","<i>R</i><sub>wp</sub> = [ <span class=\"frac\"><span>Σ<i>w<sub>i</sub></i>(<i>y</i><sub><i>i</i>,göz</sub> − <i>y</i><sub><i>i</i>,hes</sub>)²</span><span>Σ<i>w<sub>i</sub></i> <i>y</i><sub><i>i</i>,göz</sub>²</span></span> ]<sup>½</sup>, &nbsp; χ² = (<span class=\"frac\"><span><i>R</i><sub>wp</sub></span><span><i>R</i><sub>exp</sub></span></span>)²":"<i>R</i><sub>wp</sub> = [ <span class=\"frac\"><span>Σ<i>w<sub>i</sub></i>(<i>y</i><sub><i>i</i>,obs</sub> − <i>y</i><sub><i>i</i>,calc</sub>)²</span><span>Σ<i>w<sub>i</sub></i> <i>y</i><sub><i>i</i>,obs</sub>²</span></span> ]<sup>½</sup>, &nbsp; χ² = (<span class=\"frac\"><span><i>R</i><sub>wp</sub></span><span><i>R</i><sub>exp</sub></span></span>)²","Bir kart; <i class=\"v\">d</i> değerlerini, bağıl şiddetleri, (hkl) atamalarını, birim hücreyi, uzay grubunu, kimyasal formülü ve çoğu zaman RIR (<span class=\"frac sm\"><span><i class=\"v\">I</i></span><span><i class=\"v\">I</i><sub>c</sub></span></span>) değerini içerir.":"A card contains <i class=\"v\">d</i> values, relative intensities, (hkl) assignments, unit-cell parameters, space group, chemical formula and often an RIR (<span class=\"frac sm\"><span><i class=\"v\">I</i></span><span><i class=\"v\">I</i><sub>c</sub></span></span>) value."});
 Object.assign(I18N_JS,{"<thead><tr><th>Profil</th><th>Tepe yüksekliği</th><th><span class=\"frac sm\"><span>β<sub>i</sub></span><span>FWHM</span></span></th><th>φ = <span class=\"frac sm\"><span>FWHM</span><span>β<sub>i</sub></span></span></th></tr></thead><tbody>":"<thead><tr><th>Profile</th><th>Peak height</th><th><span class=\"frac sm\"><span>β<sub>i</sub></span><span>FWHM</span></span></th><th>φ = <span class=\"frac sm\"><span>FWHM</span><span>β<sub>i</sub></span></span></th></tr></thead><tbody>","<div><span>λmin = <span class=\"frac sm\"><span>12,398</span><span>V</span></span></span><b>¤ Å</b></div>\n    <div><span>K uyarma eşiği V<sub>K</sub></span><b>¤ kV</b></div>\n    <div><span>Kα₁ / Kα₂</span><b>¤ / ¤ Å</b></div>\n    <div><span>Kβ</span><b>¤ Å</b></div>\n    <div style=\"grid-column:1/-1\"><span>Durum</span>¤¤</div>":"<div><span>λmin = <span class=\"frac sm\"><span>12.398</span><span>V</span></span></span><b>¤ Å</b></div><div><span>K excitation threshold V<sub>K</sub></span><b>¤ kV</b></div><div><span>Kα₁ / Kα₂</span><b>¤ / ¤ Å</b></div><div><span>Kβ</span><b>¤ Å</b></div><div style=\"grid-column:1/-1\"><span>Status</span>¤¤</div>"});
+Object.assign(I18N_HTML,{"Gerçek uzay ↔ ters uzay: aynı kristalin iki farklı dili":"Real space ↔ reciprocal space: two languages for the same crystal","Solda atomların gerçek uzaydaki periyodik tekrarı, sağda ise bu tekrarın uzaysal frekanslarını temsil eden ters örgü var. Bir taraf genişlerken diğer tarafın neden sıklaştığını ve bir (hk) düzlem ailesinin neden tek bir ters örgü noktasına dönüştüğünü birlikte izleyin.":"The left side shows periodic repetition in real space; the right side shows the reciprocal lattice representing the spatial frequencies of that repetition. Watch why one side contracts as the other expands, and why an (hk) family of planes becomes a single reciprocal-lattice point.","Önce fikir: ters uzay bir “ikinci kristal” değildir":"First idea: reciprocal space is not a “second crystal”","Gerçek uzay bize <b>atomların nerede tekrarlandığını</b> söyler. Ters uzay ise <b>bu tekrarın ne kadar sık olduğunu ve hangi yönde değiştiğini</b> söyler. Bu nedenle uzun bir gerçek-uzay periyodu, küçük bir uzaysal frekansa; küçük bir periyot ise büyük bir uzaysal frekansa karşılık gelir.":"Real space tells us <b>where atoms repeat</b>. Reciprocal space tells us <b>how frequently that repetition occurs and in which direction it changes</b>. A long real-space period therefore corresponds to a small spatial frequency, while a short period corresponds to a large spatial frequency.","Yani <b>a</b>* yalnızca <b>a</b>'nın “tersi” değildir; diğer gerçek-uzay baz vektörüne dik olacak biçimde tanımlanır. Ortogonal bir hücrede bu sadeleşir: <b>a</b>* = <span class=\"frac sm\"><span>1</span><span><i>a</i></span></span> ve <b>b</b>* = <span class=\"frac sm\"><span>1</span><span><i>b</i></span></span>.":"So <b>a</b>* is not merely the numerical reciprocal of <b>a</b>; it is defined so that it is perpendicular to the other real-space basis vector. In an orthogonal cell this simplifies to <b>a</b>* = <span class=\"frac sm\"><span>1</span><span><i>a</i></span></span> and <b>b</b>* = <span class=\"frac sm\"><span>1</span><span><i>b</i></span></span>.","Seçtiğiniz (hk) düzlem ailesi ters uzayda tek bir <b>g</b><sub>hk</sub> noktası/vektörü ile temsil edilir:":"The selected (hk) family of planes is represented in reciprocal space by a single point/vector <b>g</b><sub>hk</sub>:","Bu sayfada kristalografi geleneğini kullanıyoruz: |g| = <span class=\"frac sm\"><span>1</span><span>d</span></span>. Bazı katıhal/fizik kaynaklarında ters vektörler 2π ile tanımlanır ve |G| = <span class=\"frac sm\"><span>2π</span><span>d</span></span> yazılır; fizik aynıdır, yalnızca kullanılan konvansiyon farklıdır.":"This page uses the crystallographic convention |g| = <span class=\"frac sm\"><span>1</span><span>d</span></span>. Some solid-state physics texts define reciprocal vectors with a 2π factor and write |G| = <span class=\"frac sm\"><span>2π</span><span>d</span></span>; the physics is the same, only the convention differs.","Dönüşümü üç cümlede oku":"Read the transformation in three sentences","1 · Gerçek uzay":"1 · Real space","Atomların / hücrelerin tekrar mesafesi":"Repeat distance of atoms / unit cells","2 · Ters uzay":"2 · Reciprocal space","Bu tekrarın uzaysal frekansı":"Spatial frequency of that repetition","3 · Kırınım":"3 · Diffraction","(hk) düzlemi ↔ g<sub>hk</sub> ters örgü noktası":"(hk) plane ↔ g<sub>hk</sub> reciprocal-lattice point","En önemli sezgi: gerçek uzayda çizgiler uzaklaşıyorsa ters uzay noktaları yaklaşır.":"Key intuition: if spacings grow in real space, reciprocal-lattice points move closer together.","Gerçek uzay":"Real space","Ters uzay":"Reciprocal space","Seçili düzlem (hk)":"Selected plane (hk)","a'yı 2× büyüt":"Double a","Eğik örgü göster":"Show an oblique lattice","Sıfırla":"Reset","Neden (hk) düzlemi g<sub>hk</sub>'ye diktir?":"Why is g<sub>hk</sub> perpendicular to the (hk) planes?","Bir (hk) düzlemi üzerinde ilerlerken hx + ky değeri sabit kalır. Bu yüzden bu düzlem boyunca hareket etmek fazı değiştirmez. Fazın en hızlı değiştiği yön düzleme diktir; ters uzaydaki <b>g</b><sub>hk</sub> vektörü tam olarak bu yönü gösterir.":"Along an (hk) plane, hx + ky remains constant, so moving along the plane does not change phase. Phase changes fastest normal to the plane; the reciprocal-space vector <b>g</b><sub>hk</sub> points exactly in that direction.","Neden |g| = 1/d?":"Why is |g| = 1/d?","Ardışık iki (hk) düzlemi arasında faz bir tam tur ilerler. Gerçek uzayda bu turu tamamlamak için gereken mesafe <i>d</i><sub>hk</sub> ise, birim uzunluk başına tur sayısı onun tersidir. Ters uzaydaki vektör uzunluğu bu uzaysal frekanstır.":"Between two successive (hk) planes, phase advances by one full cycle. If the real-space distance needed for one cycle is <i>d</i><sub>hk</sub>, the number of cycles per unit length is its reciprocal. The reciprocal-vector magnitude is this spatial frequency."});
+Object.assign(I18N_HTML,{"Üç boyutta dönüşümün tam biçimi, hücre hacmi <i>V</i> = <b>a</b>·(<b>b</b>×<b>c</b>) olmak üzere:":"In three dimensions the full transformation, with cell volume <i>V</i> = <b>a</b>·(<b>b</b>×<b>c</b>), is:","Matris diliyle aynı işlem, gerçek-uzay baz matrisinin tersinin transpozunu almaktır. Simülasyon bunun 2B kesitini gösterir.":"In matrix language the same operation is the inverse transpose of the real-space basis matrix. The simulation shows a 2D section of this relation.","XRD neden doğal olarak ters uzayda düşünülür?":"Why is XRD naturally described in reciprocal space?","Periyodik bir kristalin Fourier dönüşümü, sürekli bir bulut yerine belirli uzaysal frekanslarda keskin noktalar verir; bunlar ters örgü noktalarıdır. Kırınım deneyinde gelen ve saçılan dalga vektörlerinin farkı <b>q</b> = <b>k</b> − <b>k</b>₀ ölçülür. Kristal güçlü saçılmayı yalnızca bu <b>q</b> vektörü bir ters örgü vektörüne eşit olduğunda verir: <b>q</b> = <b>g</b>. Bir sonraki Ewald simülasyonu tam olarak bu geometrik koşulu gösterecek.":"The Fourier transform of a periodic crystal gives sharp points at specific spatial frequencies rather than a continuous cloud; these are reciprocal-lattice points. In diffraction the relevant quantity is the difference between the scattered and incident wavevectors, <b>q</b> = <b>k</b> − <b>k</b>₀. Strong scattering occurs when this <b>q</b> equals a reciprocal-lattice vector: <b>q</b> = <b>g</b>. The following Ewald simulation shows exactly this geometric condition."});
 </script>
 <script>
 "use strict";
@@ -1997,6 +2097,81 @@ $('#run2').addEventListener('click',e=>{ T2b.run=!T2b.run; e.target.textContent=
 if(!T2b.run) $('#run2').textContent=__t`Dalgaları oynat`;
 reg(C2b,bragg2);
 animators.push({tab:TAB2,fn:dt=>{ if(T2b.run){ T2b.t+=dt*5; bragg2(); } }});
+
+/* Gerçek uzay ↔ ters uzay laboratuvarı */
+const RR2={a:4,b:4,gam:90,h:1,k:1};
+const C2real=$('#c2real'), C2rec=$('#c2rec');
+function rrBasis2(){
+  const g=RR2.gam*D2R, cg=Math.cos(g), sg=Math.sin(g);
+  const A=[RR2.a,0], B=[RR2.b*cg,RR2.b*sg];
+  const det=A[0]*B[1]-A[1]*B[0];
+  const AS=[B[1]/det,-B[0]/det];
+  const BS=[-A[1]/det,A[0]/det];
+  const G=[RR2.h*AS[0]+RR2.k*BS[0],RR2.h*AS[1]+RR2.k*BS[1]];
+  return {A,B,AS,BS,G};
+}
+function rrPoint2(ctx,x,y,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fill();}
+function rrArrow2(ctx,x0,y0,x1,y1,color,label){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  const an=Math.atan2(y1-y0,x1-x0),q=8;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1-q*Math.cos(an-.45),y1-q*Math.sin(an-.45));ctx.lineTo(x1-q*Math.cos(an+.45),y1-q*Math.sin(an+.45));ctx.closePath();ctx.fill();
+  if(label){ctx.font='600 13px IBM Plex Sans, sans-serif';ctx.fillText(label,x1+7*Math.cos(an),y1+7*Math.sin(an));}
+}
+function rr2real(){
+  const P=prep(C2real);if(!P)return;
+  const {ctx,w,h}=P,{A,B,G}=rrBasis2();
+  const ink=cssv('--ink'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+  const extent=40,sc=Math.min(w,h)/72,ox=w/2,oy=h/2;
+  const S=v=>[ox+v[0]*sc,oy-v[1]*sc];
+  for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){const p=[i*A[0]+j*B[0],i*A[1]+j*B[1]],q=S(p);rrPoint2(ctx,q[0],q[1],2.8,muted);}
+  if(RR2.h||RR2.k){
+    const gm=Math.hypot(...G),n=[G[0]/gm,G[1]/gm],t=[-n[1],n[0]],d=1/gm,ext=extent*1.6;
+    ctx.strokeStyle=cb;ctx.lineWidth=1.5;
+    for(let m=-7;m<=7;m++){const c=[n[0]*m*d,n[1]*m*d],p1=[c[0]-t[0]*ext,c[1]-t[1]*ext],p2=[c[0]+t[0]*ext,c[1]+t[1]*ext],q1=S(p1),q2=S(p2);ctx.globalAlpha=m===0?1:.38;ctx.beginPath();ctx.moveTo(...q1);ctx.lineTo(...q2);ctx.stroke();}
+    ctx.globalAlpha=1;
+    const q0=S([0,0]),qd=S([n[0]*d,n[1]*d]);rrArrow2(ctx,q0[0],q0[1],qd[0],qd[1],cu,'d');
+  }
+  const o=S([0,0]),qa=S(A),qb=S(B);
+  rrArrow2(ctx,o[0],o[1],qa[0],qa[1],cu,'a');rrArrow2(ctx,o[0],o[1],qb[0],qb[1],tl,'b');rrPoint2(ctx,o[0],o[1],4,ink);
+}
+function rr2rec(){
+  const P=prep(C2rec);if(!P)return;
+  const {ctx,w,h}=P,{AS,BS,G}=rrBasis2();
+  const ink=cssv('--ink'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+  const sc=Math.min(w,h)/5,ox=w/2,oy=h/2;
+  const S=v=>[ox+v[0]*sc,oy-v[1]*sc];
+  for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){
+    const p=[i*AS[0]+j*BS[0],i*AS[1]+j*BS[1]],q=S(p),sel=i===RR2.h&&j===RR2.k;
+    rrPoint2(ctx,q[0],q[1],sel?6:3,sel?cb:muted);
+    if(sel){ctx.fillStyle=cb;ctx.font='600 13px IBM Plex Sans, sans-serif';ctx.fillText(hklStr([i,j]),q[0]+8,q[1]-8);}
+  }
+  const o=S([0,0]),qa=S(AS),qb=S(BS),qg=S(G);
+  rrArrow2(ctx,o[0],o[1],qa[0],qa[1],cu,'a*');rrArrow2(ctx,o[0],o[1],qb[0],qb[1],tl,'b*');
+  if(RR2.h||RR2.k)rrArrow2(ctx,o[0],o[1],qg[0],qg[1],cb,'g');
+  rrPoint2(ctx,o[0],o[1],4,ink);
+}
+function rr2update(){
+  const {AS,BS,G}=rrBasis2(),gm=Math.hypot(...G),d=gm?1/gm:Infinity;
+  $('#rra2').value=RR2.a;$('#rrb2').value=RR2.b;$('#rrg2').value=RR2.gam;$('#rrh2').value=RR2.h;$('#rrk2').value=RR2.k;
+  $('#rra2o').textContent=num(RR2.a,2)+' Å';$('#rrb2o').textContent=num(RR2.b,2)+' Å';$('#rrg2o').textContent=num(RR2.gam,0)+'°';
+  $('#rr2out').innerHTML='<div><span>a*</span><b>'+num(Math.hypot(...AS),4)+' Å⁻¹</b></div><div><span>b*</span><b>'+num(Math.hypot(...BS),4)+' Å⁻¹</b></div><div><span>|g'+hklStr([RR2.h,RR2.k])+'|</span><b>'+(gm?num(gm,4):'0')+' Å⁻¹</b></div><div><span>d'+hklStr([RR2.h,RR2.k])+'</span><b>'+(isFinite(d)?num(d,4)+' Å':'—')+'</b></div><div style="grid-column:1/-1"><span>d · |g|</span><b>'+(gm&&isFinite(d)?num(d*gm,3):'—')+'</b></div>';
+  $('#rr2realcap').textContent=(LANG==='en'?'Real-space repeat: ':'Gerçek-uzay tekrarı: ')+'a = '+num(RR2.a,2)+' Å, b = '+num(RR2.b,2)+' Å, γ = '+num(RR2.gam,0)+'°';
+  $('#rr2reccap').textContent=(LANG==='en'?'Reciprocal basis: ':'Ters baz: ')+'|a*| = '+num(Math.hypot(...AS),4)+' Å⁻¹, |b*| = '+num(Math.hypot(...BS),4)+' Å⁻¹';
+  let msg='';
+  if(!RR2.h&&!RR2.k)msg=LANG==='en'?'Choose a non-zero (hk) plane to create a reciprocal vector.':'Bir ters vektör oluşturmak için sıfırdan farklı bir (hk) düzlemi seçin.';
+  else if(RR2.h===2&&RR2.k===0)msg=LANG==='en'?'Compare (20) with (10): g doubles, so the real-space plane spacing is halved.':'(20) ile (10)’u karşılaştırın: g iki kat uzar, gerçek uzaydaki düzlem aralığı yarıya iner.';
+  else if(Math.abs(RR2.gam-90)>=.5)msg=LANG==='en'?'In an oblique lattice a* is not parallel to a: reciprocal space is the dual basis defined by dot products.':'Eğik örgüde a* artık a ile paralel değildir: ters uzay, skaler çarpım koşullarıyla tanımlanan dual bazdır.';
+  else msg=LANG==='en'?'Increase a: real-space points separate along a while reciprocal points move closer along a*.':'a’yı büyütün: gerçek uzayda noktalar a yönünde uzaklaşırken ters uzayda a* yönündeki noktalar yaklaşır.';
+  $('#rr2lesson').textContent=msg;rr2real();rr2rec();
+}
+[['#rra2','a'],['#rrb2','b'],['#rrg2','gam']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=+e.target.value;rr2update();}));
+[['#rrh2','h'],['#rrk2','k']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=clamp(Math.round(+e.target.value||0),-4,4);e.target.value=RR2[k];rr2update();}));
+$('[data-rr2]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.rr2;RR2.h=+v[0];RR2.k=+v[1];rr2update();}));
+$('#rr2grow').addEventListener('click',()=>{RR2.a=Math.min(8,RR2.a*2);rr2update();});
+$('#rr2skew').addEventListener('click',()=>{RR2.a=4;RR2.b=5;RR2.gam=70;RR2.h=1;RR2.k=1;rr2update();});
+$('#rr2reset').addEventListener('click',()=>{Object.assign(RR2,{a:4,b:4,gam:90,h:1,k:1});rr2update();});
+reg(C2real,rr2real);reg(C2rec,rr2rec);onTheme(rr2update);rr2update();
 
 /* Ewald yapısı */
 const T2e={lam:1.54,a:3.2,b:4.0,om:20,run:false,pow:false};
