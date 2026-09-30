@@ -14,11 +14,14 @@ Ders özeti yedi ana bölümden oluşur:
    - Birim hücre ve örgü parametreleri
    - Yedi kristal sistemi ve Bravais örgüleri
    - Miller indisleri ve düzlemler arası uzaklık
+   - Eksen kesişimlerinden Miller indislerini adım adım üreten etkileşimli düzlem laboratuvarı
    - Kristal yapıların üç boyutlu gösterimi
 
 2. **X-ışınları ve Bragg kırınımı**
    - X-ışınlarının oluşumu ve karakteristik çizgiler
    - Bragg yasası: \(n\lambda = 2d\sin\theta\)
+   - İki komşu düzlem için \(d\sin\theta + d\sin\theta\) yol farkının geometrik gösterimi
+   - Yol farkını doğrudan faz farkına taşıyan yapıcı/yıkıcı girişim laboratuvarı
    - Yapıcı girişim
    - Gerçek uzay ↔ ters uzay dönüşümü
    - Dual baz vektörleri ve gerçek örgü / ters örgü aralığı ilişkisi
@@ -68,7 +71,9 @@ Ders özeti yedi ana bölümden oluşur:
 
 İçerik doğrusal biçimde **Kristalografi → Bragg → Toz yöntemi → Simülasyon → Veri analizi → Pratik kullanım → Gerçek veriyi okuma** sırasıyla takip edilebilir. Ancak her bölüm bağımsız bir ders tekrarı olarak da kullanılabilir.
 
-Kaydırıcılar ve seçim kutuları yalnızca sonucu göstermek için değil, kavramlar arasındaki ilişkiyi görünür kılmak için tasarlanmıştır. Örneğin örgü parametresi değiştirildiğinde pik konumlarının, kristalit boyutu değiştirildiğinde pik genişliğinin ve atomik düzen değiştirildiğinde izinli/sönen yansımaların nasıl değiştiği gözlenebilir.
+Kaydırıcılar ve seçim kutuları yalnızca sonucu göstermek için değil, kavramlar arasındaki ilişkiyi görünür kılmak için tasarlanmıştır.
+
+Temel kırınım kavramları özellikle **Miller düzlemi → Bragg yol farkı → faz farkı → yapıcı/yıkıcı girişim → ters uzay/Ewald** zinciri halinde izlenebilir. Böylece geometrik düzlem tanımı ile kırınım pikinin oluşması arasındaki bağ adım adım kurulabilir. Örneğin örgü parametresi değiştirildiğinde pik konumlarının, kristalit boyutu değiştirildiğinde pik genişliğinin ve atomik düzen değiştirildiğinde izinli/sönen yansımaların nasıl değiştiği gözlenebilir.
 
 ## Bilimsel kapsam ve sadeleştirmeler
 
