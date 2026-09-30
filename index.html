@@ -1995,6 +1995,77 @@ function update1(){
 onTheme(()=>{build1();legend1();});
 setSystem('cubic');
 
+/* ================= MILLER DÜZLEMİ ÜRETİCİ ================= */
+function initMillerGenerator(){
+  const cv=$('#cMillerGen'); if(!cv) return;
+  const selA=$('#miA'),selB=$('#miB'),selC=$('#miC'),out=$('#millerSteps'),cap=$('#millerGenCap');
+  const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a||1;};
+  const lcm=(a,b)=>Math.abs(a*b)/gcd(a,b);
+  function rational(x){
+    if(Math.abs(x)<1e-12)return [0,1];
+    let bp=Math.round(x),bq=1,be=Math.abs(x-bp);
+    for(let q=1;q<=12;q++){const p=Math.round(x*q),e=Math.abs(x-p/q);if(e<be){bp=p;bq=q;be=e;}}
+    const g=gcd(bp,bq);return [bp/g,bq/g];
+  }
+  function val(sel){return sel.value==='inf'?Infinity:+sel.value;}
+  function interceptLabel(v,axis){
+    if(!isFinite(v))return '∞';
+    if(v===1)return axis;if(v===-1)return '−'+axis;
+    if(v===.5)return axis+'/2';if(v===-.5)return '−'+axis+'/2';
+    return (v<0?'−':'')+num(Math.abs(v),Math.abs(v)%1?1:0)+axis;
+  }
+  function derive(){
+    const ints=[val(selA),val(selB),val(selC)],rec=ints.map(v=>isFinite(v)?1/v:0);
+    if(rec.every(v=>Math.abs(v)<1e-12))return {ints,rec,hkl:[0,0,0],scaled:[0,0,0],valid:false};
+    const fr=rec.map(rational),L=fr.reduce((z,p)=>lcm(z,p[1]),1),raw=fr.map(([p,q])=>p*(L/q));
+    const gg=raw.reduce((z,v)=>v?gcd(z||Math.abs(v),Math.abs(v)):z,0)||1,hkl=raw.map(v=>v/gg);
+    return {ints,rec,hkl,scaled:raw,valid:true};
+  }
+  function boxPlane(h,k,l,m,lo,hi){
+    const C=[];for(const x of [lo,hi])for(const y of [lo,hi])for(const z of [lo,hi])C.push([x,y,z]);
+    const E=[];for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let d=0;for(let a=0;a<3;a++)if(C[i][a]!==C[j][a])d++;if(d===1)E.push([C[i],C[j]]);}
+    const F=v=>h*v[0]+k*v[1]+l*v[2]-m,pts=[];
+    const add=p=>{if(!pts.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])<1e-7))pts.push(p);};
+    for(const [a,b] of E){const fa=F(a),fb=F(b);if(Math.abs(fa)<1e-9)add(a);if(Math.abs(fb)<1e-9)add(b);if(fa*fb<0){const t=fa/(fa-fb);add(a.map((x,i)=>x+t*(b[i]-x)));}}
+    return pts;
+  }
+  function draw(){
+    const P=prep(cv);if(!P)return;const {ctx,w,h}=P,D=derive(),ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+    const finite=D.ints.filter(Number.isFinite).map(Math.abs),B=Math.max(1.35,...finite.map(x=>x*1.1));
+    const sc=Math.min(w,h)/(3.3*B),ox=w*.48,oy=h*.58;
+    const proj=p=>[ox+sc*(p[0]-.58*p[1]),oy-sc*(.34*p[0]+.34*p[1]+p[2])];
+    const edge=(a,b,c=line,alpha=1)=>{const A=proj(a),B2=proj(b);ctx.strokeStyle=c;ctx.globalAlpha=alpha;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(...A);ctx.lineTo(...B2);ctx.stroke();ctx.globalAlpha=1;};
+    // positive unit cell
+    const U=[];for(const x of [0,1])for(const y of [0,1])for(const z of [0,1])U.push([x,y,z]);
+    for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let d=0;for(let a=0;a<3;a++)if(U[i][a]!==U[j][a])d++;if(d===1)edge(U[i],U[j],line,.65);}
+    // axes, including negative region for barred indices
+    const O=proj([0,0,0]);for(const [v,lab,col] of [[[B,0,0],'a',cu],[[0,B,0],'b',tl],[[0,0,B],'c',cb]]){const Q=proj(v);ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2;arrow(ctx,O[0],O[1],Q[0],Q[1],8);ctx.font='italic 15px Spectral,Georgia,serif';ctx.fillText(lab,Q[0]+5,Q[1]-4);}
+    if(D.valid){
+      const pts=boxPlane(D.hkl[0],D.hkl[1],D.hkl[2],1,-B,B);
+      if(pts.length>=3){const pp=pts.map(proj),cx=pp.reduce((a,p)=>a+p[0],0)/pp.length,cy=pp.reduce((a,p)=>a+p[1],0)/pp.length;pp.sort((a,b)=>Math.atan2(a[1]-cy,a[0]-cx)-Math.atan2(b[1]-cy,b[0]-cx));ctx.fillStyle=cb;ctx.globalAlpha=.18;ctx.beginPath();ctx.moveTo(...pp[0]);for(const p of pp.slice(1))ctx.lineTo(...p);ctx.closePath();ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=cb;ctx.lineWidth=2;ctx.stroke();}
+      D.ints.forEach((v,i)=>{if(!isFinite(v))return;const p=[0,0,0];p[i]=v;const q=proj(p);ctx.fillStyle=cu;ctx.beginPath();ctx.arc(q[0],q[1],5,0,2*Math.PI);ctx.fill();});
+      ctx.fillStyle=ink;ctx.font='600 16px IBM Plex Sans, sans-serif';ctx.fillText(hklStr(D.hkl),14,16);
+    }else{ctx.fillStyle=cssv('--forbid');ctx.font='600 14px IBM Plex Sans, sans-serif';ctx.fillText(__t`(000) bir Miller düzlemi değildir.`,14,16);}
+  }
+  function update(){
+    const D=derive(),labs=[interceptLabel(D.ints[0],'a'),interceptLabel(D.ints[1],'b'),interceptLabel(D.ints[2],'c')],rec=D.rec.map(x=>Math.abs(x)<1e-12?'0':fracStr(x));
+    const reduced=D.valid?hklStr(D.hkl):'(000)';
+    out.innerHTML='<div><span>1 · '+__t`Kesişimler`+'</span><b>('+labs.join(', ')+')</b></div>'+
+      '<div><span>2 · '+__t`Terslerini al`+'</span><b>('+rec.join(', ')+')</b></div>'+
+      '<div><span>3 · '+__t`Paydaları temizle`+'</span><b>('+D.scaled.join(', ')+')</b></div>'+
+      '<div><span>4 · '+__t`En küçük tam sayılar`+'</span><b>'+reduced+'</b></div>';
+    cap.textContent=D.valid?__t`Düzlem denklemi: ${D.hkl[0]}x + ${D.hkl[1]}y + ${D.hkl[2]}z = 1. Turuncu noktalar sonlu eksen kesişimleridir.`:__t`Üç eksene de paralel bir “düzlem” tanımlanamaz; en az bir sonlu kesişim seçin.`;
+    draw();
+  }
+  [selA,selB,selC].forEach(el=>el.addEventListener('change',update));
+  document.querySelectorAll('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
+    const map={100:['1','inf','inf'],110:['1','1','inf'],111:['1','1','1'],120:['1','.5','inf'],bar110:['-1','1','inf']},v=map[b.dataset.miExample];
+    if(!v)return;[selA.value,selB.value,selC.value]=v;update();
+  }));
+  reg(cv,draw);onTheme(draw);update();
+}
+try{initMillerGenerator();}catch(e){console.error('Miller generator init failed',e);}
+
 /* ================= 2B GRAFİK SINIFI ================= */
 const Cv=c=>c&&c.startsWith('--')?cssv(c):c;
 function niceTicks(a,b,n){ const span=b-a; if(!(span>0)) return [a]; const raw=span/n, mag=10**Math.floor(Math.log10(raw)), f=raw/mag;
