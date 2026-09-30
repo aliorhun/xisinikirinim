@@ -2041,7 +2041,7 @@ function initMillerGenerator(){
     // axes, including negative region for barred indices
     const O=proj([0,0,0]);for(const [v,lab,col] of [[[B,0,0],'a',cu],[[0,B,0],'b',tl],[[0,0,B],'c',cb]]){const Q=proj(v);ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2;arrow(ctx,O[0],O[1],Q[0],Q[1],8);ctx.font='italic 15px Spectral,Georgia,serif';ctx.fillText(lab,Q[0]+5,Q[1]-4);}
     if(D.valid){
-      const pts=boxPlane(D.hkl[0],D.hkl[1],D.hkl[2],1,-B,B);
+      const pts=boxPlane(D.rec[0],D.rec[1],D.rec[2],1,-B,B);
       if(pts.length>=3){const pp=pts.map(proj),cx=pp.reduce((a,p)=>a+p[0],0)/pp.length,cy=pp.reduce((a,p)=>a+p[1],0)/pp.length;pp.sort((a,b)=>Math.atan2(a[1]-cy,a[0]-cx)-Math.atan2(b[1]-cy,b[0]-cx));ctx.fillStyle=cb;ctx.globalAlpha=.18;ctx.beginPath();ctx.moveTo(...pp[0]);for(const p of pp.slice(1))ctx.lineTo(...p);ctx.closePath();ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=cb;ctx.lineWidth=2;ctx.stroke();}
       D.ints.forEach((v,i)=>{if(!isFinite(v))return;const p=[0,0,0];p[i]=v;const q=proj(p);ctx.fillStyle=cu;ctx.beginPath();ctx.arc(q[0],q[1],5,0,2*Math.PI);ctx.fill();});
       ctx.fillStyle=ink;ctx.font='600 16px IBM Plex Sans, sans-serif';ctx.fillText(hklStr(D.hkl),14,16);
@@ -2054,12 +2054,12 @@ function initMillerGenerator(){
       '<div><span>2 · '+__t`Terslerini al`+'</span><b>('+rec.join(', ')+')</b></div>'+
       '<div><span>3 · '+__t`Paydaları temizle`+'</span><b>('+D.scaled.join(', ')+')</b></div>'+
       '<div><span>4 · '+__t`En küçük tam sayılar`+'</span><b>'+reduced+'</b></div>';
-    cap.textContent=D.valid?__t`Düzlem denklemi: ${D.hkl[0]}x + ${D.hkl[1]}y + ${D.hkl[2]}z = 1. Turuncu noktalar sonlu eksen kesişimleridir.`:__t`Üç eksene de paralel bir “düzlem” tanımlanamaz; en az bir sonlu kesişim seçin.`;
+    cap.textContent=D.valid?__t`Turuncu noktalar seçtiğiniz gerçek eksen kesişimleridir; mavi yüzey bu düzlemdir. ${hklStr(D.hkl)} ise düzlemin konumundan bağımsız yönelim/aile etiketidir.`:__t`Üç eksene de paralel bir “düzlem” tanımlanamaz; en az bir sonlu kesişim seçin.`;
     draw();
   }
   [selA,selB,selC].forEach(el=>el.addEventListener('change',update));
   document.querySelectorAll('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
-    const map={100:['1','inf','inf'],110:['1','1','inf'],111:['1','1','1'],120:['1','.5','inf'],bar110:['-1','1','inf']},v=map[b.dataset.miExample];
+    const map={100:['1','inf','inf'],110:['1','1','inf'],111:['1','1','1'],120:['1','0.5','inf'],bar110:['-1','1','inf']},v=map[b.dataset.miExample];
     if(!v)return;[selA.value,selB.value,selC.value]=v;update();
   }));
   reg(cv,draw);onTheme(draw);update();
@@ -2246,7 +2246,7 @@ function initFundamentalBraggLabs(){
   }
   function updateInterference(){
     const r=inf.ratio,phase=2*Math.PI*r,phaseDeg=((r%1)+1)%1*360,amp=Math.abs(Math.cos(phase/2)),inten=amp*amp,st=phaseInfo(r);
-    $('#ifRatio').value=Math.min(8,Math.max(0,r));$('#ifRatioO').textContent=num(r,3);
+    $('#ifRatio').max=Math.max(8,Math.ceil(r||0));$('#ifRatio').value=Math.max(0,r);$('#ifRatioO').textContent=num(r,3);
     $('#ifOut').innerHTML='<div><span>Δ / λ</span><b>'+num(r,3)+'</b></div><div><span>Δφ</span><b>'+num(phaseDeg,1)+'°</b></div><div><span>'+__t`Toplam genlik / maksimum`+'</span><b>'+num(amp,3)+'</b></div><div><span>'+__t`Bağıl şiddet`+'</span><b>'+num(inten,3)+'</b></div><div style="grid-column:1/-1"><span>'+__t`Girişim türü`+'</span><b>'+st.text+'</b></div>';
     if(st.kind==='constructive')$('#ifLesson').textContent=__t`Dalgalar aynı fazda yeniden buluşuyor; genlikler toplanıyor. Bragg yansıması için Δ/λ bir pozitif tam sayı olduğunda bu yapıcı koşul sağlanır.`;
     else if(st.kind==='destructive')$('#ifLesson').textContent=__t`Dalgalar yarım tur faz farkıyla karşılaşıyor; biri tepedeyken diğeri çukurda ve toplam büyük ölçüde sönüyor.`;
