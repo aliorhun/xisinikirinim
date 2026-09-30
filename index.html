@@ -2198,6 +2198,70 @@ $('#filt2').addEventListener('change',e=>{T2.filt=e.target.checked; spec2();});
 $('#log2').addEventListener('change',e=>{T2.log=e.target.checked; spec2();});
 reg(C2e,levels2);
 
+/* ================= BRAGG YOL FARKI + TEMEL GİRİŞİM ================= */
+const FUND2={bp:{theta:20,d:2.2,lam:1.54},inf:{ratio:0}};
+function initFundamentalBraggLabs(){
+  const cPath=$('#cBraggPath'),cInt=$('#cInterference'); if(!cPath||!cInt)return;
+  const bp=FUND2.bp,inf=FUND2.inf;
+  function phaseInfo(r){
+    const nearest=Math.round(r),f=((r%1)+1)%1,di=Math.abs(r-nearest),dh=Math.abs(f-.5);
+    if(di<.02)return {kind:'constructive',text:__t`Yapıcı girişim`,nearest};
+    if(dh<.02)return {kind:'destructive',text:__t`Yıkıcı girişim`,nearest};
+    return {kind:'partial',text:__t`Kısmi girişim`,nearest};
+  }
+  function bpCalc(){const th=bp.theta*D2R,one=bp.d*Math.sin(th),delta=2*one,ratio=delta/bp.lam;return {th,one,delta,ratio};}
+  function drawPath(){
+    const P=prep(cPath);if(!P)return;const {ctx,w,h}=P,C=bpCalc(),ink=cssv('--ink'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+    const sc=55,top=105,sep=bp.d*sc,xc=w*.5,y0=top,y1=top+sep,th=C.th;
+    ctx.strokeStyle=muted;ctx.lineWidth=1.4;ctx.globalAlpha=.55;
+    for(const y of [y0,y1]){ctx.beginPath();ctx.moveTo(25,y);ctx.lineTo(w-25,y);ctx.stroke();for(let x=45;x<w-25;x+=36){ctx.fillStyle=muted;ctx.beginPath();ctx.arc(x,y,4,0,2*Math.PI);ctx.fill();}}
+    ctx.globalAlpha=1;
+    const din=[Math.cos(th),Math.sin(th)],dout=[Math.cos(th),-Math.sin(th)],L=Math.hypot(w,h),P0=[xc,y0],P1=[xc,y1];
+    function ray(p,dir,back,color){ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2.2;const a=back?[p[0]-L*dir[0],p[1]-L*dir[1]]:p,b=back?p:[p[0]+L*dir[0],p[1]+L*dir[1]];ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();}
+    ray(P0,din,true,cb);ray(P0,dout,false,cb);ray(P1,din,true,tl);ray(P1,dout,false,tl);
+    const lp=C.one*sc,F1=[P1[0]-lp*din[0],P1[1]-lp*din[1]],F2=[P1[0]+lp*dout[0],P1[1]+lp*dout[1]];
+    ctx.setLineDash([5,4]);ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(...P0);ctx.lineTo(...F1);ctx.moveTo(...P0);ctx.lineTo(...F2);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=cu;ctx.lineWidth=6;ctx.globalAlpha=.85;ctx.beginPath();ctx.moveTo(...F1);ctx.lineTo(...P1);ctx.lineTo(...F2);ctx.stroke();ctx.globalAlpha=1;
+    ctx.fillStyle=cu;ctx.font='600 13px IBM Plex Sans, sans-serif';ctx.fillText('d sin θ',F1[0]-64,F1[1]-8);ctx.fillText('d sin θ',F2[0]+8,F2[1]+8);
+    const dx=xc-145;ctx.strokeStyle=ink;ctx.fillStyle=ink;ctx.lineWidth=1.2;arrow(ctx,dx,(y0+y1)/2,dx,y0+2,7);arrow(ctx,dx,(y0+y1)/2,dx,y1-2,7);ctx.font='italic 16px Spectral,Georgia,serif';ctx.fillText('d',dx-18,(y0+y1)/2+5);
+    ctx.strokeStyle=ink;ctx.beginPath();ctx.arc(P0[0],P0[1],38,Math.PI,Math.PI+th);ctx.stroke();ctx.fillStyle=ink;ctx.font='italic 16px Spectral,Georgia,serif';ctx.fillText('θ',P0[0]-58,P0[1]-8);
+    ctx.fillStyle=cssv('--panel');ctx.globalAlpha=.92;ctx.fillRect(8,8,Math.min(355,w-16),68);ctx.globalAlpha=1;ctx.fillStyle=ink;ctx.font='14px IBM Plex Sans, sans-serif';
+    ctx.fillText('Δ = d sin θ + d sin θ',18,18);ctx.fillText('Δ = 2d sin θ = '+num(C.delta,3)+' Å',18,42);
+  }
+  function updatePath(){
+    const C=bpCalc(),st=phaseInfo(C.ratio),phase=((C.ratio%1)+1)%1*360;
+    $('#bpTheta').value=bp.theta;$('#bpD').value=bp.d;$('#bpLambda').value=bp.lam;
+    $('#bpThetaO').textContent=num(bp.theta,1)+'°';$('#bpDO').textContent=num(bp.d,2)+' Å';$('#bpLambdaO').textContent=num(bp.lam,2)+' Å';
+    $('#bpOut').innerHTML='<div><span>d sin θ</span><b>'+num(C.one,3)+' Å</b></div><div><span>Δ = 2d sin θ</span><b>'+num(C.delta,3)+' Å</b></div><div><span>Δ / λ</span><b>'+num(C.ratio,3)+'</b></div><div><span>'+__t`Faz farkı`+'</span><b>'+num(phase,1)+'°</b></div><div style="grid-column:1/-1"><span>'+__t`Sonuç`+'</span><b>'+st.text+(st.kind==='constructive'&&st.nearest>=1?' · n = '+st.nearest:'')+'</b></div>';
+    drawPath();
+  }
+  function drawInterference(){
+    const P=prep(cInt);if(!P)return;const {ctx,w,h}=P,r=inf.ratio,phi=2*Math.PI*r,cb=cssv('--cobalt'),tl=cssv('--teal'),cu=cssv('--copper'),muted=cssv('--muted'),ink=cssv('--ink');
+    const L=38,R=w-18,A=24,k=2*Math.PI/115,ys=[70,155,275];
+    ctx.strokeStyle=muted;ctx.lineWidth=1;ctx.globalAlpha=.45;for(const y of ys){ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(R,y);ctx.stroke();}ctx.globalAlpha=1;
+    function wave(y,phase,color,scale=1){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();let first=true;for(let x=L;x<=R;x+=2){const Y=y-A*scale*Math.sin(k*(x-L)+phase);if(first){ctx.moveTo(x,Y);first=false}else ctx.lineTo(x,Y);}ctx.stroke();}
+    wave(ys[0],0,cb);wave(ys[1],phi,tl);
+    ctx.strokeStyle=cu;ctx.lineWidth=3;ctx.beginPath();let first=true;for(let x=L;x<=R;x+=2){const t=k*(x-L),sum=Math.sin(t)+Math.sin(t+phi),Y=ys[2]-A*.78*sum;if(first){ctx.moveTo(x,Y);first=false}else ctx.lineTo(x,Y);}ctx.stroke();
+    ctx.fillStyle=ink;ctx.font='12px IBM Plex Sans, sans-serif';ctx.fillText(__t`Dalga 1`,8,ys[0]+4);ctx.fillText(__t`Dalga 2`,8,ys[1]+4);ctx.fillText(__t`Toplam`,8,ys[2]+4);
+  }
+  function updateInterference(){
+    const r=inf.ratio,phase=2*Math.PI*r,phaseDeg=((r%1)+1)%1*360,amp=Math.abs(Math.cos(phase/2)),inten=amp*amp,st=phaseInfo(r);
+    $('#ifRatio').value=Math.min(8,Math.max(0,r));$('#ifRatioO').textContent=num(r,3);
+    $('#ifOut').innerHTML='<div><span>Δ / λ</span><b>'+num(r,3)+'</b></div><div><span>Δφ</span><b>'+num(phaseDeg,1)+'°</b></div><div><span>'+__t`Toplam genlik / maksimum`+'</span><b>'+num(amp,3)+'</b></div><div><span>'+__t`Bağıl şiddet`+'</span><b>'+num(inten,3)+'</b></div><div style="grid-column:1/-1"><span>'+__t`Girişim türü`+'</span><b>'+st.text+'</b></div>';
+    if(st.kind==='constructive')$('#ifLesson').textContent=__t`Dalgalar aynı fazda yeniden buluşuyor; genlikler toplanıyor. Bragg yansıması için Δ/λ bir pozitif tam sayı olduğunda bu yapıcı koşul sağlanır.`;
+    else if(st.kind==='destructive')$('#ifLesson').textContent=__t`Dalgalar yarım tur faz farkıyla karşılaşıyor; biri tepedeyken diğeri çukurda ve toplam büyük ölçüde sönüyor.`;
+    else $('#ifLesson').textContent=__t`Faz farkı tam 0° ya da 180° değil; girişim kısmi ve toplam şiddet ara bir değerde.`;
+    drawInterference();
+  }
+  [['#bpTheta','theta'],['#bpD','d'],['#bpLambda','lam']].forEach(([id,k])=>$(id).addEventListener('input',e=>{bp[k]=+e.target.value;updatePath();}));
+  $('#bpGo1').addEventListener('click',()=>{const x=bp.lam/(2*bp.d);if(x>1){alert(__t`Bu d ve λ için n = 1 Bragg çözümü yok; d ≥ λ/2 olmalı.`);return;}bp.theta=Math.asin(x)*R2D;updatePath();});
+  $('#bpToInterference').addEventListener('click',()=>{inf.ratio=bpCalc().ratio;updateInterference();$('#interferenceLab').scrollIntoView({behavior:'smooth',block:'center'});});
+  $('#ifRatio').max='8';$('#ifRatio').addEventListener('input',e=>{inf.ratio=+e.target.value;updateInterference();});
+  document.querySelectorAll('[data-if-ratio]').forEach(b=>b.addEventListener('click',()=>{inf.ratio=+b.dataset.ifRatio;updateInterference();}));
+  reg(cPath,drawPath);reg(cInt,drawInterference);onTheme(()=>{drawPath();drawInterference();});updatePath();updateInterference();
+}
+try{initFundamentalBraggLabs();}catch(e){console.error('Fundamental Bragg labs init failed',e);}
+
 /* Bragg girişim animasyonu */
 const T2b={th:22,d:2.2,lam:1.54,N:4,run:!REDUCE,t:0};
 const C2b=$('#c2b');
