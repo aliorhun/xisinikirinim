@@ -2167,7 +2167,7 @@ function rr2update(){
 }
 [['#rra2','a'],['#rrb2','b'],['#rrg2','gam']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=+e.target.value;rr2update();}));
 [['#rrh2','h'],['#rrk2','k']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=clamp(Math.round(+e.target.value||0),-4,4);e.target.value=RR2[k];rr2update();}));
-$('[data-rr2]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.rr2;RR2.h=+v[0];RR2.k=+v[1];rr2update();}));
+document.querySelectorAll('[data-rr2]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.rr2;RR2.h=+v[0];RR2.k=+v[1];rr2update();}));
 $('#rr2grow').addEventListener('click',()=>{RR2.a=Math.min(8,RR2.a*2);rr2update();});
 $('#rr2skew').addEventListener('click',()=>{RR2.a=4;RR2.b=5;RR2.gam=70;RR2.h=1;RR2.k=1;rr2update();});
 $('#rr2reset').addEventListener('click',()=>{Object.assign(RR2,{a:4,b:4,gam:90,h:1,k:1});rr2update();});
