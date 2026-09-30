@@ -475,6 +475,93 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
   </div>
 
+
+  <div class="lab panel" id="rr2lab">
+    <div class="lab-head">
+      <h3>Gerçek uzay ↔ ters uzay: aynı kristalin iki farklı dili</h3>
+      <p>Solda atomların gerçek uzaydaki periyodik tekrarı, sağda ise bu tekrarın uzaysal frekanslarını temsil eden ters örgü var. Bir taraf genişlerken diğer tarafın neden sıklaştığını ve bir (hk) düzlem ailesinin neden tek bir ters örgü noktasına dönüştüğünü birlikte izleyin.</p>
+    </div>
+
+    <div class="cols" style="align-items:start">
+      <div class="prose">
+        <h3>Önce fikir: ters uzay bir “ikinci kristal” değildir</h3>
+        <p>Gerçek uzay bize <b>atomların nerede tekrarlandığını</b> söyler. Ters uzay ise <b>bu tekrarın ne kadar sık olduğunu ve hangi yönde değiştiğini</b> söyler. Bu nedenle uzun bir gerçek-uzay periyodu, küçük bir uzaysal frekansa; küçük bir periyot ise büyük bir uzaysal frekansa karşılık gelir.</p>
+        <div class="eq"><b>a</b>*·<b>a</b> = 1,&nbsp; <b>a</b>*·<b>b</b> = 0 &nbsp;&nbsp;ve&nbsp;&nbsp; <b>b</b>*·<b>b</b> = 1,&nbsp; <b>b</b>*·<b>a</b> = 0</div>
+        <p>Yani <b>a</b>* yalnızca <b>a</b>'nın “tersi” değildir; diğer gerçek-uzay baz vektörüne dik olacak biçimde tanımlanır. Ortogonal bir hücrede bu sadeleşir: <b>a</b>* = 1/<i>a</i> ve <b>b</b>* = 1/<i>b</i>.</p>
+        <p>Seçtiğiniz (hk) düzlem ailesi ters uzayda tek bir <b>g</b><sub>hk</sub> noktası/vektörü ile temsil edilir:</p>
+        <div class="eq"><b>g</b><sub>hk</sub> = h<b>a</b>* + k<b>b</b>*, &nbsp;&nbsp; |<b>g</b><sub>hk</sub>| = <span class="frac"><span>1</span><span><i>d</i><sub>hk</sub></span></span></div>
+        <p class="cap">Bu sayfada kristalografi geleneğini kullanıyoruz: |g| = 1/d. Bazı katıhal/fizik kaynaklarında ters vektörler 2π ile tanımlanır ve |G| = 2π/d yazılır; fizik aynıdır, yalnızca kullanılan konvansiyon farklıdır.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Dönüşümü üç cümlede oku</h3>
+        <div class="readout" style="grid-template-columns:1fr">
+          <div><span>1 · Gerçek uzay</span><b>Atomların / hücrelerin tekrar mesafesi</b></div>
+          <div><span>2 · Ters uzay</span><b>Bu tekrarın uzaysal frekansı</b></div>
+          <div><span>3 · Kırınım</span><b>(hk) düzlemi ↔ g<sub>hk</sub> ters örgü noktası</b></div>
+        </div>
+        <p class="cap" style="margin-top:10px">En önemli sezgi: gerçek uzayda çizgiler uzaklaşıyorsa ters uzay noktaları yaklaşır.</p>
+      </div>
+    </div>
+
+    <div class="rr2-visual" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px">
+      <div class="panel" style="min-width:0">
+        <h3>Gerçek uzay</h3>
+        <canvas id="c2real" class="cv" style="height:390px" role="img" aria-label="Gerçek uzay örgüsü ve seçili hk düzlem ailesi"></canvas>
+        <p class="cap" id="rr2realcap"></p>
+      </div>
+      <div class="panel" style="min-width:0">
+        <h3>Ters uzay</h3>
+        <canvas id="c2rec" class="cv" style="height:390px" role="img" aria-label="Ters örgü ve seçili g hk vektörü"></canvas>
+        <p class="cap" id="rr2reccap"></p>
+      </div>
+    </div>
+
+    <div class="lab-grid" style="margin-top:14px;grid-template-columns:minmax(0,1.35fr) minmax(300px,.8fr)">
+      <div class="ctl">
+        <div class="sl"><label for="rra2">a</label><input type="range" id="rra2" min="2" max="7" step="0.05" value="4"><output id="rra2o"></output></div>
+        <div class="sl"><label for="rrb2">b</label><input type="range" id="rrb2" min="2" max="7" step="0.05" value="4"><output id="rrb2o"></output></div>
+        <div class="sl"><label for="rrg2">γ</label><input type="range" id="rrg2" min="55" max="125" step="1" value="90"><output id="rrg2o"></output></div>
+        <fieldset>
+          <legend>Seçili düzlem (hk)</legend>
+          <div class="hkl">
+            <label>h<input type="number" id="rrh2" min="-4" max="4" step="1" value="1"></label>
+            <label>k<input type="number" id="rrk2" min="-4" max="4" step="1" value="1"></label>
+            <span></span><span></span>
+          </div>
+        </fieldset>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button type="button" data-rr2="10">(10)</button>
+          <button type="button" data-rr2="01">(01)</button>
+          <button type="button" data-rr2="11">(11)</button>
+          <button type="button" data-rr2="20">(20)</button>
+          <button type="button" data-rr2="21">(21)</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="readout" id="rr2out"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button type="button" id="rr2grow">a'yı 2× büyüt</button>
+          <button type="button" id="rr2skew">Eğik örgü göster</button>
+          <button type="button" id="rr2reset">Sıfırla</button>
+        </div>
+        <p class="cap" id="rr2lesson" style="margin-top:12px"></p>
+      </div>
+    </div>
+
+    <div class="cols" style="align-items:start;margin-top:14px">
+      <div class="prose">
+        <h3>Neden (hk) düzlemi g<sub>hk</sub>'ye diktir?</h3>
+        <p>Bir (hk) düzlemi üzerinde ilerlerken hx + ky değeri sabit kalır. Bu yüzden bu düzlem boyunca hareket etmek fazı değiştirmez. Fazın en hızlı değiştiği yön düzleme diktir; ters uzaydaki <b>g</b><sub>hk</sub> vektörü tam olarak bu yönü gösterir.</p>
+      </div>
+      <div class="prose">
+        <h3>Neden |g| = 1/d?</h3>
+        <p>Ardışık iki (hk) düzlemi arasında faz bir tam tur ilerler. Gerçek uzayda bu turu tamamlamak için gereken mesafe <i>d</i><sub>hk</sub> ise, birim uzunluk başına tur sayısı onun tersidir. Ters uzaydaki vektör uzunluğu bu uzaysal frekanstır.</p>
+      </div>
+    </div>
+  </div>
+
   <div class="cols">
     <div class="prose">
       <h3>Ters örgü ve Ewald küresi</h3>
