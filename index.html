@@ -769,6 +769,51 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
   </div>
 
+
+  <div class="lab panel" id="ringToPatternLab">
+    <div class="lab-head">
+      <h3>Toz halkası → 1B difraktogram</h3>
+      <p>Alan dedektöründeki her Debye–Scherrer halkası sabit bir 2θ değerini temsil eder. Aynı yarıçaptaki pikseller azimut boyunca toplanınca halka tek bir 1B pike dönüşür.</p>
+    </div>
+    <div class="lab-grid">
+      <div>
+        <canvas id="c3ri" class="cv" style="height:390px" role="img" aria-label="Toz kırınım halkaları, seçili azimut integrasyon dilimi ve seçili halka"></canvas>
+        <p class="cap" id="ri3cap"></p>
+      </div>
+      <div>
+        <canvas id="c3rp" class="cv" style="height:290px" role="img" aria-label="Azimutal integrasyonla elde edilen bir boyutlu kırınım deseni"></canvas>
+        <div class="ctl" style="margin-top:12px">
+          <div class="row2">
+            <label>Numune <select id="ri3s"></select></label>
+            <label>Anot <select id="ri3a"><option>Cu</option><option>Mo</option><option>Co</option><option>Cr</option></select></label>
+          </div>
+          <div class="sl"><label for="ri3az">Δφ</label><input type="range" id="ri3az" min="10" max="360" step="5" value="360"><output id="ri3azo"></output></div>
+          <div class="readout" id="ri3ro"></div>
+          <p class="cap" style="margin:0">Düz dedektör için yaklaşık ilişki: <i>r</i> = <i>L</i> tan(2θ). Aynı <i>r</i> yarıçapındaki yoğunlukların azimutal toplamı, o {hkl} ailesinin 1B pik şiddetini verir.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab panel" id="singlePowderLab">
+    <div class="lab-head">
+      <h3>Tek kristal vs toz</h3>
+      <p>Aynı {hkl} yansıması tek kristalde belirli yönelimlere bağlı ayrık spotlar verir; rastgele yönelimli çok sayıda kristalit ise aynı 2θ yarıçapını bütün azimutlarda doldurarak bir halka oluşturur.</p>
+    </div>
+    <canvas id="c3sp" class="cv" style="height:410px" role="img" aria-label="Tek kristal spotları ile toz halkalarının yan yana karşılaştırması"></canvas>
+    <div class="ctl" style="margin-top:14px">
+      <div class="row2">
+        <label>Numune <select id="sp3s"></select></label>
+        <label>Anot <select id="sp3a"><option>Cu</option><option>Mo</option><option>Co</option><option>Cr</option></select></label>
+        <label>Seçili yansıma <select id="sp3r"></select></label>
+        <div class="sl"><label for="sp3rot">φ</label><input type="range" id="sp3rot" min="0" max="360" step="1" value="25"><output id="sp3roto"></output></div>
+      </div>
+      <span class="chk"><input type="checkbox" id="sp3all" checked> Diğer yansımaları da göster</span>
+      <div class="readout" id="sp3ro"></div>
+      <p class="cap" style="margin:0">Bu öğretim görünümünde spotların yarıçapı Bragg yasasından gelen 2θ ile belirlenir; φ kaydırıcısı tek kristalin azimut yönelimini değiştirir. Toz tarafında aynı yansıma bütün azimutlara yayıldığı için spot yerine halka görülür.</p>
+    </div>
+  </div>
+
   <div class="cols">
     <div class="prose">
       <h3>Bragg–Brentano difraktometresi</h3>
@@ -1506,6 +1551,20 @@ Object.assign(I18N_HTML,{"Gerçek uzay ↔ ters uzay: aynı kristalin iki farkl�
 Object.assign(I18N_HTML,{"Üç boyutta dönüşümün tam biçimi, hücre hacmi <i>V</i> = <b>a</b>·(<b>b</b>×<b>c</b>) olmak üzere:":"In three dimensions the full transformation, with cell volume <i>V</i> = <b>a</b>·(<b>b</b>×<b>c</b>), is:","Matris diliyle aynı işlem, gerçek-uzay baz matrisinin tersinin transpozunu almaktır. Simülasyon bunun 2B kesitini gösterir.":"In matrix language the same operation is the inverse transpose of the real-space basis matrix. The simulation shows a 2D section of this relation.","XRD neden doğal olarak ters uzayda düşünülür?":"Why is XRD naturally described in reciprocal space?","Periyodik bir kristalin Fourier dönüşümü, sürekli bir bulut yerine belirli uzaysal frekanslarda keskin noktalar verir; bunlar ters örgü noktalarıdır. Kırınım deneyinde gelen ve saçılan dalga vektörlerinin farkı <b>q</b> = <b>k</b> − <b>k</b>₀ ölçülür. Kristal güçlü saçılmayı yalnızca bu <b>q</b> vektörü bir ters örgü vektörüne eşit olduğunda verir: <b>q</b> = <b>g</b>. Bir sonraki Ewald simülasyonu tam olarak bu geometrik koşulu gösterecek.":"The Fourier transform of a periodic crystal gives sharp points at specific spatial frequencies rather than a continuous cloud; these are reciprocal-lattice points. In diffraction the relevant quantity is the difference between the scattered and incident wavevectors, <b>q</b> = <b>k</b> − <b>k</b>₀. Strong scattering occurs when this <b>q</b> equals a reciprocal-lattice vector: <b>q</b> = <b>g</b>. The following Ewald simulation shows exactly this geometric condition."});
 Object.assign(I18N_HTML,{"Miller düzlemi üretici: kesişimlerden (hkl)'ye":"Miller plane generator: from intercepts to (hkl)","Bir düzlemin a, b ve c eksenlerini nerede kestiğini seçin. Simülasyon önce kesişimlerin terslerini alır, sonra kesirleri temizleyip en küçük tam sayı Miller indislerine dönüştürür.":"Choose where a plane intersects the a, b and c axes. The simulation takes the reciprocals of those intercepts, clears fractions and reduces them to the smallest integer Miller indices.","Birim hücre ve üretilen Miller düzlemi":"Unit cell and generated Miller plane","Eksen kesişimleri (örgü parametresi cinsinden)":"Axis intercepts (in lattice-parameter units)","a ekseni":"a axis","b ekseni":"b axis","c ekseni":"c axis","∞ kesişimi, düzlemin o eksene paralel olduğu anlamına gelir; tersi 0'dır.":"An ∞ intercept means the plane is parallel to that axis; its reciprocal is 0.","Bragg yol farkı: 2d sin θ nereden geliyor?":"Bragg path difference: where does 2d sin θ come from?","İki komşu atom düzleminden saçılan ışınları karşılaştırın. Alttaki ışın, düzleme girerken bir <b>d sin θ</b>, çıkarken bir <b>d sin θ</b> daha fazla yol alır.":"Compare rays scattered from two adjacent atomic planes. The lower ray travels an extra <b>d sin θ</b> on the way in and another <b>d sin θ</b> on the way out.","Bragg geometrisinde iki ışının yol farkı":"Path difference between two rays in Bragg geometry","Turuncu iki parça eşittir: d sin θ + d sin θ = 2d sin θ.":"The two orange segments are equal: d sin θ + d sin θ = 2d sin θ.","n = 1 Bragg açısı":"n = 1 Bragg angle","Yol farkını girişime aktar":"Send path difference to interference","Yapıcı ↔ yıkıcı girişim: yol farkı faz farkına nasıl dönüşür?":"Constructive ↔ destructive interference: how does path difference become phase difference?","İki eş genlikli dalganın faz farkını değiştirin. Üstte iki dalga, altta toplamları gösterilir. Bragg koşulu, saçılan dalgaların tam tur sayısı kadar faz farkıyla yeniden aynı faza gelmesidir.":"Change the phase difference between two equal-amplitude waves. The two waves are shown above and their sum below. The Bragg condition means the scattered waves return to the same phase after an integer number of cycles.","İki dalganın ve toplam dalganın yapıcı yıkıcı girişimi":"Constructive and destructive interference of two waves and their sum","Dalga 1":"Wave 1","Dalga 2":"Wave 2","Toplam":"Sum"});
 Object.assign(I18N_JS,{"Kesişimler":"Intercepts","Terslerini al":"Take reciprocals","Paydaları temizle":"Clear denominators","En küçük tam sayılar":"Smallest integers","(000) bir Miller düzlemi değildir.":"(000) is not a Miller plane.","Turuncu noktalar seçtiğiniz gerçek eksen kesişimleridir; mavi yüzey bu düzlemdir. ¤ ise düzlemin konumundan bağımsız yönelim/aile etiketidir.":"The orange points are the actual axis intercepts you selected; the blue surface is that plane. ¤ is the orientation/family label, independent of the plane's position.","Üç eksene de paralel bir “düzlem” tanımlanamaz; en az bir sonlu kesişim seçin.":"A “plane” parallel to all three axes cannot be defined; choose at least one finite intercept.","Yapıcı girişim":"Constructive interference","Yıkıcı girişim":"Destructive interference","Kısmi girişim":"Partial interference","Faz farkı":"Phase difference","Sonuç":"Result","Bu d ve λ için n = 1 Bragg çözümü yok; d ≥ ½λ olmalı.":"There is no n = 1 Bragg solution for this d and λ; d must be at least ½λ.","Toplam genlik / maksimum":"Total amplitude / maximum","Bağıl şiddet":"Relative intensity","Girişim türü":"Interference type","Dalga 1":"Wave 1","Dalga 2":"Wave 2","Toplam":"Sum","Dalgalar aynı fazda yeniden buluşuyor; genlikler toplanıyor. Bragg yansıması için Δ'nin λ'ya oranı pozitif bir tam sayı olduğunda bu yapıcı koşul sağlanır.":"The waves meet again in phase, so their amplitudes add. For a Bragg reflection this constructive condition occurs when the ratio of Δ to λ is a positive integer.","Dalgalar yarım tur faz farkıyla karşılaşıyor; biri tepedeyken diğeri çukurda ve toplam büyük ölçüde sönüyor.":"The waves meet half a cycle out of phase; when one is at a crest the other is at a trough, so the sum is strongly cancelled.","Faz farkı tam 0° ya da 180° değil; girişim kısmi ve toplam şiddet ara bir değerde.":"The phase difference is neither exactly 0° nor 180°; interference is partial and the total intensity lies between the extremes."});
+
+Object.assign(I18N_HTML,{
+"Toz halkası → 1B difraktogram":"Powder ring → 1D diffractogram",
+"Alan dedektöründeki her Debye–Scherrer halkası sabit bir 2θ değerini temsil eder. Aynı yarıçaptaki pikseller azimut boyunca toplanınca halka tek bir 1B pike dönüşür.":"Each Debye–Scherrer ring on an area detector represents a fixed 2θ value. Summing pixels at the same radius over azimuth turns that ring into a single 1D peak.",
+"Toz kırınım halkaları, seçili azimut integrasyon dilimi ve seçili halka":"Powder diffraction rings, the selected azimuthal integration sector and selected ring",
+"Azimutal integrasyonla elde edilen bir boyutlu kırınım deseni":"One-dimensional diffraction pattern obtained by azimuthal integration",
+"Düz dedektör için yaklaşık ilişki: <i>r</i> = <i>L</i> tan(2θ). Aynı <i>r</i> yarıçapındaki yoğunlukların azimutal toplamı, o {hkl} ailesinin 1B pik şiddetini verir.":"For a flat detector the approximate relation is <i>r</i> = <i>L</i> tan(2θ). Azimuthally summing the intensity at the same radius <i>r</i> gives the 1D peak intensity of that {hkl} family.",
+"Tek kristal vs toz":"Single crystal vs powder",
+"Aynı {hkl} yansıması tek kristalde belirli yönelimlere bağlı ayrık spotlar verir; rastgele yönelimli çok sayıda kristalit ise aynı 2θ yarıçapını bütün azimutlarda doldurarak bir halka oluşturur.":"The same {hkl} reflection gives discrete orientation-dependent spots in a single crystal, whereas many randomly oriented crystallites fill the same 2θ radius over all azimuths to form a ring.",
+"Tek kristal spotları ile toz halkalarının yan yana karşılaştırması":"Side-by-side comparison of single-crystal spots and powder rings",
+"Seçili yansıma":"Selected reflection",
+"Diğer yansımaları da göster":"Show other reflections",
+"Bu öğretim görünümünde spotların yarıçapı Bragg yasasından gelen 2θ ile belirlenir; φ kaydırıcısı tek kristalin azimut yönelimini değiştirir. Toz tarafında aynı yansıma bütün azimutlara yayıldığı için spot yerine halka görülür.":"In this teaching view, spot radius is set by the 2θ value from Bragg's law; the φ slider changes the single crystal's azimuthal orientation. On the powder side the same reflection is spread over every azimuth, so it appears as a ring rather than a spot."
+});
 </script>
 <script>
 "use strict";
@@ -2651,6 +2710,120 @@ $('#st3').addEventListener('change',e=>{T3c.st=e.target.value; cones3();});
 $('#an3').addEventListener('change',e=>{T3c.an=e.target.value; cones3();});
 $('#det3').addEventListener('change',e=>{T3c.det=e.target.checked; cones3();});
 onTheme(cones3); cones3();
+
+
+/* --- Toz halkası -> 1B difraktogram --- */
+const RI3={st:'cu',an:'Cu',az:360,pick:0,refl:[],ttMax:70,full:null};
+const RI3S=['cu','fe','nacl','si','mg','zno','rutile','anatase'];
+$('#ri3s').innerHTML=RI3S.map(k=>'<option value="'+k+'">'+STRUCTS[k].name+'</option>').join('');
+const C3ri=$('#c3ri');
+const P3ri=new Plot($('#c3rp'),{xmin:10,xmax:70,xlabel:'2θ (°)',ylabel:LANG==='en'?'Integrated intensity (a.u.)':'Entegre şiddet (b.i.)',labels:false,padL:52,
+  onPick:s=>{if(Number.isInteger(s.idx)){RI3.pick=s.idx;updateRI3();}}});
+function ri3Refl(){
+  const st=STRUCTS[RI3.st],lam=ANODES[RI3.an].ka1;
+  RI3.refl=reflections(st.atoms,latP(st),lam,RI3.ttMax).refl.filter(r=>r.Irel>1.2&&r.tth<RI3.ttMax).slice(0,10);
+  RI3.pick=clamp(RI3.pick,0,Math.max(0,RI3.refl.length-1));
+  RI3.full=profile(RI3.refl,{min:10,max:RI3.ttMax,step:.04,lam:lam,size:90,inst:.09});
+}
+function ri3Radius(r,R){
+  const den=Math.tan(RI3.ttMax*D2R);
+  return den>0?R*Math.tan(r.tth*D2R)/den:0;
+}
+function drawRI3(){
+  const P=prep(C3ri);if(!P)return;const {ctx,w,h}=P,ink=cssv('--filmInk'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper');
+  const cx=w/2,cy=h/2,R=Math.min(w,h)*.43;
+  ctx.fillStyle=cssv('--film');ctx.fillRect(0,0,w,h);
+  const az=RI3.az*D2R,a0=-az/2,a1=az/2;
+  ctx.save();ctx.translate(cx,cy);ctx.fillStyle=cb;ctx.globalAlpha=RI3.az>=359?.07:.13;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,a0,a1);ctx.closePath();ctx.fill();ctx.globalAlpha=1;
+  if(RI3.az<359){ctx.strokeStyle=cb;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(R*Math.cos(a0),R*Math.sin(a0));ctx.moveTo(0,0);ctx.lineTo(R*Math.cos(a1),R*Math.sin(a1));ctx.stroke();ctx.setLineDash([]);}
+  const rrng=rng(37);
+  RI3.refl.forEach((r,i)=>{
+    const rr=ri3Radius(r,R),sel=i===RI3.pick,base=Math.max(.15,r.Irel/100);
+    ctx.strokeStyle=sel?cu:ink;ctx.lineWidth=sel?3:Math.max(1,1.1+2.2*base);ctx.globalAlpha=sel?1:.22+.55*base;
+    ctx.beginPath();ctx.arc(0,0,rr,0,2*Math.PI);ctx.stroke();
+    const dots=Math.round(28+120*base);
+    ctx.fillStyle=sel?cu:ink;
+    for(let j=0;j<dots;j++){const ph=rrng()*2*Math.PI,rad=rr+(rrng()-.5)*(sel?2.8:4.5);ctx.globalAlpha=(sel?.65:.12+.35*base)*(0.45+rrng()*.55);ctx.fillRect(rad*Math.cos(ph)-.7,rad*Math.sin(ph)-.7,1.4,1.4);}
+  });
+  ctx.globalAlpha=1;ctx.strokeStyle=muted;ctx.lineWidth=1;ctx.strokeRect(-R,-R,2*R,2*R);
+  ctx.strokeStyle=ink;ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(-7,0);ctx.lineTo(7,0);ctx.moveTo(0,-7);ctx.lineTo(0,7);ctx.stroke();ctx.globalAlpha=1;
+  const pr=RI3.refl[RI3.pick];if(pr){const rr=ri3Radius(pr,R);ctx.fillStyle=cu;ctx.font='600 13px "IBM Plex Sans",sans-serif';ctx.fillText(hklStr(pr.hkl),rr+7,-6);}
+  ctx.restore();
+  ctx.fillStyle=ink;ctx.font='12px "IBM Plex Sans",sans-serif';ctx.fillText(LANG==='en'?'area detector':'alan dedektörü',10,10);
+}
+function updateRI3Plot(){
+  if(!RI3.full)return;const f=RI3.az/360,n=RI3.full.x.length,y=new Float64Array(n),r=rng(91);
+  let fullmax=0;for(const v of RI3.full.y)fullmax=Math.max(fullmax,v);
+  for(let i=0;i<n;i++){const signal=RI3.full.y[i]*f,noise=(r()-.5)*Math.sqrt(Math.max(1,signal))*1.8+(r()-.5)*1.2;y[i]=Math.max(0,signal+noise);}
+  P3ri.series=[{x:RI3.full.x,y,color:'--cobalt',width:1.35,fill:true}];
+  P3ri.o.ymax=Math.max(8,fullmax*1.12);
+  P3ri.sticks=RI3.refl.map((q,i)=>({x:q.tth,y:Math.max(4,q.Irel*f),color:i===RI3.pick?'--copper':'--muted',alpha:i===RI3.pick?.95:.2,width:i===RI3.pick?2.6:1,idx:i,
+    info:[hklStr(q.hkl),'2θ = '+num(q.tth,2)+'°','d = '+num(q.d,4)+' Å']}));
+  P3ri.markers=RI3.refl[RI3.pick]?[{x:RI3.refl[RI3.pick].tth,color:'--copper',width:1.4,alpha:.8}]:[];
+  P3ri.draw();
+}
+function updateRI3(){
+  if(!RI3.refl.length)ri3Refl();
+  $('#ri3azo').textContent=Math.round(RI3.az)+'°';
+  const q=RI3.refl[RI3.pick];
+  if(q){
+    $('#ri3ro').innerHTML='<div><span>'+(LANG==='en'?'Selected ring':'Seçili halka')+'</span><b>'+hklStr(q.hkl)+'</b></div>'+
+      '<div><span>2θ</span><b>'+num(q.tth,2)+'°</b></div>'+
+      '<div><span>d</span><b>'+num(q.d,4)+' Å</b></div>'+
+      '<div><span>'+(LANG==='en'?'Integrated azimuth':'Entegre azimut')+'</span><b>'+Math.round(RI3.az)+'° / 360°</b></div>';
+    $('#ri3cap').innerHTML=(LANG==='en'?'Orange highlights ':'Turuncu vurgu ')+hklStr(q.hkl)+(LANG==='en'?'. Increasing Δφ sums a larger fraction of the ring; signal grows roughly with the integrated arc length and the 1D peak becomes statistically cleaner.':'. Δφ arttıkça halkanın daha büyük bir bölümü toplanır; sinyal yaklaşık entegre yay uzunluğuyla büyür ve 1B pik istatistiksel olarak daha temiz hale gelir.');
+  }
+  drawRI3();updateRI3Plot();
+}
+$('#ri3s').addEventListener('change',e=>{RI3.st=e.target.value;RI3.pick=0;ri3Refl();updateRI3();});
+$('#ri3a').addEventListener('change',e=>{RI3.an=e.target.value;RI3.pick=0;ri3Refl();updateRI3();});
+$('#ri3az').addEventListener('input',e=>{RI3.az=+e.target.value;updateRI3();});
+C3ri.addEventListener('click',e=>{if(!RI3.refl.length)return;const b=C3ri.getBoundingClientRect(),cx=b.width/2,cy=b.height/2,R=Math.min(b.width,b.height)*.43,rr=Math.hypot(e.clientX-b.left-cx,e.clientY-b.top-cy);let bi=0,bd=Infinity;RI3.refl.forEach((q,i)=>{const d=Math.abs(ri3Radius(q,R)-rr);if(d<bd){bd=d;bi=i;}});RI3.pick=bi;updateRI3();});
+reg(C3ri,drawRI3);onTheme(()=>{drawRI3();P3ri.draw();});ri3Refl();updateRI3();
+
+/* --- Tek kristal vs toz --- */
+const SP3={st:'cu',an:'Cu',ri:0,rot:25,all:true,refl:[],ttMax:70};
+$('#sp3s').innerHTML=RI3S.map(k=>'<option value="'+k+'">'+STRUCTS[k].name+'</option>').join('');
+const C3sp=$('#c3sp');
+function sp3Data(){
+  const st=STRUCTS[SP3.st],lam=ANODES[SP3.an].ka1;
+  SP3.refl=reflections(st.atoms,latP(st),lam,SP3.ttMax).refl.filter(r=>r.Irel>1.2&&r.tth<SP3.ttMax).slice(0,10);
+  SP3.ri=clamp(SP3.ri,0,Math.max(0,SP3.refl.length-1));
+  $('#sp3r').innerHTML=SP3.refl.map((r,i)=>'<option value="'+i+'">'+hklStr(r.hkl)+' · 2θ '+num(r.tth,1)+'°</option>').join('');
+  $('#sp3r').value=SP3.ri;
+}
+function sp3Radius(r,R){return R*Math.tan(r.tth*D2R)/Math.tan(SP3.ttMax*D2R);}
+function drawSP3(){
+  const P=prep(C3sp);if(!P)return;const {ctx,w,h}=P,film=cssv('--film'),fi=cssv('--filmInk'),muted=cssv('--muted'),cu=cssv('--copper'),cb=cssv('--cobalt'),ink=cssv('--ink');
+  const pad=18,top=44,R=Math.min((w/2-pad*2)*.43,(h-top-28)*.43),c1=[w*.25,top+(h-top)/2],c2=[w*.75,top+(h-top)/2];
+  ctx.fillStyle=film;for(const c of [c1,c2])ctx.fillRect(c[0]-R,c[1]-R,2*R,2*R);
+  ctx.font='600 14px "IBM Plex Sans",sans-serif';ctx.fillStyle=ink;ctx.textAlign='center';ctx.fillText(LANG==='en'?'Single crystal':'Tek kristal',c1[0],16);ctx.fillText(LANG==='en'?'Powder':'Toz',c2[0],16);
+  ctx.font='12px "IBM Plex Sans",sans-serif';ctx.fillStyle=muted;ctx.fillText(LANG==='en'?'fixed orientation → discrete spots':'sabit yönelim → ayrık spotlar',c1[0],34);ctx.fillText(LANG==='en'?'random orientations → rings':'rastgele yönelimler → halkalar',c2[0],34);
+  SP3.refl.forEach((r,i)=>{
+    if(!SP3.all&&i!==SP3.ri)return;const sel=i===SP3.ri,rr=sp3Radius(r,R),alpha=sel?1:.2+.45*Math.max(.1,r.Irel/100);
+    ctx.strokeStyle=sel?cu:fi;ctx.globalAlpha=alpha;ctx.lineWidth=sel?3:1.2;ctx.beginPath();ctx.arc(c2[0],c2[1],rr,0,2*Math.PI);ctx.stroke();
+    const h0=r.hkl[0],k0=r.hkl[1],base=Math.atan2(k0||1e-6,h0||1e-6)+SP3.rot*D2R+i*.13;
+    const mult=sel?4:2;for(let m=0;m<mult;m++){const ph=base+m*Math.PI*2/mult,x=c1[0]+rr*Math.cos(ph),y=c1[1]+rr*Math.sin(ph);ctx.fillStyle=sel?cu:fi;ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(x,y,sel?5:2.8,0,2*Math.PI);ctx.fill();}
+  });
+  ctx.globalAlpha=1;ctx.strokeStyle=muted;ctx.lineWidth=1;for(const c of [c1,c2])ctx.strokeRect(c[0]-R,c[1]-R,2*R,2*R);
+  const q=SP3.refl[SP3.ri];if(q){const rr=sp3Radius(q,R);ctx.fillStyle=cu;ctx.font='600 13px "IBM Plex Sans",sans-serif';ctx.textAlign='left';ctx.fillText(hklStr(q.hkl),c2[0]+rr+6,c2[1]-6);}
+  ctx.fillStyle=muted;ctx.textAlign='center';ctx.font='12px "IBM Plex Sans",sans-serif';ctx.fillText(LANG==='en'?'same 2θ radius':'aynı 2θ yarıçapı',w/2,h-8);
+  ctx.strokeStyle=cb;ctx.fillStyle=cb;ctx.lineWidth=1.5;arrow(ctx,c1[0]+R+12,h-20,c2[0]-R-12,h-20,7);
+}
+function updateSP3(){
+  if(!SP3.refl.length)sp3Data();$('#sp3roto').textContent=Math.round(SP3.rot)+'°';$('#sp3r').value=SP3.ri;
+  const q=SP3.refl[SP3.ri];if(q)$('#sp3ro').innerHTML='<div><span>'+(LANG==='en'?'Reflection family':'Yansıma ailesi')+'</span><b>'+hklStr(q.hkl)+'</b></div>'+
+    '<div><span>2θ</span><b>'+num(q.tth,2)+'°</b></div>'+
+    '<div><span>'+(LANG==='en'?'Single crystal':'Tek kristal')+'</span><b>'+(LANG==='en'?'spots at selected azimuths':'seçili azimutlarda spotlar')+'</b></div>'+
+    '<div><span>'+(LANG==='en'?'Powder':'Toz')+'</span><b>'+(LANG==='en'?'same radius, full ring':'aynı yarıçap, tam halka')+'</b></div>';
+  drawSP3();
+}
+$('#sp3s').addEventListener('change',e=>{SP3.st=e.target.value;SP3.ri=0;sp3Data();updateSP3();});
+$('#sp3a').addEventListener('change',e=>{SP3.an=e.target.value;SP3.ri=0;sp3Data();updateSP3();});
+$('#sp3r').addEventListener('change',e=>{SP3.ri=+e.target.value;updateSP3();});
+$('#sp3rot').addEventListener('input',e=>{SP3.rot=+e.target.value;updateSP3();});
+$('#sp3all').addEventListener('change',e=>{SP3.all=e.target.checked;updateSP3();});
+reg(C3sp,drawSP3);onTheme(drawSP3);sp3Data();updateSP3();
 
 /* --- Bragg–Brentano goniyometresi ve tarama --- */
 const T3b={st:'cu',mode:'tt',tt:10,play:false,speed:5,from:10,to:110,data:null};
