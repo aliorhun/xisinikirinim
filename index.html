@@ -1564,7 +1564,7 @@ const CRYSTAL_EXAMPLES={
 let selectedExample1=null;
 function exampleName1(e){return LANG==='en'&&e.en?e.en:e.label;}
 function updateExampleSelection1(){
-  $('[data-crystal-example]').forEach(b=>{
+  $$('[data-crystal-example]').forEach(b=>{
     const e=CRYSTAL_EXAMPLES[b.dataset.crystalExample];
     b.classList.toggle('active',b.dataset.crystalExample===selectedExample1);
     if(e&&LANG==='en'&&e.en)b.textContent=e.en;
@@ -1662,7 +1662,7 @@ function setSystem(sys,cent=null,example=null){
 }
 $('#sys').addEventListener('change',e=>setSystem(e.target.value,null,null));
 $('#cent').addEventListener('change',e=>{L1.cent=e.target.value; selectedExample1=null; update1();});
-$('[data-crystal-example]').forEach(b=>b.addEventListener('click',()=>{
+$$('[data-crystal-example]').forEach(b=>b.addEventListener('click',()=>{
   const key=b.dataset.crystalExample,e=CRYSTAL_EXAMPLES[key]; if(!e)return;
   setSystem(e.sys,e.cent,key);
   document.querySelector('.lab.panel')?.scrollIntoView({behavior:'smooth',block:'start'});
