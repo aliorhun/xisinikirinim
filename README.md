@@ -11,8 +11,8 @@ Amaç; kapsamlı bir kristalografi veya Rietveld yazılımının yerini almak de
 Ders özeti yedi ana bölümden oluşur:
 
 1. **Kristalografi**
-   - Birim hücre ve kafes parametreleri
-   - Yedi kristal sistemi ve Bravais kafesleri
+   - Birim hücre ve örgü parametreleri
+   - Yedi kristal sistemi ve Bravais örgüleri
    - Miller indisleri ve düzlemler arası uzaklık
    - Kristal yapıların üç boyutlu gösterimi
 
@@ -32,14 +32,14 @@ Ders özeti yedi ana bölümden oluşur:
 
 4. **Desen simülatörü**
    - Farklı kristal yapıların hesaplanan toz desenleri
-   - Kafes parametresi ve ışın kaynağının etkisi
+   - Örgü parametresi ve ışın kaynağının etkisi
    - Sistematik sönümler
    - Kristalit boyutu ve pik genişlemesi
    - Kα bileşenlerinin etkisi
 
 5. **Veri analizi**
    - Kübik desenlerin indekslenmesi
-   - Kafes parametresinin belirlenmesi
+   - Örgü parametresinin belirlenmesi
    - Hanawalt/search-match yaklaşımı
    - Scherrer kristalit boyutu
    - Rietveld yönteminin temel fikri
@@ -63,7 +63,7 @@ Ders özeti yedi ana bölümden oluşur:
 
 İçerik doğrusal biçimde **Kristalografi → Bragg → Toz yöntemi → Simülasyon → Veri analizi → Pratik kullanım → Gerçek veriyi okuma** sırasıyla takip edilebilir. Ancak her bölüm bağımsız bir ders tekrarı olarak da kullanılabilir.
 
-Kaydırıcılar ve seçim kutuları yalnızca sonucu göstermek için değil, kavramlar arasındaki ilişkiyi görünür kılmak için tasarlanmıştır. Örneğin kafes parametresi değiştirildiğinde pik konumlarının, kristalit boyutu değiştirildiğinde pik genişliğinin ve atomik düzen değiştirildiğinde izinli/sönen yansımaların nasıl değiştiği gözlenebilir.
+Kaydırıcılar ve seçim kutuları yalnızca sonucu göstermek için değil, kavramlar arasındaki ilişkiyi görünür kılmak için tasarlanmıştır. Örneğin örgü parametresi değiştirildiğinde pik konumlarının, kristalit boyutu değiştirildiğinde pik genişliğinin ve atomik düzen değiştirildiğinde izinli/sönen yansımaların nasıl değiştiği gözlenebilir.
 
 ## Bilimsel kapsam ve sadeleştirmeler
 
