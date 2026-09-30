@@ -1580,14 +1580,14 @@ function equivIndices1(v,sys=L1.sys){
   }
   return uniqTriples(out).sort((a,b)=>a.join(',').localeCompare(b.join(',')));
 }
-const idxButton=(v,type,current)=>\`<button type="button" class="idx-btn\${v.every((x,i)=>x===current[i])?' active':''}" data-index-type="\${type}" data-index="\${v.join(',')}">\${type==='plane'?hklStr(v):uvwStr(v)}</button>\`;
+const idxButton=(v,type,current)=>`<button type="button" class="idx-btn${v.every((x,i)=>x===current[i])?' active':''}" data-index-type="${type}" data-index="${v.join(',')}">${type==='plane'?hklStr(v):uvwStr(v)}</button>`;
 function renderIndexOptions1(){
   const ph=[L1.h,L1.k,L1.l], du=[L1.u,L1.v,L1.w];
   $('#planePresets').innerHTML=PLANE_PRESETS.map(v=>idxButton(v,'plane',ph)).join('');
   $('#dirPresets').innerHTML=DIR_PRESETS.map(v=>idxButton(v,'dir',du)).join('');
   const pe=equivIndices1(ph), de=equivIndices1(du), limit=24;
-  $('#planeEquiv').innerHTML=pe.slice(0,limit).map(v=>idxButton(v,'plane',ph)).join('')+(pe.length>limit?\`<span class="idx-more">+\${pe.length-limit}</span>\`:'');
-  $('#dirEquiv').innerHTML=de.slice(0,limit).map(v=>idxButton(v,'dir',du)).join('')+(de.length>limit?\`<span class="idx-more">+\${de.length-limit}</span>\`:'');
+  $('#planeEquiv').innerHTML=pe.slice(0,limit).map(v=>idxButton(v,'plane',ph)).join('')+(pe.length>limit?`<span class="idx-more">+${pe.length-limit}</span>`:'');
+  $('#dirEquiv').innerHTML=de.slice(0,limit).map(v=>idxButton(v,'dir',du)).join('')+(de.length>limit?`<span class="idx-more">+${de.length-limit}</span>`:'');
 }
 function setIndices1(type,v){
   if(type==='plane'){
