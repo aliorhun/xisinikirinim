@@ -396,6 +396,55 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
   </div>
 
+
+  <div class="lab panel" id="millerGenLab">
+    <div class="lab-head">
+      <h3>Miller düzlemi üretici: kesişimlerden (hkl)'ye</h3>
+      <p>Bir düzlemin a, b ve c eksenlerini nerede kestiğini seçin. Simülasyon önce kesişimlerin terslerini alır, sonra kesirleri temizleyip en küçük tam sayı Miller indislerine dönüştürür.</p>
+    </div>
+    <div class="lab-grid" style="grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr)">
+      <div>
+        <canvas id="cMillerGen" class="cv" style="height:390px" role="img" aria-label="Birim hücre ve üretilen Miller düzlemi"></canvas>
+        <p class="cap" id="millerGenCap"></p>
+      </div>
+      <div class="ctl">
+        <fieldset>
+          <legend>Eksen kesişimleri (örgü parametresi cinsinden)</legend>
+          <div class="hkl">
+            <label>a ekseni
+              <select id="miA">
+                <option value="inf">∞</option><option value="-2">−2a</option><option value="-1">−a</option><option value="-0.5">−a/2</option>
+                <option value="0.5">a/2</option><option value="1" selected>a</option><option value="2">2a</option><option value="3">3a</option>
+              </select>
+            </label>
+            <label>b ekseni
+              <select id="miB">
+                <option value="inf">∞</option><option value="-2">−2b</option><option value="-1">−b</option><option value="-0.5">−b/2</option>
+                <option value="0.5">b/2</option><option value="1" selected>b</option><option value="2">2b</option><option value="3">3b</option>
+              </select>
+            </label>
+            <label>c ekseni
+              <select id="miC">
+                <option value="inf">∞</option><option value="-2">−2c</option><option value="-1">−c</option><option value="-0.5">−c/2</option>
+                <option value="0.5">c/2</option><option value="1" selected>c</option><option value="2">2c</option><option value="3">3c</option>
+              </select>
+            </label>
+            <span></span>
+          </div>
+        </fieldset>
+        <div class="readout" id="millerSteps" style="grid-template-columns:1fr"></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button type="button" data-mi-example="100">(100)</button>
+          <button type="button" data-mi-example="110">(110)</button>
+          <button type="button" data-mi-example="111">(111)</button>
+          <button type="button" data-mi-example="120">(120)</button>
+          <button type="button" data-mi-example="bar110">(1̄10)</button>
+        </div>
+        <p class="cap" style="margin-top:10px">∞ kesişimi, düzlemin o eksene paralel olduğu anlamına gelir; tersi 0'dır.</p>
+      </div>
+    </div>
+  </div>
+
   <div class="prose" style="max-width:none">
     <h3>Düzlemler arası mesafe <i class="v">d</i><sub>hkl</sub></h3>
     <p style="max-width:48em">Kırınımda ölçülen asıl büyüklük düzlemler arası mesafedir. Her kristal sistemi için <i class="v">d</i><sub>hkl</sub>, örgü parametrelerinden geometrik olarak hesaplanır. Genel durumda <span class="frac sm"><span>1</span><span><i class="v">d</i>²</span></span> = <b>h</b><sup>T</sup> <b>G</b>* <b>h</b> bağıntısı kullanılır; burada <b>G</b>* ters metrik tensördür. Aşağıdaki formüllerin tümü bu bağıntının özel durumlarıdır. Seçili sistem vurgulanır.</p>
@@ -451,6 +500,59 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
       <div class="eq"><i>n</i>λ = 2<i>d</i> sin θ</div>
       <p>Burada <i class="v">n</i> yansıma mertebesidir. Difraktometre, gelen ve saçılan ışın arasındaki 2θ açısını ölçer. sin θ ≤ 1 olduğundan yalnızca <i class="v">d</i> ≥ <span class="frac sm"><span>λ</span><span>2</span></span> olan düzlemler yansıma verebilir. Pratikte <i class="v">n</i> = 2 yansıması, <span class="frac sm"><span><i class="v">d</i></span><span>2</span></span> aralıklı hayali (2h 2k 2l) düzlemlerinin birinci mertebe yansıması olarak yazılır; bu yüzden desenlerde yalnızca λ = 2<i>d</i><sub>hkl</sub> sin θ kullanılır.</p>
       <p>Aşağıdaki animasyonda düzlem sayısı arttıkça yansıma tepesinin nasıl daraldığına dikkat edin: çok sayıda düzlem, Bragg açısından küçük sapmalarda bile girişimi hızla bozar. Kristalit boyutu ile pik genişliği arasındaki Scherrer ilişkisinin kökeni budur.</p>
+    </div>
+  </div>
+
+
+  <div class="lab panel" id="braggPathLab">
+    <div class="lab-head">
+      <h3>Bragg yol farkı: 2d sin θ nereden geliyor?</h3>
+      <p>İki komşu atom düzleminden saçılan ışınları karşılaştırın. Alttaki ışın, düzleme girerken bir <b>d sin θ</b>, çıkarken bir <b>d sin θ</b> daha fazla yol alır.</p>
+    </div>
+    <div class="lab-grid" style="grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr)">
+      <div>
+        <canvas id="cBraggPath" class="cv" style="height:390px" role="img" aria-label="Bragg geometrisinde iki ışının yol farkı"></canvas>
+        <p class="cap">Turuncu iki parça eşittir: d sin θ + d sin θ = 2d sin θ.</p>
+      </div>
+      <div class="ctl">
+        <div class="sl"><label for="bpTheta">θ</label><input type="range" id="bpTheta" min="5" max="80" step="0.1" value="20"><output id="bpThetaO"></output></div>
+        <div class="sl"><label for="bpD">d</label><input type="range" id="bpD" min="1" max="4" step="0.01" value="2.2"><output id="bpDO"></output></div>
+        <div class="sl"><label for="bpLambda">λ</label><input type="range" id="bpLambda" min="0.5" max="2.5" step="0.01" value="1.54"><output id="bpLambdaO"></output></div>
+        <div class="readout" id="bpOut"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="primary" id="bpGo1">n = 1 Bragg açısı</button>
+          <button type="button" id="bpToInterference">Yol farkını girişime aktar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab panel" id="interferenceLab">
+    <div class="lab-head">
+      <h3>Yapıcı ↔ yıkıcı girişim: yol farkı faz farkına nasıl dönüşür?</h3>
+      <p>İki eş genlikli dalganın faz farkını değiştirin. Üstte iki dalga, altta toplamları gösterilir. Bragg koşulu, saçılan dalgaların tam tur sayısı kadar faz farkıyla yeniden aynı faza gelmesidir.</p>
+    </div>
+    <div class="lab-grid" style="grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr)">
+      <div>
+        <canvas id="cInterference" class="cv" style="height:360px" role="img" aria-label="İki dalganın ve toplam dalganın yapıcı yıkıcı girişimi"></canvas>
+        <div class="legend">
+          <span><i style="background:var(--cobalt)"></i>Dalga 1</span>
+          <span><i style="background:var(--teal)"></i>Dalga 2</span>
+          <span><i style="background:var(--copper)"></i>Toplam</span>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="sl"><label for="ifRatio">Δ / λ</label><input type="range" id="ifRatio" min="0" max="2" step="0.005" value="0"><output id="ifRatioO"></output></div>
+        <div class="readout" id="ifOut"></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button type="button" data-if-ratio="0">Δ = 0</button>
+          <button type="button" data-if-ratio="0.5">Δ = λ/2</button>
+          <button type="button" data-if-ratio="1">Δ = λ</button>
+          <button type="button" data-if-ratio="1.5">Δ = 3λ/2</button>
+          <button type="button" data-if-ratio="2">Δ = 2λ</button>
+        </div>
+        <p class="cap" id="ifLesson" style="margin-top:10px"></p>
+      </div>
     </div>
   </div>
 
