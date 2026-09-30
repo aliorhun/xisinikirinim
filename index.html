@@ -519,8 +519,8 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
 
     <div class="lab-grid" style="margin-top:14px;grid-template-columns:minmax(0,1.35fr) minmax(300px,.8fr)">
       <div class="ctl">
-        <div class="sl"><label for="rra2">a</label><input type="range" id="rra2" min="2" max="7" step="0.05" value="4"><output id="rra2o"></output></div>
-        <div class="sl"><label for="rrb2">b</label><input type="range" id="rrb2" min="2" max="7" step="0.05" value="4"><output id="rrb2o"></output></div>
+        <div class="sl"><label for="rra2">a</label><input type="range" id="rra2" min="2" max="8" step="0.05" value="4"><output id="rra2o"></output></div>
+        <div class="sl"><label for="rrb2">b</label><input type="range" id="rrb2" min="2" max="8" step="0.05" value="4"><output id="rrb2o"></output></div>
         <div class="sl"><label for="rrg2">γ</label><input type="range" id="rrg2" min="55" max="125" step="1" value="90"><output id="rrg2o"></output></div>
         <fieldset>
           <legend>Seçili düzlem (hk)</legend>
@@ -2084,6 +2084,81 @@ $('#run2').addEventListener('click',e=>{ T2b.run=!T2b.run; e.target.textContent=
 if(!T2b.run) $('#run2').textContent=__t`Dalgaları oynat`;
 reg(C2b,bragg2);
 animators.push({tab:TAB2,fn:dt=>{ if(T2b.run){ T2b.t+=dt*5; bragg2(); } }});
+
+/* Gerçek uzay ↔ ters uzay laboratuvarı */
+const RR2={a:4,b:4,gam:90,h:1,k:1};
+const C2real=$('#c2real'), C2rec=$('#c2rec');
+function rrBasis2(){
+  const g=RR2.gam*D2R, cg=Math.cos(g), sg=Math.sin(g);
+  const A=[RR2.a,0], B=[RR2.b*cg,RR2.b*sg];
+  const det=A[0]*B[1]-A[1]*B[0];
+  const AS=[B[1]/det,-B[0]/det];
+  const BS=[-A[1]/det,A[0]/det];
+  const G=[RR2.h*AS[0]+RR2.k*BS[0],RR2.h*AS[1]+RR2.k*BS[1]];
+  return {A,B,AS,BS,G};
+}
+function rrPoint2(ctx,x,y,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fill();}
+function rrArrow2(ctx,x0,y0,x1,y1,color,label){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  const an=Math.atan2(y1-y0,x1-x0),q=8;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1-q*Math.cos(an-.45),y1-q*Math.sin(an-.45));ctx.lineTo(x1-q*Math.cos(an+.45),y1-q*Math.sin(an+.45));ctx.closePath();ctx.fill();
+  if(label){ctx.font='600 13px IBM Plex Sans, sans-serif';ctx.fillText(label,x1+7*Math.cos(an),y1+7*Math.sin(an));}
+}
+function rr2real(){
+  const P=prep(C2real);if(!P)return;
+  const {ctx,w,h}=P,{A,B,G}=rrBasis2();
+  const ink=cssv('--ink'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+  const extent=Math.max(RR2.a,RR2.b)*4.5,sc=Math.min(w,h)/(extent*2.05),ox=w/2,oy=h/2;
+  const S=v=>[ox+v[0]*sc,oy-v[1]*sc];
+  for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){const p=[i*A[0]+j*B[0],i*A[1]+j*B[1]],q=S(p);rrPoint2(ctx,q[0],q[1],2.8,muted);}
+  if(RR2.h||RR2.k){
+    const gm=Math.hypot(...G),n=[G[0]/gm,G[1]/gm],t=[-n[1],n[0]],d=1/gm,ext=extent*1.6;
+    ctx.strokeStyle=cb;ctx.lineWidth=1.5;
+    for(let m=-7;m<=7;m++){const c=[n[0]*m*d,n[1]*m*d],p1=[c[0]-t[0]*ext,c[1]-t[1]*ext],p2=[c[0]+t[0]*ext,c[1]+t[1]*ext],q1=S(p1),q2=S(p2);ctx.globalAlpha=m===0?1:.38;ctx.beginPath();ctx.moveTo(...q1);ctx.lineTo(...q2);ctx.stroke();}
+    ctx.globalAlpha=1;
+    const q0=S([0,0]),qd=S([n[0]*d,n[1]*d]);rrArrow2(ctx,q0[0],q0[1],qd[0],qd[1],cu,'d');
+  }
+  const o=S([0,0]),qa=S(A),qb=S(B);
+  rrArrow2(ctx,o[0],o[1],qa[0],qa[1],cu,'a');rrArrow2(ctx,o[0],o[1],qb[0],qb[1],tl,'b');rrPoint2(ctx,o[0],o[1],4,ink);
+}
+function rr2rec(){
+  const P=prep(C2rec);if(!P)return;
+  const {ctx,w,h}=P,{AS,BS,G}=rrBasis2();
+  const ink=cssv('--ink'),muted=cssv('--muted'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+  const maxG=Math.max(Math.hypot(...AS),Math.hypot(...BS))*4.6,sc=Math.min(w,h)/(Math.max(maxG,.2)*2.05),ox=w/2,oy=h/2;
+  const S=v=>[ox+v[0]*sc,oy-v[1]*sc];
+  for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){
+    const p=[i*AS[0]+j*BS[0],i*AS[1]+j*BS[1]],q=S(p),sel=i===RR2.h&&j===RR2.k;
+    rrPoint2(ctx,q[0],q[1],sel?6:3,sel?cb:muted);
+    if(sel){ctx.fillStyle=cb;ctx.font='600 13px IBM Plex Sans, sans-serif';ctx.fillText(hklStr([i,j]),q[0]+8,q[1]-8);}
+  }
+  const o=S([0,0]),qa=S(AS),qb=S(BS),qg=S(G);
+  rrArrow2(ctx,o[0],o[1],qa[0],qa[1],cu,'a*');rrArrow2(ctx,o[0],o[1],qb[0],qb[1],tl,'b*');
+  if(RR2.h||RR2.k)rrArrow2(ctx,o[0],o[1],qg[0],qg[1],cb,'g');
+  rrPoint2(ctx,o[0],o[1],4,ink);
+}
+function rr2update(){
+  const {AS,BS,G}=rrBasis2(),gm=Math.hypot(...G),d=gm?1/gm:Infinity;
+  $('#rra2').value=RR2.a;$('#rrb2').value=RR2.b;$('#rrg2').value=RR2.gam;$('#rrh2').value=RR2.h;$('#rrk2').value=RR2.k;
+  $('#rra2o').textContent=num(RR2.a,2)+' Å';$('#rrb2o').textContent=num(RR2.b,2)+' Å';$('#rrg2o').textContent=num(RR2.gam,0)+'°';
+  $('#rr2out').innerHTML='<div><span>a*</span><b>'+num(Math.hypot(...AS),4)+' Å⁻¹</b></div><div><span>b*</span><b>'+num(Math.hypot(...BS),4)+' Å⁻¹</b></div><div><span>|g'+hklStr([RR2.h,RR2.k])+'|</span><b>'+(gm?num(gm,4):'0')+' Å⁻¹</b></div><div><span>d'+hklStr([RR2.h,RR2.k])+'</span><b>'+(isFinite(d)?num(d,4)+' Å':'—')+'</b></div>';
+  $('#rr2realcap').textContent=(LANG==='en'?'Real-space repeat: ':'Gerçek-uzay tekrarı: ')+'a = '+num(RR2.a,2)+' Å, b = '+num(RR2.b,2)+' Å, γ = '+num(RR2.gam,0)+'°';
+  $('#rr2reccap').textContent=(LANG==='en'?'Reciprocal basis: ':'Ters baz: ')+'|a*| = '+num(Math.hypot(...AS),4)+' Å⁻¹, |b*| = '+num(Math.hypot(...BS),4)+' Å⁻¹';
+  let msg='';
+  if(!RR2.h&&!RR2.k)msg=LANG==='en'?'Choose a non-zero (hk) plane to create a reciprocal vector.':'Bir ters vektör oluşturmak için sıfırdan farklı bir (hk) düzlemi seçin.';
+  else if(RR2.h===2&&RR2.k===0)msg=LANG==='en'?'Compare (20) with (10): g doubles, so the real-space plane spacing is halved.':'(20) ile (10)’u karşılaştırın: g iki kat uzar, gerçek uzaydaki düzlem aralığı yarıya iner.';
+  else if(Math.abs(RR2.gam-90)>=.5)msg=LANG==='en'?'In an oblique lattice a* is not parallel to a: reciprocal space is the dual basis defined by dot products.':'Eğik örgüde a* artık a ile paralel değildir: ters uzay, skaler çarpım koşullarıyla tanımlanan dual bazdır.';
+  else msg=LANG==='en'?'Increase a: real-space points separate along a while reciprocal points move closer along a*.':'a’yı büyütün: gerçek uzayda noktalar a yönünde uzaklaşırken ters uzayda a* yönündeki noktalar yaklaşır.';
+  $('#rr2lesson').textContent=msg;rr2real();rr2rec();
+}
+[['#rra2','a'],['#rrb2','b'],['#rrg2','gam']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=+e.target.value;rr2update();}));
+[['#rrh2','h'],['#rrk2','k']].forEach(([id,k])=>$(id).addEventListener('input',e=>{RR2[k]=clamp(Math.round(+e.target.value||0),-4,4);e.target.value=RR2[k];rr2update();}));
+$('[data-rr2]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.rr2;RR2.h=+v[0];RR2.k=+v[1];rr2update();}));
+$('#rr2grow').addEventListener('click',()=>{RR2.a=Math.min(8,RR2.a*2);rr2update();});
+$('#rr2skew').addEventListener('click',()=>{RR2.a=4;RR2.b=5;RR2.gam=70;RR2.h=1;RR2.k=1;rr2update();});
+$('#rr2reset').addEventListener('click',()=>{Object.assign(RR2,{a:4,b:4,gam:90,h:1,k:1});rr2update();});
+reg(C2real,rr2real);reg(C2rec,rr2rec);onTheme(rr2update);rr2update();
 
 /* Ewald yapısı */
 const T2e={lam:1.54,a:3.2,b:4.0,om:20,run:false,pow:false};
