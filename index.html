@@ -2979,7 +2979,7 @@ function setStruct4(k){
     if(st.c){ const c=$('#cp4'); c.min=(st.c*.92).toFixed(3); c.max=(st.c*1.08).toFixed(3); c.value=st.c; } }
   sim4(); build4();
 }
-const P4=new Plot($('#c4'),{xmin:5,xmax:120,xlabel:'2θ (°)',ylabel:__t`Bağıl şiddet`,padL:44,onPick:s=>{ T4.pick=s.hkl; build4(); table4(); ring4draw(); }});
+const P4=new Plot($('#c4'),{xmin:5,xmax:120,xlabel:'2θ (°)',ylabel:__t`Bağıl şiddet`,padL:44,onPick:s=>{ T4.pick=s.hkl; sim4(); build4(); }});
 function sim4(){
   const S=curStruct(), A=ANODES[T4.an], V=cellVolume(S.p);
   if(!(V>0)){ $('#sim4info').textContent=__t`1. sekmedeki hücre geçerli değil.`; return; }
@@ -3085,7 +3085,7 @@ C4rings.addEventListener('click',e=>{
   if(!T4.res)return;const b=C4rings.getBoundingClientRect(),R=Math.min(b.width,b.height)*.43,cx=b.width/2,cy=b.height/2,rr=Math.hypot(e.clientX-b.left-cx,e.clientY-b.top-cy),mx=ring4Max();
   let best=null,bd=10;
   for(const r of T4.res.refl){if(r.tth>R4.cut||r.tth>=mx||r.Irel<=.25)continue;const d=Math.abs(ring4Radius(r.tth,R,mx)-rr);if(d<bd){bd=d;best=r;}}
-  if(best){T4.pick=best.hkl;build4();table4();sim4();ring4sync();}
+  if(best){T4.pick=best.hkl;sim4();build4();}
 });
 reg(C4rings,ring4draw);onTheme(ring4draw);
 animators.push({tab:TAB4,fn:dt=>{if(!R4.play)return;R4.cut=Math.min(ring4Max(),R4.cut+R4.speed*dt);if(R4.cut>=ring4Max())ring4SetPlay(false);ring4sync();}});
@@ -3095,7 +3095,7 @@ function table4(){
   $('#tab4').innerHTML='<thead><tr><th>(hkl)</th><th>d (Å)</th><th>2θ (°)</th><th>m</th><th>|F|</th><th>LP</th><th>I (%)</th></tr></thead><tbody>'+
     T4.res.refl.filter(r=>r.Irel>.05).map(r=>`<tr data-hkl="${r.hkl.join(',')}" style="cursor:pointer;${r.hkl.join()===pk?'background:var(--panel2);font-weight:600':''}"><td>${hklStr(r.hkl)}</td><td>${num(r.d,4)}</td><td>${num(r.tth,3)}</td><td>${r.m}</td><td>${num(r.F,1)}</td><td>${num(r.LP,1)}</td><td>${num(r.Irel,1)}</td></tr>`).join('')+'</tbody>';
 }
-$('#tab4').addEventListener('click',e=>{ const tr=e.target.closest('tr[data-hkl]'); if(!tr) return; T4.pick=tr.dataset.hkl.split(',').map(Number); build4(); table4(); sim4(); ring4draw(); });
+$('#tab4').addEventListener('click',e=>{ const tr=e.target.closest('tr[data-hkl]'); if(!tr) return; T4.pick=tr.dataset.hkl.split(',').map(Number); sim4(); build4(); });
 const V4=new Viewer3D($('#v4'),{dist:10.5});
 function build4(){
   const S=curStruct(); if(!(cellVolume(S.p)>0)) return;
