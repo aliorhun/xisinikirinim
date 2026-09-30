@@ -1559,7 +1559,7 @@ function signVariants(v){
     out.push([sx*v[0],sy*v[1],sz*v[2]].map(x=>Object.is(x,-0)?0:x));
   return uniqTriples(out);
 }
-function equivIndices1(v,sys=L1.sys){
+function equivIndices1(v,sys=L1.sys,type='plane'){
   let out=[];
   if(sys==='cubic'){
     for(const p of perms3(v)) out.push(...signVariants(p));
@@ -1568,7 +1568,10 @@ function equivIndices1(v,sys=L1.sys){
   }else if(sys==='ortho'){
     out=signVariants(v);
   }else if(sys==='hex'){
-    const [h,k,l]=v, hk=[[h,k],[-k,h+k],[-h-k,h],[-h,-k],[k,-h-k],[h+k,-h]];
+    const [h,k,l]=v;
+    const hk=type==='plane'
+      ? [[h,k],[-k,h+k],[-h-k,h],[-h,-k],[k,-h-k],[h+k,-h]]
+      : [[h,k],[h-k,h],[-k,h-k],[-h,-k],[k-h,-h],[k,k-h]];
     for(const [a,b] of hk){out.push([a,b,l],[a,b,-l]);}
   }else if(sys==='rhombo'){
     const [h,k,l]=v, cyc=[[h,k,l],[k,l,h],[l,h,k]];
@@ -1585,7 +1588,7 @@ function renderIndexOptions1(){
   const ph=[L1.h,L1.k,L1.l], du=[L1.u,L1.v,L1.w];
   $('#planePresets').innerHTML=PLANE_PRESETS.map(v=>idxButton(v,'plane',ph)).join('');
   $('#dirPresets').innerHTML=DIR_PRESETS.map(v=>idxButton(v,'dir',du)).join('');
-  const pe=equivIndices1(ph), de=equivIndices1(du), limit=24;
+  const pe=equivIndices1(ph,L1.sys,'plane'), de=equivIndices1(du,L1.sys,'dir'), limit=24;
   $('#planeEquiv').innerHTML=pe.slice(0,limit).map(v=>idxButton(v,'plane',ph)).join('')+(pe.length>limit?`<span class="idx-more">+${pe.length-limit}</span>`:'');
   $('#dirEquiv').innerHTML=de.slice(0,limit).map(v=>idxButton(v,'dir',du)).join('')+(de.length>limit?`<span class="idx-more">+${de.length-limit}</span>`:'');
 }
