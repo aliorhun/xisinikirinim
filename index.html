@@ -2864,6 +2864,9 @@ setSystem('cubic');
 function initMillerGenerator(){
   const cv=$('#cMillerGen'); if(!cv) return;
   const selA=$('#miA'),selB=$('#miB'),selC=$('#miC'),out=$('#millerSteps'),cap=$('#millerGenCap');
+  const sentence=$('#millerSentence'),axisCards=$('#millerAxisCards'),planeEq=$('#millerPlaneEq');
+  const stageExplain=$('#millerStageExplain'),interpret=$('#millerInterpretation'),prev=$('#miPrev'),next=$('#miNext'),stageButtons=$('[data-mi-stage]');
+  let stage=1;
   const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a||1;};
   const lcm=(a,b)=>Math.abs(a*b)/gcd(a,b);
   function rational(x){
@@ -2881,10 +2884,53 @@ function initMillerGenerator(){
   }
   function derive(){
     const ints=[val(selA),val(selB),val(selC)],rec=ints.map(v=>isFinite(v)?1/v:0);
-    if(rec.every(v=>Math.abs(v)<1e-12))return {ints,rec,hkl:[0,0,0],scaled:[0,0,0],valid:false};
+    if(rec.every(v=>Math.abs(v)<1e-12))return {ints,rec,hkl:[0,0,0],scaled:[0,0,0],valid:false,L:1,gg:1,n0:0};
     const fr=rec.map(rational),L=fr.reduce((z,p)=>lcm(z,p[1]),1),raw=fr.map(([p,q])=>p*(L/q));
     const gg=raw.reduce((z,v)=>v?gcd(z||Math.abs(v),Math.abs(v)):z,0)||1,hkl=raw.map(v=>v/gg);
-    return {ints,rec,hkl,scaled:raw,valid:true};
+    return {ints,rec,hkl,scaled:raw,valid:true,L,gg,n0:L/gg};
+  }
+  function reciprocalLabel(v){
+    if(Math.abs(v)<1e-12)return '0';
+    return fracStr(v);
+  }
+  function coeffTerm(c,v,first){
+    if(Math.abs(c)<1e-12)return '';
+    const neg=c<0,abs=Math.abs(c),rq=rational(abs),p=Math.abs(rq[0]),q=rq[1];
+    let body;
+    if(q===1)body=(p===1?'':p)+v;
+    else if(p===1)body=v+'/'+q;
+    else body=p+v+'/'+q;
+    if(first)return (neg?'−':'')+body;
+    return (neg?' − ':' + ')+body;
+  }
+  function lhsOf(coeffs){
+    const vars=['x','y','z'];let lhs='';
+    coeffs.forEach((c,i)=>{if(Math.abs(c)>1e-12)lhs+=coeffTerm(c,vars[i],lhs==='');});
+    return lhs||'0';
+  }
+  function reciprocalEquation(D){return lhsOf(D.rec)+' = 1';}
+  function integerEquation(D,rhs){return lhsOf(D.hkl)+' = '+fracStr(rhs);}
+  function familyEquation(D){return lhsOf(D.hkl)+' = n';}
+  function axisMeaning(D,i){
+    const axis='abc'[i],v=D.ints[i],r=D.rec[i];
+    if(!isFinite(v))return {cls:'zero',intercept:'∞',normalized:'∞',reciprocal:'0',meaning:LANG==='en'?'parallel → reciprocal component 0':'paralel → reciprocal bileşen 0'};
+    return {cls:'',intercept:interceptLabel(v,axis),normalized:fracStr(v),reciprocal:reciprocalLabel(r),meaning:LANG==='en'?'closer intercept → larger reciprocal component':'kesişim yaklaştıkça reciprocal bileşen büyür'};
+  }
+  function stageText(D){
+    const hk=D.valid?hklStr(D.hkl):'(000)';
+    const tr=[
+      '<b>1 · Önce geometrinin kendisine bakın.</b> Mavi yüzey seçtiğiniz düzlemdir. Sayı hesabına geçmeden önce düzlemin hangi eksenlere eğildiğini ve hangilerine paralel kaldığını gözleyin.',
+      '<b>2 · Kesişimleri okuyun.</b> Turuncu noktalar düzlemin a, b ve c eksenleriyle gerçek kesişimleridir. Bir kesişim ∞ ise düzlem o eksene paraleldir.',
+      '<b>3 · Reciprocal dile geçin.</b> Normalize kesişimlerin tersini alın: 2 → 1/2, 1/2 → 2, ∞ → 0. Böylece geometrik mesafeyi uzaysal frekans bileşenine dönüştürürüz.',
+      '<b>4 · Tam sayılı oranı okuyun.</b> Reciprocal bileşenlerin ortak oranı '+hk+' olur. Bu indis, kristalografide kullanılacak yönelim/periyodiklik etiketidir.'
+    ];
+    const en=[
+      '<b>1 · Start with the geometry.</b> The blue surface is the selected plane. Before calculating, notice which axes it tilts toward and which axes it remains parallel to.',
+      '<b>2 · Read the intercepts.</b> Orange points are the actual intersections with a, b, and c. An ∞ intercept means the plane is parallel to that axis.',
+      '<b>3 · Move into reciprocal language.</b> Take reciprocals of normalized intercepts: 2 → 1/2, 1/2 → 2, ∞ → 0. This converts geometric distance into spatial-frequency components.',
+      '<b>4 · Read the integer ratio.</b> The common ratio of reciprocal components becomes '+hk+'. This is the orientation/periodicity label used in crystallography.'
+    ];
+    return (LANG==='en'?en:tr)[stage-1];
   }
   function boxPlane(h,k,l,m,lo,hi){
     const C=[];for(const x of [lo,hi])for(const y of [lo,hi])for(const z of [lo,hi])C.push([x,y,z]);
@@ -2900,6 +2946,7 @@ function initMillerGenerator(){
     const sc=Math.min(w,h)/(3.3*B),ox=w*.48,oy=h*.58;
     const proj=p=>[ox+sc*(p[0]-.58*p[1]),oy-sc*(.34*p[0]+.34*p[1]+p[2])];
     const edge=(a,b,c=line,alpha=1)=>{const A=proj(a),B2=proj(b);ctx.strokeStyle=c;ctx.globalAlpha=alpha;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(...A);ctx.lineTo(...B2);ctx.stroke();ctx.globalAlpha=1;};
+    const textBox=(text,x,y,color=ink)=>{ctx.font='600 12px "IBM Plex Sans",sans-serif';const tw=ctx.measureText(text).width;ctx.fillStyle=cssv('--panel');ctx.globalAlpha=.92;ctx.fillRect(x-4,y-14,tw+8,19);ctx.globalAlpha=1;ctx.fillStyle=color;ctx.fillText(text,x,y);};
     // positive unit cell
     const U=[];for(const x of [0,1])for(const y of [0,1])for(const z of [0,1])U.push([x,y,z]);
     for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let d=0;for(let a=0;a<3;a++)if(U[i][a]!==U[j][a])d++;if(d===1)edge(U[i],U[j],line,.65);}
@@ -2908,24 +2955,75 @@ function initMillerGenerator(){
     if(D.valid){
       const pts=boxPlane(D.rec[0],D.rec[1],D.rec[2],1,-B,B);
       if(pts.length>=3){const pp=pts.map(proj),cx=pp.reduce((a,p)=>a+p[0],0)/pp.length,cy=pp.reduce((a,p)=>a+p[1],0)/pp.length;pp.sort((a,b)=>Math.atan2(a[1]-cy,a[0]-cx)-Math.atan2(b[1]-cy,b[0]-cx));ctx.fillStyle=cb;ctx.globalAlpha=.18;ctx.beginPath();ctx.moveTo(...pp[0]);for(const p of pp.slice(1))ctx.lineTo(...p);ctx.closePath();ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=cb;ctx.lineWidth=2;ctx.stroke();}
-      D.ints.forEach((v,i)=>{if(!isFinite(v))return;const p=[0,0,0];p[i]=v;const q=proj(p);ctx.fillStyle=cu;ctx.beginPath();ctx.arc(q[0],q[1],5,0,2*Math.PI);ctx.fill();});
-      ctx.fillStyle=ink;ctx.font='600 16px IBM Plex Sans, sans-serif';ctx.fillText(hklStr(D.hkl),14,16);
+      D.ints.forEach((v,i)=>{
+        if(!isFinite(v))return;
+        const p=[0,0,0];p[i]=v;const q=proj(p);
+        ctx.fillStyle=cu;ctx.beginPath();ctx.arc(q[0],q[1],5.5,0,2*Math.PI);ctx.fill();
+        if(stage>=2)textBox(interceptLabel(v,'abc'[i]),q[0]+9,q[1]-9,cu);
+        if(stage>=3){ctx.font='11px "IBM Plex Sans",sans-serif';ctx.fillStyle=muted;ctx.fillText((LANG==='en'?'reciprocal ':'tersi ')+reciprocalLabel(D.rec[i]),q[0]+9,q[1]+13);}
+      });
+      if(stage>=3)D.ints.forEach((v,i)=>{
+        if(isFinite(v))return;
+        const Q=proj(i===0?[B*.72,0,0]:i===1?[0,B*.72,0]:[0,0,B*.72]);
+        textBox('∞ → 0',Q[0]+5,Q[1]+13,muted);
+      });
+      ctx.fillStyle=ink;ctx.font='600 16px IBM Plex Sans, sans-serif';ctx.fillText(stage>=4?hklStr(D.hkl):(LANG==='en'?'Step '+stage:'Adım '+stage),14,16);
+      if(stage>=4){ctx.fillStyle=muted;ctx.font='12px "IBM Plex Sans",sans-serif';ctx.fillText(integerEquation(D,D.n0),14,37);}
     }else{ctx.fillStyle=cssv('--forbid');ctx.font='600 14px IBM Plex Sans, sans-serif';ctx.fillText(__t`(000) bir Miller düzlemi değildir.`,14,16);}
   }
-  function update(){
-    const D=derive(),labs=[interceptLabel(D.ints[0],'a'),interceptLabel(D.ints[1],'b'),interceptLabel(D.ints[2],'c')],rec=D.rec.map(x=>{if(Math.abs(x)<1e-12)return '0';const [p,q]=rational(x);return q===1?String(p):'<span class="frac sm"><span>'+p+'</span><span>'+q+'</span></span>';});
-    const reduced=D.valid?hklStr(D.hkl):'(000)';
-    out.innerHTML='<div><span>1 · '+__t`Kesişimler`+'</span><b>('+labs.join(', ')+')</b></div>'+
-      '<div><span>2 · '+__t`Terslerini al`+'</span><b>('+rec.join(', ')+')</b></div>'+
-      '<div><span>3 · '+__t`Paydaları temizle`+'</span><b>('+D.scaled.join(', ')+')</b></div>'+
-      '<div><span>4 · '+__t`En küçük tam sayılar`+'</span><b>'+reduced+'</b></div>';
-    cap.textContent=D.valid?__t`Turuncu noktalar seçtiğiniz gerçek eksen kesişimleridir; mavi yüzey bu düzlemdir. ${hklStr(D.hkl)} ise düzlemin konumundan bağımsız yönelim/aile etiketidir.`:__t`Üç eksene de paralel bir “düzlem” tanımlanamaz; en az bir sonlu kesişim seçin.`;
-    draw();
+  function updateStageUI(D){
+    stageButtons.forEach((b,i)=>{const on=i===stage-1;b.setAttribute('aria-pressed',on?'true':'false');b.tabIndex=on?0:-1;});
+    prev.disabled=stage===1;next.disabled=stage===4;
+    next.textContent=stage===4?(LANG==='en'?'Completed':'Tamamlandı'):(LANG==='en'?'Next step →':'Sonraki adım →');
+    stageExplain.innerHTML=stageText(D);
   }
+  function update(){
+    const D=derive(),labs=[interceptLabel(D.ints[0],'a'),interceptLabel(D.ints[1],'b'),interceptLabel(D.ints[2],'c')],rec=D.rec.map(reciprocalLabel);
+    const reduced=D.valid?hklStr(D.hkl):'(000)';
+    sentence.innerHTML=D.valid
+      ?(LANG==='en'
+        ?'This plane intersects the axes at <b>'+labs[0]+'</b>, <b>'+labs[1]+'</b>, <b>'+labs[2]+'</b>. Read these as unit-cell-relative intercepts, not as Å distances.'
+        :'Bu düzlem eksenleri <b>'+labs[0]+'</b>, <b>'+labs[1]+'</b>, <b>'+labs[2]+'</b> noktalarında kesiyor. Bunları Å cinsinden değil, hücre kenarına göre normalize edilmiş kesişimler olarak okuyun.')
+      :(LANG==='en'?'A plane cannot be parallel to all three axes.':'Bir düzlem üç eksenin tümüne birden paralel olamaz.');
+
+    axisCards.innerHTML=D.ints.map((v,i)=>{
+      const a=axisMeaning(D,i),axis='abc'[i];
+      return '<div class="miller-axis-card '+a.cls+'"><strong>'+axis+' ekseni</strong><span>'+(LANG==='en'?'intercept':'kesişim')+': '+a.intercept+'</span><small>'+(LANG==='en'?'normalized':'normalize')+': '+a.normalized+'</small><b>1/'+axis+' → '+a.reciprocal+'</b><small>'+a.meaning+'</small></div>';
+    }).join('');
+
+    planeEq.innerHTML=D.valid
+      ?'<div class="muted">'+(LANG==='en'?'Plane equation from reciprocal intercepts':'Kesişimlerin terslerinden düzlem denklemi')+'</div><b>'+reciprocalEquation(D)+'</b><div class="muted" style="margin-top:5px">'+(LANG==='en'?'same orientation, integer ratio':'aynı yönelim, tam sayılı oran')+'</div><b>'+integerEquation(D,D.n0)+'</b>'
+      :'—';
+
+    out.innerHTML='<div><span>1 · '+(LANG==='en'?'intercepts':'kesişimler')+'</span><b>('+labs.join(', ')+')</b></div>'+
+      '<div><span>2 · '+(LANG==='en'?'reciprocals':'tersleri')+'</span><b>('+rec.join(', ')+')</b></div>'+
+      '<div><span>3 · '+(LANG==='en'?'integer ratio':'tam sayı oranı')+'</span><b>('+D.scaled.join(', ')+')</b></div>'+
+      '<div><span>4 · Miller</span><b>'+reduced+'</b></div>';
+
+    if(D.valid){
+      const integerN=Math.abs(D.n0-Math.round(D.n0))<1e-9;
+      interpret.innerHTML='<h4>'+reduced+' '+(LANG==='en'?'what does it mean?':'ne anlatıyor?')+'</h4>'+
+        '<div class="result-grid"><div><span>'+(LANG==='en'?'reciprocal ratio':'reciprocal oran')+'</span><b>'+D.hkl.join(' : ')+'</b></div>'+
+        '<div><span>'+(LANG==='en'?'selected plane':'seçilen düzlem')+'</span><b>'+integerEquation(D,D.n0)+'</b></div>'+
+        '<div><span>'+(LANG==='en'?'parallel set':'paralel set')+'</span><b>'+familyEquation(D)+'</b></div></div>'+
+        '<p style="margin:9px 0 0">'+(integerN
+          ?(LANG==='en'?'The selected geometric plane is the <b>n = '+fracStr(D.n0)+'</b> member of the '+reduced+' parallel plane set.':'Seçtiğiniz geometrik düzlem, '+reduced+' paralel düzlem setinin <b>n = '+fracStr(D.n0)+'</b> üyesidir.')
+          :(LANG==='en'?'The selected plane is parallel to '+reduced+', but lies at <b>n = '+fracStr(D.n0)+'</b>; here it demonstrates orientation rather than an integer lattice layer.':'Seçtiğiniz düzlem '+reduced+' yönelimine paraleldir fakat <b>n = '+fracStr(D.n0)+'</b> konumundadır; burada tam sayılı bir örgü katmanından çok yönelimi gösterir.'))+'</p>';
+      cap.textContent=LANG==='en'?'Orange points are the actual axis intercepts; advance through the four stages to see how the label is constructed.':'Turuncu noktalar gerçek eksen kesişimleridir; etiketin nasıl oluştuğunu görmek için dört aşamada ilerleyin.';
+    }else{
+      interpret.innerHTML='<h4>(000)</h4><p>'+(LANG==='en'?'There is no plane parallel to all three independent axes. Choose at least one finite intercept.':'Üç bağımsız eksenin tümüne birden paralel bir düzlem tanımlanamaz. En az bir sonlu kesişim seçin.')+'</p>';
+      cap.textContent=LANG==='en'?'Choose at least one finite intercept.':'En az bir sonlu kesişim seçin.';
+    }
+    updateStageUI(D);draw();
+  }
+  function setStage(n){stage=clamp(Math.round(n),1,4);update();}
   [selA,selB,selC].forEach(el=>el.addEventListener('change',update));
-  document.querySelectorAll('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
+  stageButtons.forEach(b=>b.addEventListener('click',()=>setStage(+b.dataset.miStage)));
+  prev.addEventListener('click',()=>setStage(stage-1));
+  next.addEventListener('click',()=>{if(stage<4)setStage(stage+1);});
+  $$('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
     const map={100:['1','inf','inf'],110:['1','1','inf'],111:['1','1','1'],120:['1','0.5','inf'],bar110:['-1','1','inf']},v=map[b.dataset.miExample];
-    if(!v)return;[selA.value,selB.value,selC.value]=v;update();
+    if(!v)return;[selA.value,selB.value,selC.value]=v;stage=1;update();
   }));
   reg(cv,draw);onTheme(draw);update();
 }
