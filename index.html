@@ -4009,12 +4009,12 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
         ?'<b>Primitive-cell picture:</b> equivalent periodic contributions return in phase under the Bragg condition. The detector sees their amplitudes add instead of cancel.'
         :'<b>Basit hücre resmi:</b> uygun Bragg koşulunda eşdeğer periyodik katkılar aynı fazda geri gelir. Dedektör bunların birbirini söndürdüğünü değil, genliklerinin toplandığını görür.';
     }
-    $('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.scatterMode===SC.mode?'true':'false'));
+    $$('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.scatterMode===SC.mode?'true':'false'));
     play.textContent=SC.run?(LANG==='en'?'Pause':'Durdur'):(LANG==='en'?'Play':'Oynat');
     draw();
   }
 
-  $('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.addEventListener('click',()=>{
+  $$('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.addEventListener('click',()=>{
     SC.mode=b.dataset.scatterMode;SC.t=0;updateText();
   }));
   play.addEventListener('click',()=>{SC.run=!SC.run;updateText();});
@@ -5911,8 +5911,8 @@ $$('.subnav').forEach(nav=>{
     });
   });
 });
-let startTab='t1'; try{ const s=localStorage.getItem('xrd-tab'); if(s&&$('#'+s)) startTab=s; }catch(e){}
-showTab(startTab);
+// Sayfa her açıldığında başlangıç sekmesi Kristalografi olsun.
+showTab('t1');
 requestAnimationFrame(loop);
 </script>
 </body>
