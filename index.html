@@ -160,6 +160,14 @@ legend{font-size:13px;color:var(--muted);padding:0 4px}
 .info-modal-body .eq{font-size:1.08rem;margin:10px 0}
 .info-modal-note{padding:9px 11px;border-left:3px solid var(--copper);background:var(--panel2);border-radius:0 6px 6px 0}
 
+.sf-canvas{border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+.sf-formula{font-family:"Spectral",Georgia,serif;font-size:1.08rem;line-height:1.55;padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 6px 6px 0;overflow-x:auto}
+.sf-verdict{padding:10px 12px;border-left:3px solid var(--cobalt);background:var(--panel2);border-radius:0 6px 6px 0;font-size:14px}
+.sf-verdict.extinct{border-left-color:var(--forbid)}
+.sf-verdict.constructive{border-left-color:var(--ok)}
+.sf-verdict.partial{border-left-color:var(--copper)}
+#sfTerms td,#sfTerms th{white-space:nowrap}
+
 /* tables, equations */
 .scroll{overflow-x:auto}
 .tbl{width:100%;border-collapse:collapse;font-size:14px}
@@ -702,13 +710,29 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
 
   <div class="cols" style="align-items:start">
     <div class="prose">
-      <h3>Yapı faktörü ve sistematik sönümlenmeler</h3>
-      <p>Bragg yasası bir yansımanın <em>nerede</em> çıkabileceğini söyler; <em>ne kadar şiddetli</em> olacağını ise birim hücredeki atomların konumları belirler. Birim hücrenin tümünden saçılan dalga, yapı faktörüyle verilir:</p>
-      <div class="eq"><i>F</i><sub>hkl</sub> = Σ<sub><i>j</i></sub> <i>f<sub>j</sub></i> exp[2π<i>i</i>(<i>hx<sub>j</sub></i> + <i>ky<sub>j</sub></i> + <i>lz<sub>j</sub></i>)], &nbsp; <i>I</i> ∝ |<i>F</i><sub>hkl</sub>|²</div>
-      <p><b>Hacim merkezli kübik (HMK/BCC)</b>, atomlar (0,0,0) ve (½,½,½): <i class="v">F</i> = <i class="v">f</i> [1 + e<sup><i>iπ</i>(h+k+l)</sup>]. h + k + l çiftse <i class="v">F</i> = 2<i class="v">f</i>, tekse <i class="v">F</i> = 0. Yani (100), (111), (210) gibi yansımalar söner.</p>
-      <p><b>Yüzey merkezli kübik (YMK/FCC)</b>, dört atom: <i class="v">F</i> = <i class="v">f</i> [1 + e<sup><i>iπ</i>(h+k)</sup> + e<sup><i>iπ</i>(h+l)</sup> + e<sup><i>iπ</i>(k+l)</sup>]. h, k, l hepsi tek ya da hepsi çiftse <i class="v">F</i> = 4<i class="v">f</i>; karışıksa sıfır.</p>
-      <p><b>Elmas yapı</b> (Si, Ge) YMK'ya ek olarak (¼,¼,¼) kaydırılmış ikinci bir atom takımı içerir; bu yüzden hepsi çift olup h + k + l = 4n + 2 olan (200), (222) gibi yansımalar da söner.</p>
-      <p>Aynı örgüde farklı atomlar olduğunda sönüm tam olmayabilir. NaCl'de tek indisli yansımalar <i class="v">F</i> = 4(<i class="v">f</i><sub>Na</sub> − <i class="v">f</i><sub>Cl</sub>) ile zayıf, çift olanlar 4(<i class="v">f</i><sub>Na</sub> + <i class="v">f</i><sub>Cl</sub>) ile güçlüdür. CsCl ise HMK gibi görünse de basit kübiktir ve hiçbir yansıması tam sönmez.</p>
+      <h3>Yapı Faktörünün Matematiksel Tanımı</h3>
+      <p>Bragg yasası bir yansımanın <em>hangi açıda geometrik olarak mümkün</em> olduğunu söyler. Ancak aynı (hkl) için birim hücre içindeki bütün atomlardan saçılan dalgalar farklı fazlarla toplanır. Dedektörün gördüğü toplam saçılma genliği bu kompleks toplam, yani <b>yapı faktörü</b> ile belirlenir.</p>
+      <div class="eq"><i>F</i><sub>hkl</sub> = Σ<sub><i>j</i></sub> <i>f<sub>j</sub></i> exp[2π<i>i</i>(<i>hx<sub>j</sub></i> + <i>ky<sub>j</sub></i> + <i>lz<sub>j</sub></i>)]</div>
+      <p>Burada (<i>x</i><sub>j</sub>, <i>y</i><sub>j</sub>, <i>z</i><sub>j</sub>) atomun birim hücre içindeki <b>kesirli koordinatları</b>, <i>f</i><sub>j</sub> o atomun saçılma faktörü ve</p>
+      <div class="eq">φ<sub>j</sub> = 2π(<i>hx<sub>j</sub></i> + <i>ky<sub>j</sub></i> + <i>lz<sub>j</sub></i>), &nbsp;&nbsp; e<sup><i>iφ</i></sup> = cos φ + <i>i</i> sin φ</div>
+      <p>faz açısıdır. Dolayısıyla her atom kompleks düzlemde uzunluğu yaklaşık <i>f</i><sub>j</sub> olan bir <b>faz vektörü</b> üretir. Yapı faktörü bu vektörlerin vektörel toplamıdır; ölçülen şiddet ise genliğin karesiyle orantılıdır:</p>
+      <div class="eq"><i>I</i><sub>hkl</sub> ∝ |<i>F</i><sub>hkl</sub>|² = Re(<i>F</i>)² + Im(<i>F</i>)²</div>
+      <p>Bu ifade, “atomlar tek tek ne kadar saçıyor?” ile “saçılan dalgalar birbirine hangi fazda ulaşıyor?” sorularını aynı denklemde birleştirir. Bazı kaynaklarda Fourier işaret seçimine bağlı olarak üstelde −2π<i>i</i> kullanılır; bu yalnızca kompleks fazın yönünü ters çevirir, |<i>F</i>|² ve sistematik yok olma koşulları değişmez.</p>
+
+      <h3><i>e</i><sup><i>iπ</i></sup> Teriminin Ortaya Çıkışı ve Anlamı</h3>
+      <p>Hacim merkezli kübik yapının en öğretici örneğinde aynı atomdan iki eşdeğer saçıcı düşünün: biri (0,0,0), diğeri (½,½,½) konumundadır. İkinci atomun (hkl) yansımasına getirdiği faz:</p>
+      <div class="eq">φ<sub>2</sub> = 2π(h·½ + k·½ + l·½) = π(h+k+l)</div>
+      <p>olur. Bu yüzden ikinci atomun katkısı doğrudan <i>e</i><sup><i>iπ(h+k+l)</i></sup> biçiminde görünür:</p>
+      <div class="eq"><i>F</i><sub>hkl</sub> = <i>f</i>[1 + e<sup><i>iπ(h+k+l)</i></sup>]</div>
+      <p>Eğer <i>h+k+l</i> <b>tek</b> ise <i>e</i><sup><i>iπ(2n+1)</i></sup> = −1'dir. Buradaki “−1”, ikinci atomun daha az saçtığı anlamına gelmez; genliği aynı, fakat fazı birinci atoma göre <b>180° ters</b> olan bir dalga demektir. Eğer <i>h+k+l</i> <b>çift</b> ise faz tam tur sayısıdır: <i>e</i><sup><i>i2πn</i></sup> = +1 ve iki genlik aynı yönde toplanır.</p>
+      <p>Örneğin HMK (100) için <i>F</i> = <i>f</i>(1 + e<sup><i>iπ</i></sup>) = <i>f</i>(1 − 1) = 0; HMK (110) için ise <i>F</i> = <i>f</i>(1 + e<sup><i>i2π</i></sup>) = 2<i>f</i>. Aşağıdaki kompleks-düzlem simülasyonunda bu iki durum doğrudan vektörlerin kapanması veya aynı yönde eklenmesi olarak görülebilir.</p>
+
+      <h3>Fiziksel Sonuç: Sistematik Yok Olma (Yıkıcı Girişim)</h3>
+      <p>Bir yansıma Bragg geometrisini sağladığı halde yapı faktörü tam olarak sıfır olabilir. Bu durumda ilgili ters örgü noktası geometrik olarak doğru yerdedir, fakat birim hücre içindeki simetriyle ilişkili saçıcıların faz vektörleri kapalı bir çokgen oluşturur ve dedektöre net genlik ulaşmaz. Buna <b>sistematik yok olma</b> ya da sistematik sönüm denir.</p>
+      <p><b>HMK/BCC:</b> <i>h+k+l</i> çiftse <i>F</i> = 2<i>f</i>; tekse <i>F</i> = 0. Bu nedenle (100), (111), (210) gibi yansımalar yok olur; (110), (200), (211) görünür.</p>
+      <p><b>YMK/FCC:</b> <i>F</i> = <i>f</i>[1 + e<sup><i>iπ(h+k)</i></sup> + e<sup><i>iπ(h+l)</i></sup> + e<sup><i>iπ(k+l)</i></sup>]. h, k, l indislerinin üçü de tek veya üçü de çiftse dört faz vektörü aynı yönde toplanır; karışık paritede birbirlerini götürürler.</p>
+      <p><b>Elmas yapı:</b> YMK'ya ek olarak (¼,¼,¼) kaydırılmış ikinci bir atom takımı bulunduğundan, YMK kuralına ek sönümler oluşur; hepsi çift olup h+k+l = 4n+2 olan (200), (222) gibi yansımalar da kaybolur.</p>
+      <p>Önemli nokta şudur: tam yok olma, karşılıklı fazların yanında <b>eşit saçılma genlikleri</b> de gerektirir. İki konumda farklı atomlar varsa <i>f</i><sub>1</sub> ≠ <i>f</i><sub>2</sub> olduğundan 180° faz farkı çoğu zaman yalnızca zayıflama üretir. CsCl bu nedenle “HMK gibi görünen” iki konumlu geometrisine rağmen bir Bravais HMK örgüsü değildir; farklı atomların katkıları tam olarak birbirini söndürmez.
     </div>
     <div class="panel">
       <h3>Hangi yansımalar görünür?</h3>
@@ -725,6 +749,58 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
       </fieldset>
     </div>
   </div>
+
+  <div class="lab panel" id="structureFactorLab">
+    <div class="lab-head">
+      <h3>Faz vektörleriyle yapı faktörü simülasyonu</h3>
+      <p>(hkl), atom konumu ve saçılma genliği değiştikçe her atomun kompleks faz vektörünü, toplam <i>F</i><sub>hkl</sub>'yi ve |<i>F</i>|² şiddetini birlikte izleyin.</p>
+    </div>
+    <div class="lab-grid" style="grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr)">
+      <div>
+        <canvas id="c2sf" class="cv sf-canvas" style="height:430px" role="img" aria-label="Atomların kompleks faz vektörleri ve toplam yapı faktörü"></canvas>
+        <p class="cap">Oklar atom katkılarını uç uca ekler. Kalın sonuç oku, orijinden toplam <i>F</i><sub>hkl</sub> vektörüne gider. Kapalı çokgen → <i>F</i> = 0 → yansıma yok.</p>
+      </div>
+      <div class="ctl">
+        <label class="fld">Model
+          <select id="sfModel">
+            <option value="bcc">HMK/BCC — aynı atom, (0,0,0) + (½,½,½)</option>
+            <option value="fcc">YMK/FCC — dört eşdeğer atom</option>
+            <option value="custom">İki atomlu özel baz</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend>Yansıma (hkl)</legend>
+          <div class="hkl">
+            <label>h<input type="number" id="sfH" value="1" min="-8" max="8" step="1"></label>
+            <label>k<input type="number" id="sfK" value="0" min="-8" max="8" step="1"></label>
+            <label>l<input type="number" id="sfL" value="0" min="-8" max="8" step="1"></label>
+            <span></span>
+          </div>
+        </fieldset>
+        <fieldset id="sfCustom" hidden>
+          <legend>İkinci atomun konumu ve saçılması</legend>
+          <div class="sl"><label for="sfX">x₂</label><input type="range" id="sfX" min="0" max="1" step="0.01" value="0.5"><output id="sfXO"></output></div>
+          <div class="sl"><label for="sfY">y₂</label><input type="range" id="sfY" min="0" max="1" step="0.01" value="0.5"><output id="sfYO"></output></div>
+          <div class="sl"><label for="sfZ">z₂</label><input type="range" id="sfZ" min="0" max="1" step="0.01" value="0.5"><output id="sfZO"></output></div>
+          <div class="sl"><label for="sfRho">ρ</label><input type="range" id="sfRho" min="0.1" max="2" step="0.01" value="1"><output id="sfRhoO"></output></div>
+          <p class="cap" style="margin:0">ρ = <i>f</i><sub>2</sub>/<i>f</i><sub>1</sub>. ρ ≠ 1 seçerek 180° faz farkının neden her zaman tam yok olma vermediğini deneyin.</p>
+        </fieldset>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button type="button" data-sf-model="bcc" data-sf-hkl="1,0,0">HMK (100): e<sup>iπ</sup></button>
+          <button type="button" data-sf-model="bcc" data-sf-hkl="1,1,0">HMK (110): e<sup>i2π</sup></button>
+          <button type="button" data-sf-model="fcc" data-sf-hkl="1,1,1">YMK (111): izinli</button>
+          <button type="button" data-sf-model="fcc" data-sf-hkl="1,1,0">YMK (110): sönük</button>
+        </div>
+        <div class="sf-formula" id="sfEq"></div>
+        <div class="readout" id="sfOut"></div>
+        <div class="sf-verdict" id="sfVerdict"></div>
+        <div class="scroll">
+          <table class="tbl" id="sfTerms"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 <section class="tab" id="t3" role="tabpanel" aria-labelledby="tb3" hidden>
   <div class="chap"><span class="chap-no">3</span><div>
@@ -1614,6 +1690,40 @@ Object.assign(I18N_HTML,{
 "Başa sar":"Rewind",
 "Halka (hkl) etiketleri":"Ring (hkl) labels",
 "Bu panel düz bir ileri-saçılma alan dedektörünü temsil ettiği için görsel 2θ &lt; 80° ile sınırlandırılır. 1B desen simülatörü seçtiğiniz daha yüksek 2θ sınırına kadar hesaplamaya devam eder.":"Because this panel represents a flat forward-scattering area detector, the visual is limited to 2θ &lt; 80°. The 1D pattern simulator continues calculating up to the higher 2θ limit you selected."
+});
+
+Object.assign(I18N_HTML,{
+"Yapı Faktörünün Matematiksel Tanımı":"Mathematical definition of the structure factor",
+"Bragg yasası bir yansımanın <em>hangi açıda geometrik olarak mümkün</em> olduğunu söyler. Ancak aynı (hkl) için birim hücre içindeki bütün atomlardan saçılan dalgalar farklı fazlarla toplanır. Dedektörün gördüğü toplam saçılma genliği bu kompleks toplam, yani <b>yapı faktörü</b> ile belirlenir.":"Bragg's law tells us <em>at which angle a reflection is geometrically possible</em>. For the same (hkl), however, waves scattered from all atoms in the unit cell add with different phases. The total scattering amplitude seen by the detector is this complex sum, the <b>structure factor</b>.",
+"Burada (<i>x</i><sub>j</sub>, <i>y</i><sub>j</sub>, <i>z</i><sub>j</sub>) atomun birim hücre içindeki <b>kesirli koordinatları</b>, <i>f</i><sub>j</sub> o atomun saçılma faktörü ve":"Here (<i>x</i><sub>j</sub>, <i>y</i><sub>j</sub>, <i>z</i><sub>j</sub>) are the atom's <b>fractional coordinates</b> in the unit cell, <i>f</i><sub>j</sub> is its scattering factor, and",
+"faz açısıdır. Dolayısıyla her atom kompleks düzlemde uzunluğu yaklaşık <i>f</i><sub>j</sub> olan bir <b>faz vektörü</b> üretir. Yapı faktörü bu vektörlerin vektörel toplamıdır; ölçülen şiddet ise genliğin karesiyle orantılıdır:":"is the phase angle. Each atom therefore contributes a <b>phase vector</b> in the complex plane with length approximately <i>f</i><sub>j</sub>. The structure factor is the vector sum of these contributions, while measured intensity is proportional to the squared amplitude:",
+"Bu ifade, “atomlar tek tek ne kadar saçıyor?” ile “saçılan dalgalar birbirine hangi fazda ulaşıyor?” sorularını aynı denklemde birleştirir. Bazı kaynaklarda Fourier işaret seçimine bağlı olarak üstelde −2π<i>i</i> kullanılır; bu yalnızca kompleks fazın yönünü ters çevirir, |<i>F</i>|² ve sistematik yok olma koşulları değişmez.":"This expression combines the questions “how strongly does each atom scatter?” and “with what relative phase do the scattered waves arrive?” in one equation. Some sources use −2π<i>i</i> in the exponent because of a different Fourier sign convention; this only reverses the direction of complex phase, while |<i>F</i>|² and systematic-absence conditions remain unchanged.",
+"<i>e</i><sup><i>iπ</i></sup> Teriminin Ortaya Çıkışı ve Anlamı":"Where the <i>e</i><sup><i>iπ</i></sup> term comes from and what it means",
+"Hacim merkezli kübik yapının en öğretici örneğinde aynı atomdan iki eşdeğer saçıcı düşünün: biri (0,0,0), diğeri (½,½,½) konumundadır. İkinci atomun (hkl) yansımasına getirdiği faz:":"For the most instructive body-centred cubic example, consider two equivalent scatterers of the same atom, one at (0,0,0) and the other at (½,½,½). The phase contributed by the second atom to the (hkl) reflection is:",
+"olur. Bu yüzden ikinci atomun katkısı doğrudan <i>e</i><sup><i>iπ(h+k+l)</i></sup> biçiminde görünür:":"Therefore the second atom's contribution appears directly as <i>e</i><sup><i>iπ(h+k+l)</i></sup>:",
+"Eğer <i>h+k+l</i> <b>tek</b> ise <i>e</i><sup><i>iπ(2n+1)</i></sup> = −1'dir. Buradaki “−1”, ikinci atomun daha az saçtığı anlamına gelmez; genliği aynı, fakat fazı birinci atoma göre <b>180° ters</b> olan bir dalga demektir. Eğer <i>h+k+l</i> <b>çift</b> ise faz tam tur sayısıdır: <i>e</i><sup><i>i2πn</i></sup> = +1 ve iki genlik aynı yönde toplanır.":"If <i>h+k+l</i> is <b>odd</b>, then <i>e</i><sup><i>iπ(2n+1)</i></sup> = −1. The “−1” does not mean the second atom scatters less; it means a wave of the same amplitude that is <b>180° out of phase</b> with the first. If <i>h+k+l</i> is <b>even</b>, the phase is an integer number of full turns: <i>e</i><sup><i>i2πn</i></sup> = +1, so the amplitudes add in the same direction.",
+"Örneğin HMK (100) için <i>F</i> = <i>f</i>(1 + e<sup><i>iπ</i></sup>) = <i>f</i>(1 − 1) = 0; HMK (110) için ise <i>F</i> = <i>f</i>(1 + e<sup><i>i2π</i></sup>) = 2<i>f</i>. Aşağıdaki kompleks-düzlem simülasyonunda bu iki durum doğrudan vektörlerin kapanması veya aynı yönde eklenmesi olarak görülebilir.":"For BCC (100), for example, <i>F</i> = <i>f</i>(1 + e<sup><i>iπ</i></sup>) = <i>f</i>(1 − 1) = 0; for BCC (110), <i>F</i> = <i>f</i>(1 + e<sup><i>i2π</i></sup>) = 2<i>f</i>. In the complex-plane simulation below, these cases appear directly as vectors that either close or add in the same direction.",
+"Fiziksel Sonuç: Sistematik Yok Olma (Yıkıcı Girişim)":"Physical consequence: systematic absence (destructive interference)",
+"Bir yansıma Bragg geometrisini sağladığı halde yapı faktörü tam olarak sıfır olabilir. Bu durumda ilgili ters örgü noktası geometrik olarak doğru yerdedir, fakat birim hücre içindeki simetriyle ilişkili saçıcıların faz vektörleri kapalı bir çokgen oluşturur ve dedektöre net genlik ulaşmaz. Buna <b>sistematik yok olma</b> ya da sistematik sönüm denir.":"A reflection can satisfy the Bragg geometry while its structure factor is exactly zero. The corresponding reciprocal-lattice point is geometrically in the right place, but the phase vectors of symmetry-related scatterers in the unit cell form a closed polygon, so no net amplitude reaches the detector. This is called a <b>systematic absence</b> or systematic extinction.",
+"<b>HMK/BCC:</b> <i>h+k+l</i> çiftse <i>F</i> = 2<i>f</i>; tekse <i>F</i> = 0. Bu nedenle (100), (111), (210) gibi yansımalar yok olur; (110), (200), (211) görünür.":"<b>BCC:</b> if <i>h+k+l</i> is even, <i>F</i> = 2<i>f</i>; if it is odd, <i>F</i> = 0. Thus reflections such as (100), (111), and (210) are absent, while (110), (200), and (211) are present.",
+"<b>YMK/FCC:</b> <i>F</i> = <i>f</i>[1 + e<sup><i>iπ(h+k)</i></sup> + e<sup><i>iπ(h+l)</i></sup> + e<sup><i>iπ(k+l)</i></sup>]. h, k, l indislerinin üçü de tek veya üçü de çiftse dört faz vektörü aynı yönde toplanır; karışık paritede birbirlerini götürürler.":"<b>FCC:</b> <i>F</i> = <i>f</i>[1 + e<sup><i>iπ(h+k)</i></sup> + e<sup><i>iπ(h+l)</i></sup> + e<sup><i>iπ(k+l)</i></sup>]. If h, k, and l are all odd or all even, the four phase vectors add in the same direction; mixed parity makes them cancel.",
+"<b>Elmas yapı:</b> YMK'ya ek olarak (¼,¼,¼) kaydırılmış ikinci bir atom takımı bulunduğundan, YMK kuralına ek sönümler oluşur; hepsi çift olup h+k+l = 4n+2 olan (200), (222) gibi yansımalar da kaybolur.":"<b>Diamond structure:</b> in addition to the FCC lattice there is a second atomic set shifted by (¼,¼,¼), producing extra extinctions; all-even reflections with h+k+l = 4n+2, such as (200) and (222), also vanish.",
+"Önemli nokta şudur: tam yok olma, karşılıklı fazların yanında <b>eşit saçılma genlikleri</b> de gerektirir. İki konumda farklı atomlar varsa <i>f</i><sub>1</sub> ≠ <i>f</i><sub>2</sub> olduğundan 180° faz farkı çoğu zaman yalnızca zayıflama üretir. CsCl bu nedenle “HMK gibi görünen” iki konumlu geometrisine rağmen bir Bravais HMK örgüsü değildir; farklı atomların katkıları tam olarak birbirini söndürmez.":"The key point is that complete extinction requires <b>equal scattering amplitudes</b> as well as opposite phases. If the two positions contain different atoms, <i>f</i><sub>1</sub> ≠ <i>f</i><sub>2</sub>, so a 180° phase difference usually produces only weakening. This is why CsCl, despite its two-position geometry that looks BCC-like, is not a BCC Bravais lattice; contributions from different atoms do not cancel exactly.",
+"Faz vektörleriyle yapı faktörü simülasyonu":"Structure-factor simulation with phase vectors",
+"(hkl), atom konumu ve saçılma genliği değiştikçe her atomun kompleks faz vektörünü, toplam <i>F</i><sub>hkl</sub>'yi ve |<i>F</i>|² şiddetini birlikte izleyin.":"Vary (hkl), atomic position, and scattering amplitude to follow each atom's complex phase vector, the total <i>F</i><sub>hkl</sub>, and the |<i>F</i>|² intensity together.",
+"Oklar atom katkılarını uç uca ekler. Kalın sonuç oku, orijinden toplam <i>F</i><sub>hkl</sub> vektörüne gider. Kapalı çokgen → <i>F</i> = 0 → yansıma yok.":"The arrows add atomic contributions head-to-tail. The thick resultant arrow runs from the origin to the total <i>F</i><sub>hkl</sub> vector. Closed polygon → <i>F</i> = 0 → no reflection.",
+"Model":"Model",
+"HMK/BCC — aynı atom, (0,0,0) + (½,½,½)":"BCC — same atom, (0,0,0) + (½,½,½)",
+"YMK/FCC — dört eşdeğer atom":"FCC — four equivalent atoms",
+"İki atomlu özel baz":"Custom two-atom basis",
+"Yansıma (hkl)":"Reflection (hkl)",
+"İkinci atomun konumu ve saçılması":"Second atom position and scattering",
+"ρ = <i>f</i><sub>2</sub>/<i>f</i><sub>1</sub>. ρ ≠ 1 seçerek 180° faz farkının neden her zaman tam yok olma vermediğini deneyin.":"ρ = <i>f</i><sub>2</sub>/<i>f</i><sub>1</sub>. Set ρ ≠ 1 to see why a 180° phase difference does not always produce complete extinction.",
+"YMK (111): izinli":"FCC (111): allowed",
+"YMK (110): sönük":"FCC (110): extinct",
+"HMK (100): e<sup>iπ</sup>":"BCC (100): e<sup>iπ</sup>",
+"HMK (110): e<sup>i2π</sup>":"BCC (110): e<sup>i2π</sup>",
+"Atomların kompleks faz vektörleri ve toplam yapı faktörü":"Complex phase vectors of atoms and the total structure factor"
 });
 </script>
 <script>
@@ -2576,6 +2686,129 @@ $('#rot2').addEventListener('change',e=>{T2e.run=e.target.checked;});
 $('#pow2').addEventListener('change',e=>{T2e.pow=e.target.checked; ewald2();});
 reg(C2w,ewald2);
 animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2').value=T2e.om; ewald2(); } }});
+
+/* Yapı faktörü: kompleks faz vektörleri */
+const SF2={model:'bcc',h:1,k:0,l:0,x:.5,y:.5,z:.5,rho:1};
+const C2sf=$('#c2sf');
+function sf2Atoms(){
+  if(SF2.model==='bcc') return [
+    {label:'1',p:[0,0,0],f:1},
+    {label:'2',p:[.5,.5,.5],f:1}
+  ];
+  if(SF2.model==='fcc') return [
+    {label:'1',p:[0,0,0],f:1},
+    {label:'2',p:[0,.5,.5],f:1},
+    {label:'3',p:[.5,0,.5],f:1},
+    {label:'4',p:[.5,.5,0],f:1}
+  ];
+  return [
+    {label:'1',p:[0,0,0],f:1},
+    {label:'2',p:[SF2.x,SF2.y,SF2.z],f:SF2.rho}
+  ];
+}
+function sf2Data(){
+  const atoms=sf2Atoms(),terms=[];
+  let re=0,im=0,sumf=0;
+  for(const a of atoms){
+    const u=SF2.h*a.p[0]+SF2.k*a.p[1]+SF2.l*a.p[2];
+    const phi=2*Math.PI*u,ar=a.f*Math.cos(phi),ai=a.f*Math.sin(phi);
+    terms.push({a,u,phi,re:ar,im:ai});
+    re+=ar;im+=ai;sumf+=a.f;
+  }
+  const F=Math.hypot(re,im),relI=sumf?F*F/(sumf*sumf):0;
+  return {atoms,terms,re,im,F,sumf,relI};
+}
+function sf2Pi(v){
+  if(Math.abs(v)<1e-10)return '0';
+  const q=Math.round(v);
+  if(Math.abs(v-q)<1e-8)return (q===1?'π':q===-1?'−π':q+'π');
+  return num(v,2)+'π';
+}
+function sf2Complex(re,im){
+  const z=x=>Math.abs(x)<5e-4?0:x;
+  re=z(re);im=z(im);
+  const a=num(re,2),b=num(Math.abs(im),2);
+  if(!im)return a;
+  if(!re)return (im<0?'−':'')+b+'i';
+  return a+(im<0?' − ':' + ')+b+'i';
+}
+function sf2Equation(D){
+  if(SF2.model==='bcc'){
+    const n=SF2.h+SF2.k+SF2.l,sgn=Math.abs(n)%2?'−1':'+1';
+    return '<i>F</i>/<i>f</i> = 1 + e<sup><i>iπ(h+k+l)</i></sup> = 1 + e<sup><i>iπ·'+n+'</i></sup> = 1 + ('+sgn+') = <b>'+num(D.F,2)+'</b>';
+  }
+  if(SF2.model==='fcc'){
+    return '<i>F</i>/<i>f</i> = 1 + e<sup><i>iπ(k+l)</i></sup> + e<sup><i>iπ(h+l)</i></sup> + e<sup><i>iπ(h+k)</i></sup> = <b>'+sf2Complex(D.re,D.im)+'</b>';
+  }
+  const u=SF2.h*SF2.x+SF2.k*SF2.y+SF2.l*SF2.z;
+  return '<i>F</i>/<i>f</i><sub>1</sub> = 1 + ρe<sup><i>i2π(hx₂+ky₂+lz₂)</i></sup> = 1 + '+num(SF2.rho,2)+'e<sup><i>i2π·'+num(u,3)+'</i></sup> = <b>'+sf2Complex(D.re,D.im)+'</b>';
+}
+function drawSF2(){
+  const D=sf2Data(),P=prep(C2sf); if(!P)return;
+  const {ctx,w,h}=P,ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line');
+  const colors=['--cobalt','--teal','--copper','--forbid'];
+  const cx=w*.46,cy=h*.52,R=Math.min(w*.39,h*.40),sc=R/Math.max(1,D.sumf);
+  ctx.strokeStyle=line;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx-R-12,cy);ctx.lineTo(cx+R+12,cy);ctx.moveTo(cx,cy-R-12);ctx.lineTo(cx,cy+R+12);ctx.stroke();
+  ctx.setLineDash([4,5]);ctx.strokeStyle=muted;ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(cx,cy,R,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+  ctx.fillStyle=muted;ctx.font='12px "IBM Plex Sans",sans-serif';ctx.textAlign='left';ctx.fillText('Re',cx+R+16,cy+4);ctx.fillText('Im',cx+6,cy-R-14);
+  let x=cx,y=cy;
+  D.terms.forEach((t,i)=>{
+    const nx=x+t.re*sc,ny=y-t.im*sc,c=cssv(colors[i%colors.length]);
+    ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=2.3;arrow(ctx,x,y,nx,ny,9);
+    ctx.beginPath();ctx.arc(nx,ny,3.4,0,2*Math.PI);ctx.fill();
+    ctx.font='600 12px "IBM Plex Sans",sans-serif';ctx.fillText('j'+(i+1),nx+6,ny-6);
+    x=nx;y=ny;
+  });
+  ctx.strokeStyle=ink;ctx.fillStyle=ink;ctx.lineWidth=3.4;
+  if(D.F>1e-8)arrow(ctx,cx,cy,cx+D.re*sc,cy-D.im*sc,11);
+  else {ctx.beginPath();ctx.arc(cx,cy,7,0,2*Math.PI);ctx.stroke();}
+  ctx.font='600 13px "IBM Plex Sans",sans-serif';ctx.fillText('F',cx+D.re*sc+8,cy-D.im*sc+15);
+  ctx.font='12px "IBM Plex Sans",sans-serif';ctx.fillStyle=muted;
+  ctx.textAlign='left';ctx.fillText((LANG==='en'?'maximum amplitude Σf = ':'maksimum genlik Σf = ')+num(D.sumf,2),12,18);
+  ctx.fillText('|F| = '+num(D.F,3)+'   I/Imax = '+num(D.relI*100,2)+'%',12,38);
+  ctx.fillText((LANG==='en'?'Reflection ':'Yansıma ')+hklStr([SF2.h,SF2.k,SF2.l]),12,58);
+}
+function updateSF2(){
+  $('#sfModel').value=SF2.model;$('#sfH').value=SF2.h;$('#sfK').value=SF2.k;$('#sfL').value=SF2.l;
+  $('#sfCustom').hidden=SF2.model!=='custom';
+  $('#sfX').value=SF2.x;$('#sfY').value=SF2.y;$('#sfZ').value=SF2.z;$('#sfRho').value=SF2.rho;
+  $('#sfXO').textContent=num(SF2.x,2);$('#sfYO').textContent=num(SF2.y,2);$('#sfZO').textContent=num(SF2.z,2);$('#sfRhoO').textContent=num(SF2.rho,2);
+  const D=sf2Data();
+  $('#sfEq').innerHTML=sf2Equation(D);
+  $('#sfOut').innerHTML='<div><span>|F|</span><b>'+num(D.F,4)+'</b></div>'+
+    '<div><span>I / I<sub>'+(LANG==='en'?'max':'maks')+'</sub></span><b>'+num(D.relI*100,3)+'%</b></div>'+
+    '<div><span>Re(F)</span><b>'+num(D.re,4)+'</b></div>'+
+    '<div><span>Im(F)</span><b>'+num(D.im,4)+'</b></div>';
+  $('#sfTerms').innerHTML='<thead><tr><th>'+(LANG==='en'?'atom':'atom')+'</th><th>(x,y,z)</th><th>φ</th><th>e<sup>iφ</sup> · f</th></tr></thead><tbody>'+
+    D.terms.map((t,i)=>'<tr><td>j'+(i+1)+'</td><td>'+t.a.p.map(v=>num(v,2)).join(', ')+'</td><td>'+sf2Pi(t.phi/Math.PI)+'</td><td>'+sf2Complex(t.re,t.im)+'</td></tr>').join('')+'</tbody>';
+  const v=$('#sfVerdict'),eps=1e-8,is000=!SF2.h&&!SF2.k&&!SF2.l;
+  if(is000){
+    v.className='sf-verdict constructive';
+    v.innerHTML=LANG==='en'?'<b>(000) is not a diffraction reflection.</b> It represents the forward/direct beam; F₀₀₀ = Σf is shown only to make the vector-sum definition explicit.':'<b>(000) bir kırınım yansıması değildir.</b> İleri/doğrudan demeti temsil eder; F₀₀₀ = Σf burada yalnızca vektörel toplam tanımını görünür kılmak için gösterilir.';
+  }else if(D.relI<eps){
+    v.className='sf-verdict extinct';
+    v.innerHTML=SF2.model==='custom'
+      ?(LANG==='en'?'<b>Complete destructive interference.</b> The selected two contributions close exactly, so F = 0. This is an extinction for this chosen basis/reflection; it is systematic only if enforced by the crystal symmetry.':'<b>Tam yıkıcı girişim.</b> Seçili iki katkı tam olarak kapanıyor ve F = 0 oluyor. Bu, seçili baz/yansıma için bir yok olmadır; kristal simetrisi tarafından zorunlu kılınıyorsa sistematiktir.')
+      :(LANG==='en'?'<b>Systematic absence.</b> Symmetry-related equal-amplitude contributions cancel exactly. The Bragg position can exist geometrically, but the peak intensity is zero.':'<b>Sistematik yok olma.</b> Simetriyle ilişkili eşit genlikli katkılar tam olarak birbirini götürüyor. Bragg konumu geometrik olarak var olabilir, fakat pik şiddeti sıfırdır.');
+  }else if(D.relI>.98){
+    v.className='sf-verdict constructive';
+    v.innerHTML=LANG==='en'?'<b>Constructive interference.</b> The phase vectors point in the same direction and the intensity is near its maximum.':'<b>Yapıcı girişim.</b> Faz vektörleri aynı yönde toplanıyor ve şiddet maksimuma yakın.';
+  }else{
+    v.className='sf-verdict partial';
+    v.innerHTML=LANG==='en'?'<b>Partial interference.</b> The resultant is non-zero. Try changing the fractional position or ρ to separate phase cancellation from unequal scattering amplitudes.':'<b>Kısmi girişim.</b> Bileşke sıfır değil. Faz iptali ile eşit olmayan saçılma genliklerini ayırmak için kesirli konumu veya ρ değerini değiştirin.';
+  }
+  drawSF2();
+}
+$('#sfModel').addEventListener('change',e=>{SF2.model=e.target.value;updateSF2();});
+[['#sfH','h'],['#sfK','k'],['#sfL','l']].forEach(([id,k])=>$(id).addEventListener('input',e=>{SF2[k]=clamp(Math.round(+e.target.value||0),-8,8);e.target.value=SF2[k];updateSF2();}));
+[['#sfX','x'],['#sfY','y'],['#sfZ','z'],['#sfRho','rho']].forEach(([id,k])=>$(id).addEventListener('input',e=>{SF2[k]=+e.target.value;updateSF2();}));
+document.querySelectorAll('[data-sf-hkl]').forEach(b=>b.addEventListener('click',()=>{
+  SF2.model=b.dataset.sfModel||SF2.model;
+  const q=b.dataset.sfHkl.split(',').map(Number);[SF2.h,SF2.k,SF2.l]=q;
+  updateSF2();
+}));
+reg(C2sf,drawSF2);onTheme(drawSF2);updateSF2();
 
 /* Sönümlenme tablosu */
 const LATT={
