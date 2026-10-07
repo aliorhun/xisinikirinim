@@ -115,7 +115,52 @@ main.wrap{padding-top:44px;padding-bottom:60px}
 .miller-step .eq{font-size:1rem;margin:8px 0 0}
 .miller-symbol-table td:first-child,.miller-symbol-table th:first-child{width:19%}
 .miller-xrd-bridge{border-left:4px solid var(--teal)}
-@media(max-width:900px){.miller-steps{grid-template-columns:1fr}}
+.miller-gen-goal{display:flex;gap:8px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 8px 8px 0;font-size:14px}
+.miller-gen-stepper{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 16px}
+.miller-gen-stepper button{display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;text-align:left;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--muted)}
+.miller-gen-stepper button>span{grid-row:1/3;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:var(--panel);border:1px solid var(--line);font-weight:700}
+.miller-gen-stepper button>b{font-size:13px;color:inherit}
+.miller-gen-stepper button>small{font-size:11px;color:var(--muted)}
+.miller-gen-stepper button[aria-pressed="true"]{border-color:var(--cobalt);color:var(--ink);box-shadow:inset 0 -3px 0 var(--cobalt)}
+.miller-gen-stepper button[aria-pressed="true"]>span{background:var(--cobalt);color:var(--onAccent);border-color:var(--cobalt)}
+.miller-gen-grid{grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr)}
+.miller-stage-explain{min-height:82px;margin-top:10px;padding:10px 12px;background:var(--panel2);border-left:3px solid var(--cobalt);border-radius:0 7px 7px 0;font-size:14px}
+.miller-live-sentence{padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:14px;line-height:1.5}
+.miller-axis-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.miller-axis-card{min-width:0;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+.miller-axis-card>strong{display:block;font-family:"Spectral",Georgia,serif;font-size:1rem;margin-bottom:3px}
+.miller-axis-card span,.miller-axis-card small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+.miller-axis-card b{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}
+.miller-axis-card.zero{opacity:.72}
+.miller-plane-eq{padding:10px 12px;border-left:3px solid var(--copper);background:var(--panel2);border-radius:0 7px 7px 0;font-family:"Spectral",Georgia,serif;line-height:1.55}
+.miller-plane-eq .muted{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:12px;color:var(--muted)}
+.miller-step-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.miller-step-summary>div{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+.miller-step-summary span{display:block;color:var(--muted);font-size:11px}
+.miller-step-summary b{display:block;margin-top:2px;font-size:14px}
+.miller-example-label{font-size:12px;color:var(--muted);margin-bottom:5px}
+.miller-examples{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.miller-examples button{display:flex;flex-direction:column;gap:1px;align-items:flex-start;padding:7px 8px;text-align:left}
+.miller-examples button b{font-size:13px}.miller-examples button small{font-size:10px;color:var(--muted);line-height:1.2}
+.miller-gen-nav{display:flex;justify-content:space-between;gap:8px}
+.miller-gen-nav button{flex:1}
+.miller-gen-result{margin-top:16px;padding:13px 14px;border:1px solid var(--line);border-radius:9px;background:var(--panel)}
+.miller-gen-result h4{font-family:"Spectral",Georgia,serif;margin:0 0 6px;font-size:1.05rem}
+.miller-gen-result .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.miller-gen-result .result-grid>div{padding:8px 9px;background:var(--panel2);border-radius:7px;font-size:13px}
+.miller-gen-result .result-grid span{display:block;color:var(--muted);font-size:11px}
+.miller-xrd-detail{margin-top:10px;padding:8px 10px;border-top:1px solid var(--line);font-size:13px}
+.miller-xrd-detail summary{cursor:pointer;font-weight:600;color:var(--muted)}
+@media(max-width:900px){
+  .miller-steps{grid-template-columns:1fr}
+  .miller-gen-stepper{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .miller-gen-grid{grid-template-columns:1fr}
+  .miller-examples{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+  .miller-gen-stepper{grid-template-columns:1fr}
+  .miller-axis-cards,.miller-step-summary,.miller-gen-result .result-grid{grid-template-columns:1fr}
+}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
 .lab{margin:26px 0}
 .lab-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;align-items:baseline;margin-bottom:14px}
@@ -586,54 +631,88 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
 <div class="subp" id="s1c" hidden>
 <div class="lab panel" id="millerGenLab">
     <div class="lab-head">
-      <h3>Miller düzlemi üretici: kesişimlerden (hkl)'ye</h3>
-      <p>Bir düzlemin a, b ve c eksenlerini nerede kestiğini seçin. Simülasyon kesişim → reciprocal bileşen → Miller indisleri zincirini 3B olarak gösterir. Burada amaç yalnız sonucu bulmak değil, her adımın düzlemin yönelimi ve uzaysal frekansıyla nasıl ilişkili olduğunu görmektir.</p>
+      <h3>Miller düzlemi üretici: bir düzlemden (hkl)'ye</h3>
+      <p>Bu araç sonucu bir anda vermek yerine, seçtiğiniz geometrik düzlemin nasıl Miller indislerine dönüştüğünü dört aşamada gösterir: <b>yerleştir → kesişimleri oku → terslerini al → (hkl)'yi yorumla</b>.</p>
     </div>
-    <div class="lab-grid" style="grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr)">
+
+    <div class="miller-gen-goal">
+      <b>Hedef:</b>
+      <span>Bir düzlemin yalnız “nerede olduğunu” değil, kristaldeki <b>yönelimini ve periyodik karakterini</b> kısa bir indis diliyle tarif etmek.</span>
+    </div>
+
+    <div class="miller-gen-stepper" aria-label="Miller indislerine geçiş adımları">
+      <button type="button" data-mi-stage="1" aria-pressed="true"><span>1</span><b>Düzlemi yerleştir</b><small>3B geometri</small></button>
+      <button type="button" data-mi-stage="2" aria-pressed="false"><span>2</span><b>Kesişimleri oku</b><small>p, q, r</small></button>
+      <button type="button" data-mi-stage="3" aria-pressed="false"><span>3</span><b>Terslerini al</b><small>reciprocal bileşen</small></button>
+      <button type="button" data-mi-stage="4" aria-pressed="false"><span>4</span><b>(hkl)'yi yorumla</b><small>yönelim + XRD</small></button>
+    </div>
+
+    <div class="lab-grid miller-gen-grid">
       <div>
-        <canvas id="cMillerGen" class="cv" style="height:390px" role="img" aria-label="Birim hücre ve üretilen Miller düzlemi"></canvas>
+        <canvas id="cMillerGen" class="cv" style="height:410px" role="img" aria-label="Birim hücre, seçilen düzlem ve Miller indislerine dönüşüm adımları"></canvas>
+        <div class="miller-stage-explain" id="millerStageExplain" aria-live="polite"></div>
         <p class="cap" id="millerGenCap"></p>
       </div>
-      <div class="ctl">
+
+      <div class="ctl miller-gen-controls">
         <fieldset>
-          <legend>Eksen kesişimleri (örgü parametresi cinsinden)</legend>
+          <legend>1 · Düzlem eksenleri nerede kesiyor?</legend>
+          <p class="cap" style="margin-top:0">Değerler birim hücre kenarı cinsindendir. Örneğin <b>2a</b>, a ekseninde iki hücre uzunluğu uzakta kesişim demektir.</p>
           <div class="hkl">
             <label>a ekseni
               <select id="miA">
-                <option value="inf">∞</option><option value="-2">−2a</option><option value="-1">−a</option><option value="-0.5">−½a</option>
+                <option value="inf">∞ · paralel</option><option value="-2">−2a</option><option value="-1">−a</option><option value="-0.5">−½a</option>
                 <option value="0.5">½a</option><option value="1" selected>a</option><option value="2">2a</option><option value="3">3a</option>
               </select>
             </label>
             <label>b ekseni
               <select id="miB">
-                <option value="inf">∞</option><option value="-2">−2b</option><option value="-1">−b</option><option value="-0.5">−½b</option>
+                <option value="inf">∞ · paralel</option><option value="-2">−2b</option><option value="-1">−b</option><option value="-0.5">−½b</option>
                 <option value="0.5">½b</option><option value="1" selected>b</option><option value="2">2b</option><option value="3">3b</option>
               </select>
             </label>
             <label>c ekseni
               <select id="miC">
-                <option value="inf">∞</option><option value="-2">−2c</option><option value="-1">−c</option><option value="-0.5">−½c</option>
+                <option value="inf">∞ · paralel</option><option value="-2">−2c</option><option value="-1">−c</option><option value="-0.5">−½c</option>
                 <option value="0.5">½c</option><option value="1" selected>c</option><option value="2">2c</option><option value="3">3c</option>
               </select>
             </label>
             <span></span>
           </div>
         </fieldset>
-        <div class="readout" id="millerSteps" style="grid-template-columns:1fr"></div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap">
-          <button type="button" data-mi-example="100">(100)</button>
-          <button type="button" data-mi-example="110">(110)</button>
-          <button type="button" data-mi-example="111">(111)</button>
-          <button type="button" data-mi-example="120">(120)</button>
-          <button type="button" data-mi-example="bar110">(1̄10)</button>
+
+        <div class="miller-live-sentence" id="millerSentence"></div>
+        <div class="miller-axis-cards" id="millerAxisCards"></div>
+        <div class="miller-plane-eq" id="millerPlaneEq"></div>
+        <div class="miller-step-summary" id="millerSteps"></div>
+
+        <div>
+          <div class="miller-example-label">Örneklerle dene</div>
+          <div class="miller-examples">
+            <button type="button" data-mi-example="100"><b>(100)</b><small>b ve c'ye paralel</small></button>
+            <button type="button" data-mi-example="110"><b>(110)</b><small>iki ekseni keser</small></button>
+            <button type="button" data-mi-example="111"><b>(111)</b><small>üç ekseni eşit keser</small></button>
+            <button type="button" data-mi-example="120"><b>(120)</b><small>b'de daha sık</small></button>
+            <button type="button" data-mi-example="bar110"><b>(1̄10)</b><small>negatif kesişim</small></button>
+          </div>
         </div>
-        <p class="cap" style="margin-top:10px">∞ kesişimi, düzlemin o eksene paralel olduğu anlamına gelir; tersi 0'dır.</p>
-        <p class="cap"><b>Geometri–XRD ayrımı:</b> Bu üretici tek bir geometrik düzlemin yönelimini bulurken reciprocal oranları en küçük tam sayılı yönelim etiketine indirger. Kırınımda ise (200), (300) gibi ortak katlı yansımalar ayrı reciprocal-lattice noktaları olarak tutulur; çünkü |G| ve d<sub>hkl</sub> değişir.</p>
+
+        <div class="miller-gen-nav">
+          <button type="button" id="miPrev">← Önceki adım</button>
+          <button type="button" class="primary" id="miNext">Sonraki adım →</button>
+        </div>
       </div>
     </div>
+
+    <div class="miller-gen-result" id="millerInterpretation"></div>
+
+    <details class="miller-xrd-detail">
+      <summary>Geometri ile XRD etiketi arasındaki ince fark</summary>
+      <p>Bu üretici tek bir geometrik düzlemin yönelimini bulurken reciprocal oranları en küçük tam sayılı yönelim oranına indirger. Kırınımda ise <b>(100)</b>, <b>(200)</b>, <b>(300)</b> gibi ortak katlı yansımalar ayrı reciprocal-lattice noktalarıdır; çünkü |G| ve d<sub>hkl</sub> farklıdır.</p>
+    </details>
   </div>
   </div>
-  <div class="subp" id="s1d" hidden>
+<div class="subp" id="s1d" hidden>
 <div class="prose" style="max-width:none">
     <h3>Düzlemler arası mesafe <i class="v">d</i><sub>hkl</sub></h3>
     <p style="max-width:48em">Kırınımda ölçülen asıl büyüklük düzlemler arası mesafedir. Her kristal sistemi için <i class="v">d</i><sub>hkl</sub>, örgü parametrelerinden geometrik olarak hesaplanır. Genel durumda <span class="frac sm"><span>1</span><span><i class="v">d</i>²</span></span> = <b>h</b><sup>T</sup> <b>G</b>* <b>h</b> bağıntısı kullanılır; burada <b>G</b>* ters metrik tensördür. Aşağıdaki formüllerin tümü bu bağıntının özel durumlarıdır. Seçili sistem vurgulanır.</p>
