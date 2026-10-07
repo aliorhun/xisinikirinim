@@ -4497,8 +4497,8 @@ initInfoSystem();
 function syncTabsHeight(){ const t=$('.tabs'); if(t) document.documentElement.style.setProperty('--tabs-height',t.offsetHeight+'px'); }
 syncTabsHeight(); addEventListener('resize',syncTabsHeight,{passive:true});
 
-$('.subnav').forEach(nav=>{
-  const sec=nav.closest('.tab'), bs=$('[role=tab]',nav), panels=[...sec.children].filter(x=>x.classList.contains('subp'));
+$$('.subnav').forEach(nav=>{
+  const sec=nav.closest('.tab'), bs=$$('[role=tab]',nav), panels=[...sec.children].filter(x=>x.classList.contains('subp'));
   const key='xrd-sub-'+sec.id;
   function activate(b,scroll=false){
     if(!b)return;
