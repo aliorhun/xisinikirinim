@@ -3899,9 +3899,9 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
 
   const SC={mode:'100',run:!REDUCE,t:0};
   const configs={
-    simple:{phase:0,nameTR:'Basit hücre',nameEN:'Primitive cell',formula:'F = f + f = 2f'},
-    '100':{phase:Math.PI,nameTR:'HMK (100)',nameEN:'BCC (100)',formula:'F₁₀₀ = f[1 + eⁱπ] = 0'},
-    '200':{phase:2*Math.PI,nameTR:'HMK (200)',nameEN:'BCC (200)',formula:'F₂₀₀ = f[1 + eⁱ²π] = 2f'}
+    simple:{phase:0,nameTR:'Basit hücre',nameEN:'Primitive cell'},
+    '100':{phase:Math.PI,nameTR:'HMK (100)',nameEN:'BCC (100)'},
+    '200':{phase:2*Math.PI,nameTR:'HMK (200)',nameEN:'BCC (200)'}
   };
 
   function cfg(){return configs[SC.mode];}
@@ -3991,16 +3991,23 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     ctx.stroke();arrow2(ctx,in0,beamY-19,Math.min(in0+58,in1),beamY-19,cu,1.5);
     if(!compact)label(ctx,LANG==='en'?'incident X-ray':'gelen X-ışını',in0,beamY-27,cu);
 
-    // schematic unit cell / basis
-    ctx.strokeStyle=border;ctx.lineWidth=1.5;ctx.strokeRect(cellX,cellY,cellW,cellH);
-    const a1=[cellX+12,cellY+cellH-12],a2=[cellX+cellW*.56,cellY+cellH*.48];
-    atom(ctx,a1[0],a1[1],6,cb);
+    // schematic lattice/basis. Primitive mode uses two neighboring cells;
+    // BCC modes use the two-atom basis of one conventional cell.
+    let a1,a2;
+    ctx.strokeStyle=border;ctx.lineWidth=1.5;
     if(SC.mode==='simple'){
-      atom(ctx,a2[0],a2[1],6,tl);
-      label(ctx,compact?'P':'P: eşdeğer periyodik saçıcılar',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
+      ctx.strokeRect(cellX,cellY,cellW/2,cellH);
+      ctx.strokeRect(cellX+cellW/2,cellY,cellW/2,cellH);
+      a1=[cellX+cellW*.22,cellY+cellH*.58];
+      a2=[cellX+cellW*.72,cellY+cellH*.58];
+      atom(ctx,a1[0],a1[1],6,cb);atom(ctx,a2[0],a2[1],6,tl);
+      label(ctx,compact?'P · 2 hücre':'P: iki komşu hücreden Bragg-koherent katkı',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
     }else{
-      atom(ctx,a2[0],a2[1],6,tl);
-      label(ctx,compact?'I':'I: (0,0,0) + (½,½,½)',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
+      ctx.strokeRect(cellX,cellY,cellW,cellH);
+      a1=[cellX+12,cellY+cellH-12];
+      a2=[cellX+cellW*.56,cellY+cellH*.48];
+      atom(ctx,a1[0],a1[1],6,cb);atom(ctx,a2[0],a2[1],6,tl);
+      label(ctx,compact?'I · baz':'I: (0,0,0) + (½,½,½)',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
     }
 
     // both coherent contributions go to the same detector direction
@@ -4012,9 +4019,10 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     // --- 2. Same-axis overlay: this is the main pedagogical view
     const ovY=168,ovH=176,baseY=260,x0=32,x1=w-34;
     panel(ctx,16,ovY,w-32,ovH,panel2,border);
-    label(ctx,LANG==='en'?'2 · SAME AXIS: E₁ AND E₂ ARE REALLY SUPERPOSED':'2 · AYNI EKSEN: E₁ VE E₂ GERÇEKTEN ÜST ÜSTE',30,190,ink,'left','700 12px "IBM Plex Sans",sans-serif');
+    const overlayTitle=compact?(LANG==='en'?'2 · TRUE SUPERPOSITION':'2 · GERÇEK ÜST ÜSTE BİNME'):(LANG==='en'?'2 · SAME AXIS: E₁ AND E₂ ARE REALLY SUPERPOSED':'2 · AYNI EKSEN: E₁ VE E₂ GERÇEKTEN ÜST ÜSTE');
+    label(ctx,overlayTitle,30,190,ink,'left','700 12px "IBM Plex Sans",sans-serif');
     const phaseText=SC.mode==='100'?'Δφ = π = 180° · tepe + çukur':SC.mode==='200'?'Δφ = 2π = 360° · tepe + tepe':'Δφ = 0° · tepe + tepe';
-    label(ctx,phaseText,w-30,190,SC.mode==='100'?bad:ok,'right','700 12px "IBM Plex Sans",sans-serif');
+    label(ctx,phaseText,compact?30:w-30,compact?211:190,SC.mode==='100'?bad:ok,compact?'left':'right','700 12px "IBM Plex Sans",sans-serif');
 
     line(ctx,x0,baseY,x1,baseY,border,1,1,[5,5]);
     const lambda=compact?54:72,k=2*Math.PI/lambda,amp=30;
@@ -4041,7 +4049,8 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     // --- 3. Resultant-only water-surface analogy
     const rsY=360,rsH=Math.max(130,h-rsY-16),rBase=rsY+rsH*.55;
     panel(ctx,16,rsY,w-32,rsH,panelCol,border);
-    label(ctx,LANG==='en'?'3 · RESULTANT FIELD — “WATER SURFACE” ANALOGY':'3 · NET ALAN — “DENİZ YÜZEYİ” BENZETMESİ',30,rsY+23,muted,'left','700 11px "IBM Plex Sans",sans-serif');
+    const resultTitle=compact?(LANG==='en'?'3 · RESULTANT FIELD':'3 · NET ALAN'):(LANG==='en'?'3 · RESULTANT FIELD — “WATER SURFACE” ANALOGY':'3 · NET ALAN — “DENİZ YÜZEYİ” BENZETMESİ');
+    label(ctx,resultTitle,30,rsY+23,muted,'left','700 11px "IBM Plex Sans",sans-serif');
     line(ctx,x0,rBase,x1,rBase,border,1,1);
 
     const resultAmp=SC.mode==='100'?0:44;
@@ -4072,7 +4081,7 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     readout.innerHTML=
       '<div><span>'+(LANG==='en'?'scenario':'senaryo')+'</span><b>'+(LANG==='en'?C.nameEN:C.nameTR)+'</b></div>'+
       '<div><span>Δφ = π(h+k+l)</span><b>'+phaseLabel+'</b></div>'+
-      '<div><span>|F| / f</span><b>'+num(F,2)+'</b></div>'+
+      '<div><span>|E₁+E₂| / E₀</span><b>'+num(F,2)+'</b></div>'+
       '<div><span>I / I<sub>max</sub></span><b>'+num(relI*100,0)+'%</b></div>';
 
     if(SC.mode==='100'){
@@ -4088,8 +4097,8 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     }else{
       explain.className='scatter-wave-explain allowed';
       explain.innerHTML=LANG==='en'
-        ?'<b>Primitive-cell reference:</b> two equivalent periodic contributions are shown in phase. Their electric fields add constructively in the selected Bragg direction.'
-        :'<b>Basit hücre referansı:</b> iki eşdeğer periyodik katkı aynı fazda gösterilir. Seçilen Bragg yönünde elektrik alanları yapıcı biçimde toplanır.';
+        ?'<b>Primitive-cell reference:</b> the two contributions come from neighboring cells with a one-atom basis. At the Bragg condition the inter-cell phase difference is an integer multiple of 2π, so their electric fields add constructively.'
+        :'<b>Basit hücre referansı:</b> tek atomlu baz taşıyan iki komşu hücreden gelen Bragg-koherent katkılar gösterilir. Bragg koşulunda hücreler arası faz farkı 2π’nin tam katıdır; bu yüzden elektrik alanları yapıcı biçimde toplanır.';
     }
 
     $$('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.scatterMode===SC.mode?'true':'false'));
