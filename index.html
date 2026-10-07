@@ -132,6 +132,8 @@ main.wrap{padding-top:44px;padding-bottom:60px}
 .miller-axis-card span,.miller-axis-card small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
 .miller-axis-card b{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}
 .miller-axis-card.zero{opacity:.72}
+#millerAxisCards,#millerPlaneEq,#millerSteps,#millerInterpretation{transition:opacity .16s ease}
+#millerAxisCards[hidden],#millerPlaneEq[hidden],#millerSteps[hidden],#millerInterpretation[hidden]{display:none}
 .miller-plane-eq{padding:10px 12px;border-left:3px solid var(--copper);background:var(--panel2);border-radius:0 7px 7px 0;font-family:"Spectral",Georgia,serif;line-height:1.55}
 .miller-plane-eq .muted{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:12px;color:var(--muted)}
 .miller-step-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
@@ -2022,6 +2024,31 @@ function i18nApplyStatic(){ if(LANG!=='en') return;
 </script>
 <script>
 Object.assign(I18N_HTML,{
+"Miller düzlemi üretici: bir düzlemden (hkl)'ye":"Miller-plane builder: from a plane to (hkl)",
+"Bu araç sonucu bir anda vermek yerine, seçtiğiniz geometrik düzlemin nasıl Miller indislerine dönüştüğünü dört aşamada gösterir: <b>yerleştir → kesişimleri oku → terslerini al → (hkl)'yi yorumla</b>.":"Instead of revealing the answer immediately, this tool shows in four stages how the geometric plane you choose becomes Miller indices: <b>place it → read intercepts → take reciprocals → interpret (hkl)</b>.",
+"Hedef:":"Goal:",
+"Bir düzlemin yalnız “nerede olduğunu” değil, kristaldeki <b>yönelimini ve periyodik karakterini</b> kısa bir indis diliyle tarif etmek.":"Describe not only where a plane is, but its <b>orientation and periodic character</b> in the crystal using a compact index language.",
+"Düzlemi yerleştir":"Place the plane",
+"3B geometri":"3D geometry",
+"Kesişimleri oku":"Read intercepts",
+"Terslerini al":"Take reciprocals",
+"reciprocal bileşen":"reciprocal component",
+"(hkl)'yi yorumla":"Interpret (hkl)",
+"yönelim + XRD":"orientation + XRD",
+"1 · Düzlem eksenleri nerede kesiyor?":"1 · Where does the plane intercept the axes?",
+"Değerler birim hücre kenarı cinsindendir. Örneğin <b>2a</b>, a ekseninde iki hücre uzunluğu uzakta kesişim demektir.":"Values are given in units of the unit-cell edges. For example, <b>2a</b> means an intercept two cell lengths along the a axis.",
+"∞ · paralel":"∞ · parallel",
+"Örneklerle dene":"Try examples",
+"b ve c'ye paralel":"parallel to b and c",
+"iki ekseni keser":"cuts two axes",
+"üç ekseni eşit keser":"cuts all three equally",
+"b'de daha sık":"larger b component",
+"negatif kesişim":"negative intercept",
+"← Önceki adım":"← Previous step",
+"Sonraki adım →":"Next step →",
+"Geometri ile XRD etiketi arasındaki ince fark":"The subtle difference between geometry and an XRD label"
+});
+Object.assign(I18N_HTML,{
 "Perspektif":"Perspective",
 "Perspektif açıkken eğik 3B görünüm; kapalıyken ortografik eksen görünümü":"Perspective on: oblique 3D view; off: orthographic axis-aligned view"
 });
@@ -2975,6 +3002,8 @@ function initMillerGenerator(){
     stageButtons.forEach((b,i)=>{const on=i===stage-1;b.setAttribute('aria-pressed',on?'true':'false');b.tabIndex=on?0:-1;});
     prev.disabled=stage===1;next.disabled=stage===4;
     next.textContent=stage===4?(LANG==='en'?'Completed':'Tamamlandı'):(LANG==='en'?'Next step →':'Sonraki adım →');
+    $('#millerGenLab').dataset.stage=String(stage);
+    axisCards.hidden=stage<2;planeEq.hidden=stage<3;out.hidden=stage<4;interpret.hidden=stage<4;
     stageExplain.innerHTML=stageText(D);
   }
   function update(){
@@ -2988,7 +3017,9 @@ function initMillerGenerator(){
 
     axisCards.innerHTML=D.ints.map((v,i)=>{
       const a=axisMeaning(D,i),axis='abc'[i];
-      return '<div class="miller-axis-card '+a.cls+'"><strong>'+axis+' ekseni</strong><span>'+(LANG==='en'?'intercept':'kesişim')+': '+a.intercept+'</span><small>'+(LANG==='en'?'normalized':'normalize')+': '+a.normalized+'</small><b>1/'+axis+' → '+a.reciprocal+'</b><small>'+a.meaning+'</small></div>';
+      let html='<div class="miller-axis-card '+a.cls+'"><strong>'+axis+' ekseni</strong><span>'+(LANG==='en'?'intercept':'kesişim')+': '+a.intercept+'</span><small>'+(LANG==='en'?'normalized':'normalize')+': '+a.normalized+'</small>';
+      if(stage>=3)html+='<b>'+(LANG==='en'?'reciprocal':'tersi')+' → '+a.reciprocal+'</b><small>'+a.meaning+'</small>';
+      return html+'</div>';
     }).join('');
 
     planeEq.innerHTML=D.valid
