@@ -88,6 +88,17 @@ main.wrap{padding-top:44px;padding-bottom:60px}
 
 .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin:26px 0}
 .prose{max-width:40em}
+.source-deep-dive{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin:26px 0}
+.source-deep-dive>.prose{max-width:72em}
+.source-compare{width:100%;min-width:0}
+.source-table{table-layout:fixed;min-width:880px}
+.source-table .source-col-label{width:15%}
+.source-table th,.source-table td{white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.source-table th:not(:first-child),.source-table td:not(:first-child){width:28.333%}
+@media(max-width:900px){
+  .source-deep-dive>.prose{max-width:none}
+  .source-table{min-width:820px}
+}
 .prose ol,.prose ul{padding-left:1.25em;margin:0 0 .8em}
 .prose li{margin-bottom:.3em}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
@@ -531,7 +542,7 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
       </div>
     </div>
 
-  <div class="cols" style="align-items:start">
+  <div class="source-deep-dive">
     <div class="prose">
       <h3>Laboratuvar tüpünden sinkrotrona ve FEL'e</h3>
       <p>Klasik X-ışını tüpü, sinkrotron ve serbest elektron lazeri (FEL) aynı fiziksel hedefe — kısa dalga boylu yüksek enerjili foton üretmeye — farklı yollarla ulaşır. Aralarındaki en önemli fark yalnızca “daha fazla foton” değildir; <b>fotonların ne kadar küçük bir kaynaktan, ne kadar dar bir açıya, ne kadar dar bir enerji aralığında ve ne kadar kısa sürede çıktığı</b> da belirleyicidir.</p>
@@ -564,10 +575,16 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
       <p class="cap"><b>Önemli nüans:</b> bir sinkrotronun “daha parlak” olması yalnızca cihazın daha fazla toplam X-ışını gücü üretmesi anlamına gelmez. Küçük kaynak, düşük diverjans, dar bant ve yüksek akının aynı anda sağlanması brilliance değerini yükseltir. FEL'de ise buna ek olarak elektronların fazca örgütlenmesi çok yüksek <i>peak brilliance</i> üretir.</p>
     </div>
 
-    <div class="panel">
+    <div class="panel source-compare">
       <h3>Klasik tüp · Sinkrotron · FEL</h3>
-      <div class="scroll">
-        <table class="tbl">
+      <div class="scroll source-table-scroll">
+        <table class="tbl source-table">
+          <colgroup>
+            <col class="source-col-label">
+            <col>
+            <col>
+            <col>
+          </colgroup>
           <thead><tr><th>Özellik</th><th>Klasik X-ışını tüpü</th><th>Sinkrotron</th><th>FEL</th></tr></thead>
           <tbody>
             <tr><td>Elektron sistemi</td><td>Katot → anot çarpışması</td><td>Depolama halkasında relativistik elektronlar</td><td>Linac + uzun undulator</td></tr>
