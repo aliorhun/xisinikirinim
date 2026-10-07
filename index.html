@@ -305,7 +305,25 @@ legend{font-size:13px;color:var(--muted);padding:0 4px}
 .scatter-bridge h3{margin-top:0}
 .scatter-bridge .eq{margin:8px 0}
 .scatter-caution{padding:10px 12px;border-left:3px solid var(--copper);background:var(--panel2);border-radius:0 7px 7px 0;font-size:13px;line-height:1.5}
-@media(max-width:920px){.scatter-intro,.scatter-bridge-grid{grid-template-columns:1fr}.scatter-rules{grid-template-columns:1fr}.scatter-flow{grid-template-columns:1fr}.scatter-flow>div:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-13px;transform:translate(-50%,50%)}}
+.scatter-main-idea{padding:15px 16px;border:1px solid color-mix(in srgb,var(--cobalt) 38%,var(--line));border-left:5px solid var(--cobalt);border-radius:0 10px 10px 0;background:var(--panel2);font-size:15px;line-height:1.62}
+.scatter-main-idea h4{margin:0 0 7px;font-size:15px}
+.scatter-main-idea p{margin:0}
+.scatter-wave-lab{padding:15px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+.scatter-wave-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:11px}
+.scatter-wave-head h3{margin:0 0 4px}
+.scatter-wave-head p{margin:0;max-width:64em;color:var(--muted);font-size:13px;line-height:1.45}
+.scatter-wave-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.scatter-wave-controls button[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--onAccent)}
+.scatter-wave-canvas{height:390px!important;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+.scatter-wave-readout{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.scatter-wave-readout>div{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);min-width:0}
+.scatter-wave-readout span{display:block;color:var(--muted);font-size:11px}
+.scatter-wave-readout b{display:block;margin-top:2px;font-size:14px;overflow-wrap:anywhere}
+.scatter-wave-explain{margin-top:10px;padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 7px 7px 0;font-size:14px;line-height:1.55}
+.scatter-wave-explain.extinct{border-left-color:var(--forbid)}
+.scatter-wave-explain.allowed{border-left-color:var(--ok)}
+@media(max-width:920px){.scatter-intro,.scatter-bridge-grid{grid-template-columns:1fr}.scatter-rules{grid-template-columns:1fr}.scatter-flow{grid-template-columns:1fr}.scatter-flow>div:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-13px;transform:translate(-50%,50%)}.scatter-wave-readout{grid-template-columns:repeat(2,minmax(0,1fr))}.scatter-wave-canvas{height:430px!important}}
+@media(max-width:540px){.scatter-wave-readout{grid-template-columns:1fr}.scatter-wave-controls{width:100%}.scatter-wave-controls button{flex:1 1 auto}.scatter-wave-canvas{height:460px!important}}
 
 /* tables, equations */
 .scroll{overflow-x:auto}
@@ -1152,6 +1170,11 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
           <p>Bir <b>(hkl)</b> düzlem ailesinin geometrik olarak tanımlı olması, XRD deseninde mutlaka bir pik oluşturacağı anlamına gelmez. Bragg yasası, belirli bir düzlem aralığı için saçılan dalgaların <b>hangi açıda aynı faz koşuluna gelebileceğini</b> söyler. Fakat birim hücrenin içinde birden fazla atom varsa, bu atomların saçtığı dalgalar kendi aralarında ayrıca toplanır.</p>
           <p>Bu toplam yapıcıysa pik güçlenir; katkılar eşit büyüklükte fakat 180° ters fazdaysa birbirlerini tamamen söndürebilir. Bu yüzden bazı yansımalar kristal yapısı nedeniyle <b>sistematik olarak yok olur</b>.</p>
 
+          <div class="scatter-main-idea">
+            <h4>Temel fizik resmi: dalgalar geri dönüp üst üste geliyor</h4>
+            <p>Kristale X-ışınları, yani elektromanyetik dalgalar gönderiyoruz. İlk sezgisel resimde atom düzlemlerini düzenli “saçıcı duvarlar” gibi düşünebiliriz. Farklı katmanlardan saçılan dalgalar dedektöre <b>aynı fazda</b> geri gelirse tepe tepeye biner ve büyük bir sinyal oluşturur: <b>yapıcı girişim / difraksiyon piki</b>. Basit bir hücrede köşe atomlarının periyodik katkıları uygun Bragg koşulunda birbirini kuvvetlendirir. Merkezli hücrelerde ise araya eklenen atomların katkısı bazı (hkl) seçimlerinde yarım periyot kayarak bu toplamı söndürebilir.</p>
+          </div>
+
           <div class="scatter-key">
             <b>Ana fikir:</b> Bir pikin görünmesi için yalnızca Bragg geometrisinin uygun olması yetmez. Aynı <b>q = g<sub>hkl</sub></b> koşulunda, birim hücre içindeki atomların kompleks saçılma genliklerinin toplamı da sıfırdan farklı olmalıdır.
           </div>
@@ -1214,6 +1237,27 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
           </svg>
           <p class="cap"><b>Şeklin mantığı:</b> (100)'de hücre merkezindeki atomun fazı köşe atomuna göre π kadar kayar ve iki eşdeğer katkı söner. (200)'de aynı atom için faz kayması 2π olur; katkılar yeniden aynı faza gelir. Kitaptaki 100/200 çiziminin fikri burada HMK yapısına özgü, yeniden çizilmiş bir şema ile gösterilmiştir.</p>
         </div>
+      </div>
+
+      <div class="scatter-wave-lab" id="scatterWaveLab">
+        <div class="scatter-wave-head">
+          <div>
+            <h3>Canlı saçılma: geri dönen dalgalar dedektörde ne yapıyor?</h3>
+            <p>Üç senaryoyu karşılaştırın. Hareketli paketler aynı Bragg yönüne saçılan iki eşdeğer katkıyı temsil eder; dedektördeki alt grafik bu iki dalganın gerçek zamanlı toplamıdır.</p>
+          </div>
+          <div class="scatter-wave-controls" role="group" aria-label="Saçılma animasyonu senaryosu">
+            <button type="button" data-scatter-mode="simple" aria-pressed="false">Basit hücre</button>
+            <button type="button" data-scatter-mode="100" aria-pressed="true">HMK (100)</button>
+            <button type="button" data-scatter-mode="200" aria-pressed="false">HMK (200)</button>
+            <button type="button" id="scatterWavePlay">Durdur</button>
+          </div>
+        </div>
+
+        <canvas id="cScatterReturn" class="cv scatter-wave-canvas" role="img" aria-label="X-ışını dalgalarının iki atomik katkıdan saçılıp dedektörde yapıcı veya yıkıcı girişim oluşturmasını gösteren animasyon"></canvas>
+
+        <div class="scatter-wave-readout" id="scatterWaveReadout"></div>
+        <div class="scatter-wave-explain" id="scatterWaveExplain" aria-live="polite"></div>
+        <p class="cap">Bu, faz ilişkisini öğretmek için hazırlanmış bir 1B şemadır; atom düzlemlerini gerçek bir ayna gibi çizmez. Fiziksel sonuç, aynı saçılma vektörü yönünde atomlardan gelen kompleks genliklerin dedektörde toplanmasıdır.</p>
       </div>
 
       <div class="scatter-flow" aria-label="Bir yansımanın görülme zinciri">
@@ -2247,6 +2291,15 @@ function i18nApplyStatic(){ if(LANG!=='en') return;
 <script>
 Object.assign(I18N_HTML,{
 "Saçılma koşulları":"Scattering conditions",
+"Temel fizik resmi: dalgalar geri dönüp üst üste geliyor":"Core physical picture: the returning waves overlap",
+"Kristale X-ışınları, yani elektromanyetik dalgalar gönderiyoruz. İlk sezgisel resimde atom düzlemlerini düzenli “saçıcı duvarlar” gibi düşünebiliriz. Farklı katmanlardan saçılan dalgalar dedektöre <b>aynı fazda</b> geri gelirse tepe tepeye biner ve büyük bir sinyal oluşturur: <b>yapıcı girişim / difraksiyon piki</b>. Basit bir hücrede köşe atomlarının periyodik katkıları uygun Bragg koşulunda birbirini kuvvetlendirir. Merkezli hücrelerde ise araya eklenen atomların katkısı bazı (hkl) seçimlerinde yarım periyot kayarak bu toplamı söndürebilir.":"We send X-rays—electromagnetic waves—into the crystal. As a first intuitive picture, imagine the atomic planes as regularly spaced scattering walls. If waves scattered from different layers return to the detector <b>in phase</b>, crest meets crest and a large signal forms: a <b>constructive-interference / diffraction peak</b>. In a primitive cell, periodic contributions from corner atoms reinforce under the appropriate Bragg condition. In centered cells, additional atoms can shift some (hkl) contributions by half a period and extinguish the sum.",
+"Canlı saçılma: geri dönen dalgalar dedektörde ne yapıyor?":"Live scattering: what do the returning waves do at the detector?",
+"Üç senaryoyu karşılaştırın. Hareketli paketler aynı Bragg yönüne saçılan iki eşdeğer katkıyı temsil eder; dedektördeki alt grafik bu iki dalganın gerçek zamanlı toplamıdır.":"Compare three scenarios. The moving packets represent two equivalent contributions scattered into the same Bragg direction; the lower detector trace shows their real-time sum.",
+"Saçılma animasyonu senaryosu":"Scattering animation scenario",
+"Basit hücre":"Primitive cell",
+"Durdur":"Pause",
+"X-ışını dalgalarının iki atomik katkıdan saçılıp dedektörde yapıcı veya yıkıcı girişim oluşturmasını gösteren animasyon":"Animation showing X-ray waves scattered by two atomic contributions and producing constructive or destructive interference at the detector",
+"Bu, faz ilişkisini öğretmek için hazırlanmış bir 1B şemadır; atom düzlemlerini gerçek bir ayna gibi çizmez. Fiziksel sonuç, aynı saçılma vektörü yönünde atomlardan gelen kompleks genliklerin dedektörde toplanmasıdır.":"This is a 1D teaching schematic for phase relations; it does not treat atomic planes as literal mirrors. The physical result is the sum of complex amplitudes from atoms in the same scattering-vector direction.",
 "Saçılma koşulları: Neden bazı (hkl) düzlemleri pik verir, bazıları kaybolur?":"Scattering conditions: Why do some (hkl) planes produce peaks while others disappear?",
 "Bir <b>(hkl)</b> düzlem ailesinin geometrik olarak tanımlı olması, XRD deseninde mutlaka bir pik oluşturacağı anlamına gelmez. Bragg yasası, belirli bir düzlem aralığı için saçılan dalgaların <b>hangi açıda aynı faz koşuluna gelebileceğini</b> söyler. Fakat birim hücrenin içinde birden fazla atom varsa, bu atomların saçtığı dalgalar kendi aralarında ayrıca toplanır.":"A geometrically defined <b>(hkl)</b> plane family does not necessarily produce a peak in an XRD pattern. Bragg's law tells us <b>at which angle the scattered waves can satisfy the same-phase condition</b> for a given plane spacing. But when the unit cell contains more than one atom, the waves scattered by those atoms must also be summed among themselves.",
 "Bu toplam yapıcıysa pik güçlenir; katkılar eşit büyüklükte fakat 180° ters fazdaysa birbirlerini tamamen söndürebilir. Bu yüzden bazı yansımalar kristal yapısı nedeniyle <b>sistematik olarak yok olur</b>.":"If this sum is constructive, the peak grows stronger; if equal contributions are 180° out of phase, they can cancel completely. Some reflections therefore become <b>systematically absent</b> because of crystal structure.",
@@ -3818,6 +3871,161 @@ $('#rot2').addEventListener('change',e=>{T2e.run=e.target.checked;});
 $('#pow2').addEventListener('change',e=>{T2e.pow=e.target.checked; ewald2();});
 reg(C2w,ewald2);
 animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2').value=T2e.om; ewald2(); } }});
+
+/* Saçılma koşulları: geri dönen iki dalganın faz toplamı */
+(function initScatteringReturnWaves(){
+  const cv=$('#cScatterReturn'),lab=$('#scatterWaveLab'),readout=$('#scatterWaveReadout'),explain=$('#scatterWaveExplain'),play=$('#scatterWavePlay');
+  if(!cv||!lab||!readout||!explain||!play)return;
+
+  const SC={mode:'100',run:!REDUCE,t:0};
+  const configs={
+    simple:{phase:0,hkl:'P',nameTR:'Basit hücre',nameEN:'Primitive cell',formula:'F = f + f = 2f'},
+    '100':{phase:Math.PI,hkl:'(100)',nameTR:'HMK (100)',nameEN:'BCC (100)',formula:'F₁₀₀ = f[1 + eⁱπ] = 0'},
+    '200':{phase:2*Math.PI,hkl:'(200)',nameTR:'HMK (200)',nameEN:'BCC (200)',formula:'F₂₀₀ = f[1 + eⁱ²π] = 2f'}
+  };
+
+  function cfg(){return configs[SC.mode];}
+  function wave(ctx,x0,x1,y,amp,phase,color,width=2,alpha=1){
+    ctx.strokeStyle=color;ctx.lineWidth=width;ctx.globalAlpha=alpha;ctx.beginPath();
+    const L=Math.max(1,x1-x0),k=2*Math.PI/54;
+    for(let x=x0;x<=x1;x+=2){
+      const yy=y-amp*Math.sin(k*(x-x0)+phase);
+      if(x===x0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
+    }
+    ctx.stroke();ctx.globalAlpha=1;
+  }
+  function packet(ctx,cx,y,amp,phase,color,dir=-1){
+    const half=56,k=2*Math.PI/34;
+    ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.beginPath();let first=true;
+    for(let dx=-half;dx<=half;dx+=2){
+      const env=Math.exp(-Math.pow(dx/31,2));
+      const x=cx+dx,yy=y-amp*env*Math.sin(k*dx*dir+phase);
+      if(first){ctx.moveTo(x,yy);first=false}else ctx.lineTo(x,yy);
+    }
+    ctx.stroke();
+  }
+  function label(ctx,text,x,y,color,align='left',font='12px "IBM Plex Sans",sans-serif'){
+    ctx.font=font;ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);
+  }
+  function draw(){
+    const P=prep(cv);if(!P)return;
+    const {ctx,w,h}=P,C=cfg(),ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal'),ok=cssv('--ok'),bad=cssv('--forbid');
+    const detX=70,cr0=Math.max(245,w*.42),cr1=Math.min(w-78,cr0+Math.max(135,w*.20));
+    const yIn=72,yA=164,yB=222,ySum=Math.min(h-68,324);
+    const phase0=SC.t*7.2,Cphi=C.phase;
+    const p=(SC.t*.32)%1;
+    const pEase=.5-.5*Math.cos(Math.PI*p);
+    const xA=cr0-(cr0-detX-18)*pEase,xB=cr1-(cr1-detX-18)*pEase;
+    const totalAmp=Math.abs(1+Math.cos(Cphi)+0); // only for classification; exact magnitude below
+    const re=1+Math.cos(Cphi),im=Math.sin(Cphi),F=Math.hypot(re,im),relI=(F/2)**2;
+
+    // regions
+    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.fillStyle=cssv('--panel');
+    ctx.fillRect(14,18,122,h-36);ctx.strokeRect(14,18,122,h-36);
+    ctx.fillStyle=cssv('--panel');ctx.fillRect(cr0-34,18,w-cr0+20,h-36);ctx.strokeRect(cr0-34,18,w-cr0+20,h-36);
+    label(ctx,LANG==='en'?'source / detector':'kaynak / dedektör',75,39,muted,'center','600 11px "IBM Plex Sans",sans-serif');
+    label(ctx,LANG==='en'?'crystal':'kristal',cr0-18,39,muted,'left','600 11px "IBM Plex Sans",sans-serif');
+
+    // detector
+    ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(detX,54);ctx.lineTo(detX,h-38);ctx.stroke();
+    const glow=8+relI*12*(.72+.28*Math.sin(phase0)**2);
+    ctx.fillStyle=relI<.02?bad:ok;ctx.globalAlpha=.18+.45*relI;ctx.beginPath();ctx.arc(detX,ySum,glow,0,2*Math.PI);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle=relI<.02?bad:ok;ctx.beginPath();ctx.arc(detX,ySum,5+5*relI,0,2*Math.PI);ctx.fill();
+
+    // incoming wave from source to crystal
+    ctx.strokeStyle=cu;ctx.fillStyle=cu;ctx.lineWidth=2;
+    wave(ctx,95,cr1+28,yIn,9,phase0,cu,2,.9);
+    arrow(ctx,112,yIn,182,yIn,8);
+    label(ctx,LANG==='en'?'incoming X-ray':'gelen X-ışını',112,yIn-15,cu);
+
+    // scatterer planes/atoms
+    for(const [x,labText,col] of [[cr0,LANG==='en'?'contribution 1':'katkı 1',cb],[cr1,LANG==='en'?'contribution 2':'katkı 2',tl]]){
+      ctx.strokeStyle=line;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,48);ctx.lineTo(x,260);ctx.stroke();
+      for(let yy=58;yy<=250;yy+=32){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,yy,4.2,0,2*Math.PI);ctx.fill();}
+      label(ctx,labText,x,279,col,'center','600 11px "IBM Plex Sans",sans-serif');
+    }
+    if(SC.mode!=='simple'){
+      label(ctx,'x = 0',cr0,295,muted,'center');
+      label(ctx,'x = 1/2',cr1,295,muted,'center');
+    }else{
+      label(ctx,LANG==='en'?'equivalent planes':'eşdeğer düzlemler',cr0+(cr1-cr0)/2,295,muted,'center');
+    }
+
+    // outgoing packets moving simultaneously toward detector
+    packet(ctx,xA,yA,12,phase0,cb,-1);
+    packet(ctx,xB,yB,12,phase0+Cphi,tl,-1);
+    ctx.strokeStyle=cb;ctx.fillStyle=cb;arrow(ctx,cr0-8,yA,detX+32,yA,7);
+    ctx.strokeStyle=tl;ctx.fillStyle=tl;arrow(ctx,cr1-8,yB,detX+32,yB,7);
+    label(ctx,LANG==='en'?'return 1':'geri dönüş 1',145,yA-14,cb);
+    label(ctx,LANG==='en'?'return 2':'geri dönüş 2',145,yB-14,tl);
+
+    // phase relation at detector
+    const phaseText=SC.mode==='100'?'Δφ = π (180°)':SC.mode==='200'?'Δφ = 2π (360°)':'Δφ = 0';
+    label(ctx,phaseText,154,253,SC.mode==='100'?bad:ok,'left','700 13px "IBM Plex Sans",sans-serif');
+
+    // live sum waveform
+    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(145,ySum);ctx.lineTo(w-28,ySum);ctx.stroke();
+    const x0=145,x1=w-28,k=2*Math.PI/58;
+    ctx.strokeStyle=SC.mode==='100'?bad:ok;ctx.lineWidth=3;ctx.beginPath();
+    for(let x=x0;x<=x1;x+=2){
+      const a=Math.sin(k*(x-x0)+phase0),b=Math.sin(k*(x-x0)+phase0+Cphi),sum=a+b;
+      const yy=ySum-15*sum;
+      if(x===x0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
+    }
+    ctx.stroke();
+    label(ctx,LANG==='en'?'detector sum':'dedektör toplamı',150,ySum-38,ink,'left','600 12px "IBM Plex Sans",sans-serif');
+    label(ctx,C.formula,w-34,ySum-38,SC.mode==='100'?bad:ok,'right','700 14px "IBM Plex Sans",sans-serif');
+
+    // tiny intensity meter
+    const mx=w-48,my=62,mh=112;
+    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.strokeRect(mx-14,my,28,mh);
+    ctx.fillStyle=relI<.02?bad:ok;ctx.globalAlpha=.75;ctx.fillRect(mx-13,my+mh*(1-relI),26,mh*relI);ctx.globalAlpha=1;
+    label(ctx,'I',mx,my-8,ink,'center','700 13px "IBM Plex Sans",sans-serif');
+    label(ctx,Math.round(relI*100)+'%',mx,my+mh+17,muted,'center','600 11px "IBM Plex Sans",sans-serif');
+  }
+
+  function updateText(){
+    const C=cfg(),phase=C.phase,re=1+Math.cos(phase),im=Math.sin(phase),F=Math.hypot(re,im),relI=(F/2)**2;
+    const phaseLabel=SC.mode==='100'?'π = 180°':SC.mode==='200'?'2π = 360°':'0°';
+    readout.innerHTML=
+      '<div><span>'+(LANG==='en'?'scenario':'senaryo')+'</span><b>'+(LANG==='en'?C.nameEN:C.nameTR)+'</b></div>'+
+      '<div><span>Δφ</span><b>'+phaseLabel+'</b></div>'+
+      '<div><span>|F| / f</span><b>'+num(F,2)+'</b></div>'+
+      '<div><span>I / I<sub>max</sub></span><b>'+num(relI*100,0)+'%</b></div>';
+
+    if(SC.mode==='100'){
+      explain.className='scatter-wave-explain extinct';
+      explain.innerHTML=LANG==='en'
+        ?'<b>No peak:</b> both scattered wave packets return to the detector together, but contribution 2 is half a period behind. Crest meets trough, so the instantaneous sum stays zero: <b>F = 0 → I = 0</b>.'
+        :'<b>Pik yok:</b> iki saçılmış dalga paketi dedektöre birlikte geri gelir; fakat 2. katkı yarım periyot geridedir. Tepe çukurla karşılaşır ve anlık toplam sürekli sıfır kalır: <b>F = 0 → I = 0</b>.';
+    }else if(SC.mode==='200'){
+      explain.className='scatter-wave-explain allowed';
+      explain.innerHTML=LANG==='en'
+        ?'<b>Peak appears:</b> the extra BCC atom now differs by a full period (2π). Both returning waves have the same phase, so crest meets crest and the detector amplitude doubles: <b>F = 2f → strong intensity</b>.'
+        :'<b>Pik oluşur:</b> HMK merkez atomunun faz farkı artık tam bir turdur (2π). Geri dönen iki dalga aynı fazdadır; tepe tepeyle birleşir ve dedektörde genlik iki katına çıkar: <b>F = 2f → güçlü şiddet</b>.';
+    }else{
+      explain.className='scatter-wave-explain allowed';
+      explain.innerHTML=LANG==='en'
+        ?'<b>Primitive-cell picture:</b> equivalent periodic contributions return in phase under the Bragg condition. The detector sees their amplitudes add instead of cancel.'
+        :'<b>Basit hücre resmi:</b> uygun Bragg koşulunda eşdeğer periyodik katkılar aynı fazda geri gelir. Dedektör bunların birbirini söndürdüğünü değil, genliklerinin toplandığını görür.';
+    }
+    $('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.scatterMode===SC.mode?'true':'false'));
+    play.textContent=SC.run?(LANG==='en'?'Pause':'Durdur'):(LANG==='en'?'Play':'Oynat');
+    draw();
+  }
+
+  $('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.addEventListener('click',()=>{
+    SC.mode=b.dataset.scatterMode;SC.t=0;updateText();
+  }));
+  play.addEventListener('click',()=>{SC.run=!SC.run;updateText();});
+  reg(cv,draw);
+  onTheme(draw);
+  updateText();
+  animators.push({tab:TAB2,fn:dt=>{
+    if(lab.closest('.subp')?.hidden)return;
+    if(SC.run){SC.t+=dt;draw();}
+  }});
+})();
 
 /* Yapı faktörü: konum -> faz sarmalı -> kompleks fazörler */
 const SF2={model:'bcc',h:1,k:0,l:0,x:.5,y:.5,z:.5,rho:1,atom:1,progress:1};
