@@ -530,6 +530,61 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
         <div class="readout" id="ro2s"></div>
       </div>
     </div>
+
+  <div class="cols" style="align-items:start">
+    <div class="prose">
+      <h3>Laboratuvar tüpünden sinkrotrona ve FEL'e</h3>
+      <p>Klasik X-ışını tüpü, sinkrotron ve serbest elektron lazeri (FEL) aynı fiziksel hedefe — kısa dalga boylu yüksek enerjili foton üretmeye — farklı yollarla ulaşır. Aralarındaki en önemli fark yalnızca “daha fazla foton” değildir; <b>fotonların ne kadar küçük bir kaynaktan, ne kadar dar bir açıya, ne kadar dar bir enerji aralığında ve ne kadar kısa sürede çıktığı</b> da belirleyicidir.</p>
+
+      <p><b>Sinkrotron.</b> GeV mertebesine kadar hızlandırılmış relativistik elektronlar bir depolama halkasında mıknatıslarla yörüngede tutulur. Elektronun yönü değiştirildiğinde elektromanyetik ışınım yayılır. Eğici mıknatıslar geniş spektrumlu ışınım üretirken, <b>wiggler</b> ve özellikle <b>undulator</b> yapıları elektronu periyodik olarak sağa-sola saptırır. Aynı elektronun ardışık salınımlarından gelen alanlar belirli dalga boylarında yapıcı girişim yapar; ışık dar açılara ve belirli enerji bantlarına yoğunlaşır.</p>
+
+      <p><b>FEL (Free-Electron Laser).</b> FEL'de elektron demeti uzun bir undulatörden geçirilirken ışık alanıyla karşılıklı etkileşim sonucu elektron yoğunluğu dalga boyu ölçeğinde <i>microbunching</i> oluşturur. Böylece çok sayıda elektron aynı optik fazda yayıma katkı verebilir. Sonuç, sıradan sinkrotron ışınımına göre çok daha yüksek <b>tepe parlaklığı</b>, daha yüksek koherens ve femtosaniye mertebesinde çok kısa X-ışını darbeleridir.</p>
+
+      <h3>“Şiddet” ve “parlaklık” aynı şey değildir</h3>
+      <p>Bir dedektör veya numuneye saniyede gelen toplam foton sayısı <b>akı</b> (<i>flux</i>) ile ifade edilir. Deney açısından “şiddet arttı” denirken çoğu zaman bu akı kastedilir. Ancak büyük tesislerde asıl ayırt edici büyüklük <b>parlaklık / brilliance</b>'tır:</p>
+
+      <div class="eq"><i>B</i> ∝ <span class="frac"><span>foton akısı</span><span>kaynak alanı × katı açı × bant genişliği</span></span></div>
+
+      <p>Dolayısıyla aynı toplam foton akısına sahip iki kaynaktan; daha <b>küçük kaynak boyutuna</b>, daha <b>düşük açısal sapmaya</b> ve daha <b>dar enerji bant genişliğine</b> sahip olan daha yüksek brilliance verir. Sinkrotronun büyük avantajı tam olarak budur: çok yüksek foton akısını küçük, iyi kolime edilmiş ve enerjisi ayarlanabilir bir demette toplar.</p>
+
+      <ul>
+        <li><b>Daha yüksek akı:</b> numuneye birim zamanda daha fazla foton ulaşır → zayıf kırınım sinyalleri daha kısa sürede ölçülebilir.</li>
+        <li><b>Daha yüksek brilliance:</b> fotonlar küçük bir faz-uzayı hacminde yoğunlaşır → mikrometre-altı odaklama, küçük kristaller ve zayıf saçılma deneyleri mümkün olur.</li>
+        <li><b>Enerji ayarlanabilirliği:</b> sinkrotronlarda foton enerjisi geniş bir aralıkta seçilebilir; elemente özgü soğurma kenarlarının çevresi taranabilir.</li>
+        <li><b>Düşük demet sapması:</b> daha iyi açısal çözünürlük ve uzun deney geometrileri sağlar.</li>
+        <li><b>FEL'de kısa darbe:</b> femtosaniye zaman ölçeğinde yapısal değişimler “dondurularak” izlenebilir.</li>
+      </ul>
+
+      <p class="cap"><b>Önemli nüans:</b> bir sinkrotronun “daha parlak” olması yalnızca cihazın daha fazla toplam X-ışını gücü üretmesi anlamına gelmez. Küçük kaynak, düşük diverjans, dar bant ve yüksek akının aynı anda sağlanması brilliance değerini yükseltir. FEL'de ise buna ek olarak elektronların fazca örgütlenmesi çok yüksek <i>peak brilliance</i> üretir.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Klasik tüp · Sinkrotron · FEL</h3>
+      <div class="scroll">
+        <table class="tbl">
+          <thead><tr><th>Özellik</th><th>Klasik X-ışını tüpü</th><th>Sinkrotron</th><th>FEL</th></tr></thead>
+          <tbody>
+            <tr><td>Elektron sistemi</td><td>Katot → anot çarpışması</td><td>Depolama halkasında relativistik elektronlar</td><td>Linac + uzun undulator</td></tr>
+            <tr><td>Işınım mekanizması</td><td>Bremsstrahlung + karakteristik çizgiler</td><td>Eğici mıknatıs / wiggler / undulator ışınımı</td><td>Microbunching ile koherent güçlenme</td></tr>
+            <tr><td>Foton enerjisi</td><td>Anot ve gerilimle sınırlı</td><td>Geniş ölçüde ayarlanabilir</td><td>Ayarlanabilir, tesis ve undulator aralığına bağlı</td></tr>
+            <tr><td>Akı</td><td>Düşük–orta</td><td>Çok yüksek</td><td>Darbe içinde çok yüksek</td></tr>
+            <tr><td>Brilliance</td><td>Düşük</td><td>Çok yüksek</td><td>Özellikle tepe değerde olağanüstü yüksek</td></tr>
+            <tr><td>Koherens</td><td>Düşük</td><td>Kısmi; modern kaynaklarda yüksek uzaysal koherens</td><td>Yüksek</td></tr>
+            <tr><td>Zaman yapısı</td><td>Sürekli / uzun</td><td>Elektron paketlerine bağlı ps–ns yapılar</td><td>Genellikle fs mertebesinde kısa darbeler</td></tr>
+            <tr><td>Tipik kullanım</td><td>Rutin XRD, faz analizi</td><td>Mikro-XRD, anomalous scattering, yüksek çözünürlük, in-situ</td><td>Ultrafast dinamik, tek-parçacık görüntüleme, pump–probe</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sf-formula" style="margin-top:12px">
+        <b>Neden sinkrotron daha parlak?</b><br>
+        yüksek akı + küçük kaynak + düşük diverjans + seçilebilir/dar bant
+        <br>→ çok daha yüksek <i>brilliance</i>
+      </div>
+
+      <p class="cap">Ordinary sinkrotron undulator ışınımında belirli dalga boylarındaki güçlenme, aynı elektronun ardışık salınımlarından gelen alanların girişiminden doğar. FEL'de ise elektron demetinin kendisi de fazca örgütlenir; bu nedenle koherent güçlenme çok daha ileri gider.</p>
+    </div>
+  </div>
   </div>
   </div>
   <div class="subp" id="s2b" hidden>
@@ -1738,6 +1793,45 @@ Object.assign(I18N_HTML,{
 "HMK (110): tam tur → e<sup>i2π</sup>":"BCC (110): full turn → e<sup>i2π</sup>",
 "Atom konumunun hkl doğrultusundaki faz koordinatına dönüşümü":"Conversion of atomic position to phase coordinate along hkl",
 "Kompleks fazın helis şeklindeki matematiksel gösterimi":"Helical mathematical representation of complex phase"
+});
+Object.assign(I18N_HTML,{
+"Laboratuvar tüpünden sinkrotrona ve FEL'e":"From laboratory tube to synchrotron and FEL",
+"Klasik X-ışını tüpü, sinkrotron ve serbest elektron lazeri (FEL) aynı fiziksel hedefe — kısa dalga boylu yüksek enerjili foton üretmeye — farklı yollarla ulaşır. Aralarındaki en önemli fark yalnızca “daha fazla foton” değildir; <b>fotonların ne kadar küçük bir kaynaktan, ne kadar dar bir açıya, ne kadar dar bir enerji aralığında ve ne kadar kısa sürede çıktığı</b> da belirleyicidir.":"A conventional X-ray tube, a synchrotron, and a free-electron laser (FEL) reach the same physical goal—producing short-wavelength, high-energy photons—by different routes. The key difference is not merely “more photons”; it also matters <b>how small the source is, how narrowly the photons are emitted, how narrow the energy band is, and how short the emission time is</b>.",
+"“Şiddet” ve “parlaklık” aynı şey değildir":"“Intensity” and “brightness” are not the same thing",
+"Klasik tüp · Sinkrotron · FEL":"Conventional tube · Synchrotron · FEL",
+"Neden sinkrotron daha parlak?":"Why is a synchrotron brighter?",
+"Özellik":"Property",
+"Klasik X-ışını tüpü":"Conventional X-ray tube",
+"Elektron sistemi":"Electron system",
+"Işınım mekanizması":"Radiation mechanism",
+"Foton enerjisi":"Photon energy",
+"Akı":"Flux",
+"Brilliance":"Brilliance",
+"Koherens":"Coherence",
+"Zaman yapısı":"Time structure",
+"Tipik kullanım":"Typical use",
+"Katot → anot çarpışması":"Cathode → anode impact",
+"Depolama halkasında relativistik elektronlar":"Relativistic electrons in a storage ring",
+"Linac + uzun undulator":"Linac + long undulator",
+"Bremsstrahlung + karakteristik çizgiler":"Bremsstrahlung + characteristic lines",
+"Eğici mıknatıs / wiggler / undulator ışınımı":"Bending-magnet / wiggler / undulator radiation",
+"Microbunching ile koherent güçlenme":"Coherent amplification through microbunching",
+"Anot ve gerilimle sınırlı":"Limited by anode material and voltage",
+"Geniş ölçüde ayarlanabilir":"Widely tunable",
+"Ayarlanabilir, tesis ve undulator aralığına bağlı":"Tunable, depending on facility and undulator range",
+"Düşük–orta":"Low–moderate",
+"Çok yüksek":"Very high",
+"Darbe içinde çok yüksek":"Very high within a pulse",
+"Düşük":"Low",
+"Özellikle tepe değerde olağanüstü yüksek":"Exceptionally high, especially in peak value",
+"Kısmi; modern kaynaklarda yüksek uzaysal koherens":"Partial; high spatial coherence in modern sources",
+"Yüksek":"High",
+"Sürekli / uzun":"Continuous / long",
+"Elektron paketlerine bağlı ps–ns yapılar":"ps–ns structures set by electron bunches",
+"Genellikle fs mertebesinde kısa darbeler":"Typically fs-scale short pulses",
+"Rutin XRD, faz analizi":"Routine XRD, phase analysis",
+"Mikro-XRD, anomalous scattering, yüksek çözünürlük, in-situ":"Micro-XRD, anomalous scattering, high resolution, in-situ",
+"Ultrafast dinamik, tek-parçacık görüntüleme, pump–probe":"Ultrafast dynamics, single-particle imaging, pump–probe"
 });
 Object.assign(I18N_HTML,{
 "Hücre ve Bravais":"Cell and Bravais lattices",
