@@ -1721,6 +1721,8 @@ Object.assign(I18N_HTML,{
 "ρ = <i>f</i><sub>2</sub>/<i>f</i><sub>1</sub>. ρ ≠ 1 seçerek 180° faz farkının neden her zaman tam yok olma vermediğini deneyin.":"ρ = <i>f</i><sub>2</sub>/<i>f</i><sub>1</sub>. Set ρ ≠ 1 to see why a 180° phase difference does not always produce complete extinction.",
 "YMK (111): izinli":"FCC (111): allowed",
 "YMK (110): sönük":"FCC (110): extinct",
+"HMK (100): e<sup>iπ</sup>":"BCC (100): e<sup>iπ</sup>",
+"HMK (110): e<sup>i2π</sup>":"BCC (110): e<sup>i2π</sup>",
 "Atomların kompleks faz vektörleri ve toplam yapı faktörü":"Complex phase vectors of atoms and the total structure factor"
 });
 </script>
@@ -2775,13 +2777,16 @@ function updateSF2(){
   const D=sf2Data();
   $('#sfEq').innerHTML=sf2Equation(D);
   $('#sfOut').innerHTML='<div><span>|F|</span><b>'+num(D.F,4)+'</b></div>'+
-    '<div><span>I / I<sub>maks</sub></span><b>'+num(D.relI*100,3)+'%</b></div>'+
+    '<div><span>I / I<sub>'+(LANG==='en'?'max':'maks')+'</sub></span><b>'+num(D.relI*100,3)+'%</b></div>'+
     '<div><span>Re(F)</span><b>'+num(D.re,4)+'</b></div>'+
     '<div><span>Im(F)</span><b>'+num(D.im,4)+'</b></div>';
-  $('#sfTerms').innerHTML='<thead><tr><th>'+(LANG==='en'?'atom':'atom')+'</th><th>(x,y,z)</th><th>φ/π</th><th>e<sup>iφ</sup> · f</th></tr></thead><tbody>'+
+  $('#sfTerms').innerHTML='<thead><tr><th>'+(LANG==='en'?'atom':'atom')+'</th><th>(x,y,z)</th><th>φ</th><th>e<sup>iφ</sup> · f</th></tr></thead><tbody>'+
     D.terms.map((t,i)=>'<tr><td>j'+(i+1)+'</td><td>'+t.a.p.map(v=>num(v,2)).join(', ')+'</td><td>'+sf2Pi(t.phi/Math.PI)+'</td><td>'+sf2Complex(t.re,t.im)+'</td></tr>').join('')+'</tbody>';
-  const v=$('#sfVerdict'),eps=1e-8;
-  if(D.relI<eps){
+  const v=$('#sfVerdict'),eps=1e-8,is000=!SF2.h&&!SF2.k&&!SF2.l;
+  if(is000){
+    v.className='sf-verdict constructive';
+    v.innerHTML=LANG==='en'?'<b>(000) is not a diffraction reflection.</b> It represents the forward/direct beam; F₀₀₀ = Σf is shown only to make the vector-sum definition explicit.':'<b>(000) bir kırınım yansıması değildir.</b> İleri/doğrudan demeti temsil eder; F₀₀₀ = Σf burada yalnızca vektörel toplam tanımını görünür kılmak için gösterilir.';
+  }else if(D.relI<eps){
     v.className='sf-verdict extinct';
     v.innerHTML=SF2.model==='custom'
       ?(LANG==='en'?'<b>Complete destructive interference.</b> The selected two contributions close exactly, so F = 0. This is an extinction for this chosen basis/reflection; it is systematic only if enforced by the crystal symmetry.':'<b>Tam yıkıcı girişim.</b> Seçili iki katkı tam olarak kapanıyor ve F = 0 oluyor. Bu, seçili baz/yansıma için bir yok olmadır; kristal simetrisi tarafından zorunlu kılınıyorsa sistematiktir.')
