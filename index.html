@@ -3217,7 +3217,7 @@ function initMillerGenerator(){
     const v=e.detail&&e.detail.values;if(!v||v.length!==3)return;
     [selA.value,selB.value,selC.value]=v;stage=1;update();
   });
-  $('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
+  $$('[data-mi-example]').forEach(b=>b.addEventListener('click',()=>{
     const map={100:['1','inf','inf'],110:['1','1','inf'],111:['1','1','1'],120:['1','0.5','inf'],bar110:['-1','1','inf'],classicA:['0.5','0.6666666667','-1'],classicB:['inf','1','0.5']},v=map[b.dataset.miExample];
     if(!v)return;[selA.value,selB.value,selC.value]=v;stage=1;update();
   }));
