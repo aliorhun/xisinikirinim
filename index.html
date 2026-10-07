@@ -5911,8 +5911,8 @@ $$('.subnav').forEach(nav=>{
     });
   });
 });
-let startTab='t1'; try{ const s=localStorage.getItem('xrd-tab'); if(s&&$('#'+s)) startTab=s; }catch(e){}
-showTab(startTab);
+// Sayfa her açıldığında başlangıç sekmesi Kristalografi olsun.
+showTab('t1');
 requestAnimationFrame(loop);
 </script>
 </body>
