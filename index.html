@@ -880,7 +880,6 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
   </div>
   </div>
-  </div>
 </section>
 <section class="tab" id="t3" role="tabpanel" aria-labelledby="tb3" hidden>
 <div class="chap"><span class="chap-no">3</span><div>
@@ -2930,7 +2929,7 @@ function drawSF2Pos(progress=1){
   });
 
   const x0=x(0),xc=x(sel.u),xt=x(selF.finalU);
-  ctx.strokeStyle=cb;ctx.lineWidth=3;arrow(ctx,x0,y+44,xc,y+44,8);
+  ctx.strokeStyle=cb;ctx.lineWidth=3;if(Math.abs(xc-x0)>1)arrow(ctx,x0,y+44,xc,y+44,8);else{ctx.beginPath();ctx.arc(x0,y+44,3,0,2*Math.PI);ctx.fillStyle=cb;ctx.fill();}
   ctx.fillStyle=cb;ctx.beginPath();ctx.arc(xc,y,7,0,2*Math.PI);ctx.fill();
   if(progress<.999){
     ctx.strokeStyle=cu;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(xt,y,9,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
