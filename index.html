@@ -124,6 +124,9 @@ main.wrap{padding-top:44px;padding-bottom:60px}
 .viewer{position:relative;height:460px;border-radius:6px;border:1px solid var(--line);overflow:hidden;
   background:radial-gradient(ellipse at 50% 38%,var(--panel) 0%,var(--panel2) 100%)}
 .viewer canvas{display:block;outline:none}
+.viewer-tools{position:absolute;right:10px;top:10px;z-index:4;display:flex;gap:6px;align-items:center}
+.projection-switch{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:12px;color:var(--ink);cursor:pointer;user-select:none}
+.projection-switch input{margin:0;accent-color:var(--cobalt)}
 .viewer .hint{position:absolute;left:12px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
 .gl-fallback{padding:24px;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-top:10px}
@@ -387,7 +390,15 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
     <div class="lab-grid">
       <div>
-        <div class="viewer" id="v1"><span class="hint">Sürükleyerek döndürün, tekerlekle yakınlaştırın</span></div>
+        <div class="viewer" id="v1">
+          <div class="viewer-tools">
+            <label class="projection-switch" title="Perspektif açıkken eğik 3B görünüm; kapalıyken ortografik eksen görünümü">
+              <input type="checkbox" id="perspective1" checked>
+              <span>Perspektif</span>
+            </label>
+          </div>
+          <span class="hint" id="viewerHint1">Sürükleyerek döndürün, tekerlekle yakınlaştırın</span>
+        </div>
         <div class="legend" id="leg1"></div>
       </div>
       <div class="ctl">
@@ -1932,6 +1943,10 @@ function i18nApplyStatic(){ if(LANG!=='en') return;
 </script>
 <script>
 Object.assign(I18N_HTML,{
+"Perspektif":"Perspective",
+"Perspektif açıkken eğik 3B görünüm; kapalıyken ortografik eksen görünümü":"Perspective on: oblique 3D view; off: orthographic axis-aligned view"
+});
+Object.assign(I18N_HTML,{
 "Atomun kristaldeki konumundan kompleks fazına, faz sarmalından vektörel toplama ve son olarak |<i>F</i>|² şiddetine giden zinciri tek simülasyonda izleyin.":"Follow the full chain in one simulation: from an atom's position in the crystal to its complex phase, through the phase helix and vector sum, and finally to the |<i>F</i>|² intensity.",
 "Konum":"Position",
 "Yapı faktörü hesap zinciri":"Structure-factor calculation chain",
@@ -2244,8 +2259,10 @@ class Viewer3D{
     const r=this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
     r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     el.insertBefore(r.domElement,el.firstChild);
-    this.scene=new THREE.Scene(); this.dist=opt.dist||10;
-    this.camera=new THREE.PerspectiveCamera(35,1,.1,200);
+    this.scene=new THREE.Scene(); this.dist=opt.dist||10; this.fov=35;
+    this.perspectiveCamera=new THREE.PerspectiveCamera(this.fov,1,.1,200);
+    this.orthoCamera=new THREE.OrthographicCamera(-1,1,1,-1,.1,200);
+    this.camera=this.perspectiveCamera; this.projection='perspective'; this.savedPerspectiveRotation=null;
     this.root=new THREE.Group(); this.scene.add(this.root);
     this.root.rotation.set(opt.rx??0.42,opt.ry??-0.62,0);
     this.content=new THREE.Group(); this.root.add(this.content);
@@ -2270,14 +2287,40 @@ class Viewer3D{
     new ResizeObserver(()=>this.resize()).observe(el);
     viewers.push(this);
   }
+  setProjection(mode,opt={}){
+    if(!this.ok)return;
+    const next=mode==='orthographic'?'orthographic':'perspective';
+    if(next==='orthographic'){
+      if(this.projection==='perspective'){
+        this.savedPerspectiveRotation={x:this.root.rotation.x,y:this.root.rotation.y,z:this.root.rotation.z};
+      }
+      this.projection='orthographic'; this.camera=this.orthoCamera;
+      if(opt.alignAxis!==false) this.root.rotation.set(0,0,0);
+    }else{
+      this.projection='perspective'; this.camera=this.perspectiveCamera;
+      if(this.savedPerspectiveRotation){
+        this.root.rotation.set(this.savedPerspectiveRotation.x,this.savedPerspectiveRotation.y,this.savedPerspectiveRotation.z);
+      }
+    }
+    this.resize();
+  }
+  updateProjection(w=this.el.clientWidth,h=this.el.clientHeight){
+    if(!w||!h)return;
+    const aspect=w/h;
+    this.perspectiveCamera.aspect=aspect; this.perspectiveCamera.updateProjectionMatrix();
+    const halfH=Math.tan((this.fov*Math.PI/180)/2)*this.dist,halfW=halfH*aspect;
+    this.orthoCamera.left=-halfW;this.orthoCamera.right=halfW;this.orthoCamera.top=halfH;this.orthoCamera.bottom=-halfH;
+    this.orthoCamera.updateProjectionMatrix();
+  }
   resize(){ const w=this.el.clientWidth,h=this.el.clientHeight; if(!w||!h) return;
-    this.renderer.setSize(w,h); this.camera.aspect=w/h; this.camera.updateProjectionMatrix(); }
+    this.renderer.setSize(w,h); this.updateProjection(w,h); }
   clear(){ this.content.traverse(o=>{
       if(o.geometry&&o.geometry!==SPHERE) o.geometry.dispose();
       if(o.material){ (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{ if(m.map) m.map.dispose(); m.dispose(); }); } });
     this.content.clear(); }
   render(){ if(!this.ok||!this.el.clientWidth) return;
     if(this.auto&&!this.drag&&!REDUCE) this.root.rotation.y+=.0035;
+    this.updateProjection();
     this.camera.position.set(0,0,this.dist); this.camera.lookAt(0,0,0);
     this.renderer.render(this.scene,this.camera); }
 }
@@ -2554,6 +2597,21 @@ $('#showPlane').addEventListener('change',e=>{L1.plane=e.target.checked; update1
 $('#showDir').addEventListener('change',e=>{L1.dir=e.target.checked; update1();});
 
 const V1=new Viewer3D($('#v1'),{dist:10.5});
+const perspective1=$('#perspective1'),viewerHint1=$('#viewerHint1');
+function updateProjectionUI1(){
+  if(!perspective1)return;
+  const on=perspective1.checked;
+  if(viewerHint1) viewerHint1.textContent=on
+    ? (LANG==='en'?'Drag to rotate; use the wheel to zoom':'Sürükleyerek döndürün, tekerlekle yakınlaştırın')
+    : (LANG==='en'?'Orthographic axis view: opposite corners overlap in projection':'Ortografik eksen görünümü: derinlikteki köşeler üst üste gelir');
+}
+if(perspective1){
+  perspective1.addEventListener('change',()=>{
+    V1.setProjection(perspective1.checked?'perspective':'orthographic',{alignAxis:!perspective1.checked});
+    updateProjectionUI1();
+  });
+  updateProjectionUI1();
+}
 
 function build1(){
   if(!V1.ok) return; V1.clear();
@@ -2704,7 +2762,7 @@ reg(C1,draw1);
   if(th&&tk){
     th.addEventListener('input',()=>setTrace(+th.value,+tk.value));
     tk.addEventListener('input',()=>setTrace(+th.value,+tk.value));
-    $('[data-miller-trace]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-miller-trace]').forEach(b=>b.addEventListener('click',()=>{
       const [h,k]=b.dataset.millerTrace.split(',').map(Number);setTrace(h,k);
     }));
     syncTraceInputs();
