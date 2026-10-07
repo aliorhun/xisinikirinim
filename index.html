@@ -801,16 +801,16 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
     </div>
 
     <div class="sf-story">
-      <section class="sf-stage">
+      <div class="sf-stage">
         <div class="sf-stage-head">
           <h4>1 · Konum → faz</h4>
           <span class="tag">gerçek uzay → faz</span>
         </div>
         <canvas id="c2sfPos" class="cv sf-canvas" style="height:260px" role="img" aria-label="Atom konumunun hkl doğrultusundaki faz koordinatına dönüşümü"></canvas>
         <p class="cap">Seçili atom için <i>u</i> = <i>hx</i> + <i>ky</i> + <i>lz</i> hesaplanır. Animasyon atomun gerçek hareketini değil, fazın 0'dan seçili konuma kadar nasıl biriktiğini gösterir.</p>
-      </section>
+      </div>
 
-      <section class="sf-stage">
+      <div class="sf-stage">
         <div class="sf-stage-head">
           <h4>2 · Faz sarmalı</h4>
           <span class="tag">e<sup>iφ</sup></span>
@@ -821,16 +821,16 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
           <button type="button" id="sfPlay">Faz yolunu oynat</button>
         </div>
         <p class="cap"><b>Önemli:</b> Bu sarmal atomun veya X-ışınının uzayda izlediği yol değildir. <i>e</i><sup><i>iφ</i></sup> fazının konuma göre kompleks düzlemdeki matematiksel evrimidir.</p>
-      </section>
+      </div>
 
-      <section class="sf-stage">
+      <div class="sf-stage">
         <div class="sf-stage-head">
           <h4>3 · Fazör toplamı</h4>
           <span class="tag">Σ f<sub>j</sub>e<sup>iφj</sup></span>
         </div>
         <canvas id="c2sf" class="cv sf-canvas" style="height:260px" role="img" aria-label="Atomların kompleks faz vektörleri ve toplam yapı faktörü"></canvas>
         <p class="cap">Oklar atom katkılarını uç uca ekler. Kalın sonuç oku toplam <i>F</i><sub>hkl</sub>'dir. Kapalı çokgen → <i>F</i> = 0 → yansıma yok.</p>
-      </section>
+      </div>
     </div>
 
     <div class="sf-live" id="sfLive" aria-live="polite"></div>
