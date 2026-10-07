@@ -543,9 +543,15 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
       <h3>“Şiddet” ve “parlaklık” aynı şey değildir</h3>
       <p>Bir dedektör veya numuneye saniyede gelen toplam foton sayısı <b>akı</b> (<i>flux</i>) ile ifade edilir. Deney açısından “şiddet arttı” denirken çoğu zaman bu akı kastedilir. Ancak büyük tesislerde asıl ayırt edici büyüklük <b>parlaklık / brilliance</b>'tır:</p>
 
-      <div class="eq"><i>B</i> ∝ <span class="frac"><span>foton akısı</span><span>kaynak alanı × katı açı × bant genişliği</span></span></div>
+      <div class="eq"><i>B</i> ∝ <span class="frac"><span>foton akısı</span><span>kaynak alanı × katı açı × bağıl bant genişliği</span></span></div>
 
-      <p>Dolayısıyla aynı toplam foton akısına sahip iki kaynaktan; daha <b>küçük kaynak boyutuna</b>, daha <b>düşük açısal sapmaya</b> ve daha <b>dar enerji bant genişliğine</b> sahip olan daha yüksek brilliance verir. Sinkrotronun büyük avantajı tam olarak budur: çok yüksek foton akısını küçük, iyi kolime edilmiş ve enerjisi ayarlanabilir bir demette toplar.</p>
+      <p>Daha kesin olarak brilliance, foton sayısının zaman, kaynak alanı, katı açı ve bağıl enerji bant genişliği başına yoğunluğudur; sık kullanılan birimi yaklaşık <b>photon s⁻¹ mm⁻² mrad⁻² (0,1% BW)⁻¹</b> biçimindedir. Dolayısıyla aynı toplam foton akısına sahip iki kaynaktan; daha <b>küçük kaynak boyutuna</b>, daha <b>düşük açısal sapmaya</b> ve daha <b>dar enerji bant genişliğine</b> sahip olan daha yüksek brilliance verir. Sinkrotronun büyük avantajı tam olarak budur: çok yüksek foton akısını küçük, iyi kolime edilmiş ve enerjisi ayarlanabilir bir demette toplar.</p>
+
+      <div class="sf-formula">
+        <b>XRD'de pik neden daha güçlü ölçülür?</b><br>
+        <i>I</i><sub>ölç</sub>(hkl) ∝ Φ<sub>numune</sub> · |<i>F</i><sub>hkl</sub>|² · (geometri, soğurma, dedektör verimi, vb.)
+      </div>
+      <p>Kaynağın akısı Φ<sub>numune</sub> arttığında dedektöre daha fazla kırınım fotonu gelir; böylece zayıf pikler daha hızlı ve daha iyi sayım istatistiğiyle ölçülür. Fakat kristalin <b>yapı faktörü |F<sub>hkl</sub>|</b> kaynak daha parlak olduğu için değişmez. Kaynak, ölçülen foton sayısını artırır; kristal yapının girişim kuralını değiştirmez.</p>
 
       <ul>
         <li><b>Daha yüksek akı:</b> numuneye birim zamanda daha fazla foton ulaşır → zayıf kırınım sinyalleri daha kısa sürede ölçülebilir.</li>
@@ -569,7 +575,7 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
             <tr><td>Foton enerjisi</td><td>Anot ve gerilimle sınırlı</td><td>Geniş ölçüde ayarlanabilir</td><td>Ayarlanabilir, tesis ve undulator aralığına bağlı</td></tr>
             <tr><td>Akı</td><td>Düşük–orta</td><td>Çok yüksek</td><td>Darbe içinde çok yüksek</td></tr>
             <tr><td>Brilliance</td><td>Düşük</td><td>Çok yüksek</td><td>Özellikle tepe değerde olağanüstü yüksek</td></tr>
-            <tr><td>Koherens</td><td>Düşük</td><td>Kısmi; modern kaynaklarda yüksek uzaysal koherens</td><td>Yüksek</td></tr>
+            <tr><td>Koherens</td><td>Düşük</td><td>Kısmi; modern kaynaklarda yüksek uzaysal koherens</td><td>Yüksek uzaysal koherens; zamansal koherens çalışma moduna bağlı</td></tr>
             <tr><td>Zaman yapısı</td><td>Sürekli / uzun</td><td>Elektron paketlerine bağlı ps–ns yapılar</td><td>Genellikle fs mertebesinde kısa darbeler</td></tr>
             <tr><td>Tipik kullanım</td><td>Rutin XRD, faz analizi</td><td>Mikro-XRD, anomalous scattering, yüksek çözünürlük, in-situ</td><td>Ultrafast dinamik, tek-parçacık görüntüleme, pump–probe</td></tr>
           </tbody>
@@ -582,7 +588,7 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
         <br>→ çok daha yüksek <i>brilliance</i>
       </div>
 
-      <p class="cap">Ordinary sinkrotron undulator ışınımında belirli dalga boylarındaki güçlenme, aynı elektronun ardışık salınımlarından gelen alanların girişiminden doğar. FEL'de ise elektron demetinin kendisi de fazca örgütlenir; bu nedenle koherent güçlenme çok daha ileri gider.</p>
+      <p class="cap">Klasik sinkrotron undulator ışınımında belirli dalga boylarındaki güçlenme, aynı elektronun ardışık salınımlarından gelen alanların girişiminden doğar. FEL'de ise elektron demetinin kendisi de fazca örgütlenir; bu nedenle koherent güçlenme çok daha ileri gider.</p>
     </div>
   </div>
   </div>
@@ -1832,6 +1838,14 @@ Object.assign(I18N_HTML,{
 "Rutin XRD, faz analizi":"Routine XRD, phase analysis",
 "Mikro-XRD, anomalous scattering, yüksek çözünürlük, in-situ":"Micro-XRD, anomalous scattering, high resolution, in-situ",
 "Ultrafast dinamik, tek-parçacık görüntüleme, pump–probe":"Ultrafast dynamics, single-particle imaging, pump–probe"
+,
+"Sinkrotron.":"Synchrotron.",
+"FEL (Free-Electron Laser).":"FEL (Free-Electron Laser).",
+"Bir dedektör veya numuneye saniyede gelen toplam foton sayısı <b>akı</b> (<i>flux</i>) ile ifade edilir. Deney açısından “şiddet arttı” denirken çoğu zaman bu akı kastedilir. Ancak büyük tesislerde asıl ayırt edici büyüklük <b>parlaklık / brilliance</b>'tır:":"The total number of photons arriving at a detector or sample per second is described by the <b>flux</b>. In experiments, saying that the “intensity increased” often refers to this flux. At large facilities, however, the more discriminating quantity is <b>brightness / brilliance</b>:",
+"XRD'de pik neden daha güçlü ölçülür?":"Why does an XRD peak measure more strongly?",
+"Kaynağın akısı Φ<sub>numune</sub> arttığında dedektöre daha fazla kırınım fotonu gelir; böylece zayıf pikler daha hızlı ve daha iyi sayım istatistiğiyle ölçülür. Fakat kristalin <b>yapı faktörü |F<sub>hkl</sub>|</b> kaynak daha parlak olduğu için değişmez. Kaynak, ölçülen foton sayısını artırır; kristal yapının girişim kuralını değiştirmez.":"When the source flux Φ<sub>sample</sub> increases, more diffracted photons reach the detector, so weak peaks can be measured faster and with better counting statistics. But the crystal's <b>structure factor |F<sub>hkl</sub>|</b> does not change just because the source is brighter. The source increases the measured photon count; it does not change the crystal's interference rule.",
+"Yüksek uzaysal koherens; zamansal koherens çalışma moduna bağlı":"High spatial coherence; temporal coherence depends on operating mode",
+"Klasik sinkrotron undulator ışınımında belirli dalga boylarındaki güçlenme, aynı elektronun ardışık salınımlarından gelen alanların girişiminden doğar. FEL'de ise elektron demetinin kendisi de fazca örgütlenir; bu nedenle koherent güçlenme çok daha ileri gider.":"In conventional synchrotron undulator radiation, enhancement at selected wavelengths comes from interference among fields emitted by successive oscillations of the same electron. In an FEL, the electron bunch itself also becomes phase-organized, so coherent amplification proceeds much further."
 });
 Object.assign(I18N_HTML,{
 "Hücre ve Bravais":"Cell and Bravais lattices",
