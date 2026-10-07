@@ -2087,6 +2087,31 @@ function i18nApplyStatic(){ if(LANG!=='en') return;
 </script>
 <script>
 Object.assign(I18N_HTML,{
+"Çözümlü klasik örnekler: kuralları birlikte görelim":"Worked classic examples: see the rules together",
+"Bu iki örnek özellikle kalıcı tutulur: ilki <b>kesirli + negatif kesişimi</b>, ikincisi ise <b>paralel eksen → ∞ → 0</b> ilişkisini aynı anda gösterir.":"These two examples remain visible as references: the first combines a <b>fractional + negative intercept</b>, while the second shows the <b>parallel axis → ∞ → 0</b> relationship.",
+"Örnek A":"Example A",
+"Kesirli ve negatif kesişim":"Fractional and negative intercepts",
+"1 · Kesişimler":"1 · Intercepts",
+"a, b, c cinsinden":"in units of a, b, c",
+"2 · Tersleri":"2 · Reciprocals",
+"mesafe → reciprocal bileşen":"distance → reciprocal component",
+"3 · Paydaları eşitle":"3 · Clear denominators",
+"ortak tam sayı oranı":"common integer ratio",
+"4 · Sonuç":"4 · Result",
+"negatif indis üst çizgiyle yazılır":"a negative index is written with an overbar",
+"Ne öğretir?":"What does it teach?",
+"Bir kesişim küçüldükçe reciprocal bileşen büyür. Negatif kesişim ise negatif Miller indisi üretir.":"As an intercept becomes smaller, its reciprocal component becomes larger. A negative intercept produces a negative Miller index.",
+"Bu örneği üreticide aç →":"Open this example in the builder →",
+"Örnek B":"Example B",
+"Bir eksene paralel düzlem":"Plane parallel to one axis",
+"a eksenine paralel":"parallel to the a axis",
+"1/∞ = 0":"1/∞ = 0",
+"zaten tam sayı":"already integers",
+"ek çarpan gerekmiyor":"no extra multiplier required",
+"0 → a eksenine paralellik":"0 → parallel to the a axis",
+"Bir düzlem bir ekseni hiç kesmiyorsa kesişim ∞'dadır; tersi 0 olduğundan o Miller indisi sıfır olur.":"If a plane never intersects an axis, its intercept is at ∞; its reciprocal is 0, so that Miller index is zero."
+});
+Object.assign(I18N_HTML,{
 "Miller düzlemi üretici: bir düzlemden (hkl)'ye":"Miller-plane builder: from a plane to (hkl)",
 "Bu araç sonucu bir anda vermek yerine, seçtiğiniz geometrik düzlemin nasıl Miller indislerine dönüştüğünü dört aşamada gösterir: <b>yerleştir → kesişimleri oku → terslerini al → (hkl)'yi yorumla</b>.":"Instead of revealing the answer immediately, this tool shows in four stages how the geometric plane you choose becomes Miller indices: <b>place it → read intercepts → take reciprocals → interpret (hkl)</b>.",
 "Hedef:":"Goal:",
@@ -2940,6 +2965,78 @@ reg(C1,draw1);
   $('#millerToGenerator')?.addEventListener('click',()=>{
     const b=$('.subnav [data-sub="s1c"]'); if(b)b.click();
   });
+})();
+
+/* Kalıcı çözümlü Miller örnekleri */
+(function initSolvedMillerExamples(){
+  const configs={
+    classicA:{canvas:'#millerSolvedA',ints:[.5,2/3,-1],hkl:[4,3,-2]},
+    classicB:{canvas:'#millerSolvedB',ints:[Infinity,1,.5],hkl:[0,1,2]}
+  };
+  function clipPlane(h,k,l,m,lo,hi){
+    const C=[];for(const x of [lo,hi])for(const y of [lo,hi])for(const z of [lo,hi])C.push([x,y,z]);
+    const E=[];for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let d=0;for(let a=0;a<3;a++)if(C[i][a]!==C[j][a])d++;if(d===1)E.push([C[i],C[j]]);}
+    const F=v=>h*v[0]+k*v[1]+l*v[2]-m,pts=[];
+    const add=p=>{if(!pts.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])<1e-7))pts.push(p);};
+    for(const [a,b] of E){
+      const fa=F(a),fb=F(b);if(Math.abs(fa)<1e-9)add(a);if(Math.abs(fb)<1e-9)add(b);
+      if(fa*fb<0){const t=fa/(fa-fb);add(a.map((x,i)=>x+t*(b[i]-x)));}
+    }
+    return pts;
+  }
+  function intLabel(v,axis){
+    if(!isFinite(v))return '∞';
+    if(Math.abs(v-.5)<1e-8)return '½'+axis;
+    if(Math.abs(v-2/3)<1e-8)return '⅔'+axis;
+    if(Math.abs(v+1)<1e-8)return '−'+axis;
+    if(Math.abs(v-1)<1e-8)return axis;
+    return fracStr(v)+axis;
+  }
+  function drawOne(cfg){
+    const cv=$(cfg.canvas),P=prep(cv);if(!P)return;
+    const {ctx,w,h}=P,ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal');
+    const lo=-1.12,hi=1.12,sc=Math.min(w,h)*.285,ox=w*.47,oy=h*.57;
+    const proj=p=>[ox+sc*(p[0]-.56*p[1]),oy-sc*(.31*p[0]+.31*p[1]+p[2])];
+    const edge=(a,b,c=line,alpha=1)=>{const A=proj(a),B=proj(b);ctx.strokeStyle=c;ctx.globalAlpha=alpha;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(...A);ctx.lineTo(...B);ctx.stroke();ctx.globalAlpha=1;};
+    const U=[];for(const x of [0,1])for(const y of [0,1])for(const z of [0,1])U.push([x,y,z]);
+    for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let d=0;for(let a=0;a<3;a++)if(U[i][a]!==U[j][a])d++;if(d===1)edge(U[i],U[j],line,.7);}
+    const O=proj([0,0,0]);
+    [[[1.15,0,0],'a',cu],[[0,1.15,0],'b',tl],[[0,0,1.15],'c',cb]].forEach(([v,lab,c])=>{
+      const Q=proj(v);ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=1.8;arrow(ctx,O[0],O[1],Q[0],Q[1],7);
+      ctx.font='italic 14px Spectral,Georgia,serif';ctx.fillText(lab,Q[0]+4,Q[1]-4);
+    });
+    if(cfg.ints.some(v=>v<0)){
+      const Q=proj([0,0,-1.08]);ctx.setLineDash([4,4]);ctx.strokeStyle=muted;ctx.beginPath();ctx.moveTo(...O);ctx.lineTo(...Q);ctx.stroke();ctx.setLineDash([]);
+    }
+    const rec=cfg.ints.map(v=>isFinite(v)?1/v:0),pts=clipPlane(rec[0],rec[1],rec[2],1,lo,hi);
+    if(pts.length>=3){
+      const pp=pts.map(proj),cx=pp.reduce((a,p)=>a+p[0],0)/pp.length,cy=pp.reduce((a,p)=>a+p[1],0)/pp.length;
+      pp.sort((a,b)=>Math.atan2(a[1]-cy,a[0]-cx)-Math.atan2(b[1]-cy,b[0]-cx));
+      ctx.fillStyle=cb;ctx.globalAlpha=.19;ctx.beginPath();ctx.moveTo(...pp[0]);for(const p of pp.slice(1))ctx.lineTo(...p);ctx.closePath();ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=cb;ctx.lineWidth=2;ctx.stroke();
+    }
+    cfg.ints.forEach((v,i)=>{
+      if(!isFinite(v))return;
+      const p=[0,0,0];p[i]=v;const q=proj(p);ctx.fillStyle=cu;ctx.beginPath();ctx.arc(q[0],q[1],5,0,2*Math.PI);ctx.fill();
+      ctx.font='600 11px "IBM Plex Sans",sans-serif';ctx.fillStyle=ink;ctx.fillText(intLabel(v,'abc'[i]),q[0]+7,q[1]-7);
+    });
+    if(!isFinite(cfg.ints[0])){
+      ctx.fillStyle=muted;ctx.font='11px "IBM Plex Sans",sans-serif';ctx.fillText(LANG==='en'?'a: ∞ (parallel)':'a: ∞ (paralel)',12,h-14);
+    }
+    ctx.fillStyle=ink;ctx.font='700 15px "IBM Plex Sans",sans-serif';ctx.fillText(hklStr(cfg.hkl),12,18);
+  }
+  Object.values(configs).forEach(cfg=>{const cv=$(cfg.canvas);if(cv){reg(cv,()=>drawOne(cfg));drawOne(cfg);}});
+  onTheme(()=>Object.values(configs).forEach(drawOne));
+
+  const loadMap={classicA:['0.5','0.6666666667','-1'],classicB:['inf','1','0.5']};
+  $$('[data-miller-solved]').forEach(btn=>btn.addEventListener('click',()=>{
+    const values=loadMap[btn.dataset.millerSolved];if(!values)return;
+    const sub=$('.subnav [data-sub="s1c"]');if(sub)sub.click();
+    const lab=$('#millerGenLab');
+    if(lab){
+      lab.dispatchEvent(new CustomEvent('miller-load-solved',{detail:{values}}));
+      requestAnimationFrame(()=>lab.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:'start'}));
+    }
+  }));
 })();
 
 function update1(){
