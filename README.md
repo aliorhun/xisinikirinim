@@ -163,3 +163,25 @@ Sayfanın içindeki ileri konularda ilgili çalışmalara ayrıca kısa literat�
 Bu çalışma bir üretim tipi XRD analiz paketi değil, **ders sırasında veya ders sonrasında kavramların hızlıca tekrar edilebildiği etkileşimli bir öğrenme materyalidir**.
 
 Katkılar; özellikle bilimsel ifade düzeltmeleri, daha anlaşılır görselleştirmeler, eğitim örnekleri ve kaynak önerileri açısından memnuniyetle karşılanır.
+
+
+## Tamamen çevrimdışı kullanım
+
+Uygulamanın **çalışma zamanı için internet bağlantısı gerekmez** ve harici CDN/font/veri kaynağına bağımlılığı yoktur.
+
+- **Three.js r128** uygulama içinde `vendor/three-r128.min.js` olarak tutulur.
+- **PrismJS 1.29.0** ve Python dil desteği `vendor/` altında yereldir.
+- Google Fonts kaldırılmıştır. CSS'teki yazı tipleri bulunamazsa tarayıcı doğrudan işletim sistemi fontlarına düşer; font indirme isteği yapılmaz.
+- Depo indirildikten sonra `index.html` doğrudan yerel klasörden (`file://`) açılabilir; Three.js, Prism ve tüm uygulama kodu aynı klasörden yüklenir.
+- GitHub Pages veya localhost üzerinde ilk başarılı açılışta `service-worker.js`, `index.html` ve yerel vendor dosyalarını uygulama önbelleğine alır. Sonraki açılış internet yokken de çalışır.
+- Çevrimiçiyken ana sayfa için **network-first** stratejisi kullanılır; böylece yeni sürümler geldiğinde eski offline cache'e kilitlenmez. Ağ yoksa cache'deki son başarılı sürüme düşer.
+- Çalışma zamanında harici `http://` / `https://` script, stil, font, resim veya veri kaynağı kullanılmaz.
+
+Üçüncü taraf lisansları:
+
+- `vendor/LICENSE-three.txt`
+- `vendor/LICENSE-prism.txt`
+
+### Offline doğrulama
+
+Tarayıcı geliştirici araçlarında **Network → Offline** seçildikten sonra sayfayı yenileyebilirsiniz. GitHub Pages üzerinden test ediliyorsa servis çalışanının uygulama kabuğunu önceden bir kez başarıyla cache'lemiş olması gerekir. Depo yerel olarak açılıyorsa bu ön koşul yoktur.
