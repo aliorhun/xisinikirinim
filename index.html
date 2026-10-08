@@ -4,14 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>X-ışını toz kırınımı: kristal yapı laboratuvarı</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="application-name" content="XRD Kristal Yapı Laboratuvarı">
+<meta name="theme-color" content="#EAEEF2">
 <script>(function(){var l='tr';try{if(localStorage.getItem('xrd-lang')==='en')l='en';}catch(e){}document.documentElement.lang=l;})();</script>
 <script>(function(){var t='light';try{if(localStorage.getItem('xrd-theme')==='dark')t='dark';}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="./vendor/three-r128.min.js"></script>
+<script src="./vendor/prism-1.29.0.js"></script>
+<script src="./vendor/prism-python-1.29.0.js"></script>
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -6764,6 +6763,21 @@ const LEARN={
 }catch(e){console.error('Learn init failed',e);}
 // Sayfa her açıldığında başlangıç sekmesi Kristalografi olsun.
 showTab('t1');
+
+// GitHub Pages / localhost: cache the local app shell so subsequent launches work offline.
+// file:// launches already use only local files, so service-worker registration is skipped there.
+if('serviceWorker' in navigator && (
+  location.protocol==='https:' ||
+  location.hostname==='localhost' ||
+  location.hostname==='127.0.0.1'
+)){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js').catch(err=>{
+      console.warn('Offline service worker registration failed:',err);
+    });
+  },{once:true});
+}
+
 requestAnimationFrame(loop);
 </script>
 </body>
