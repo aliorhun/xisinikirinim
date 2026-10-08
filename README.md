@@ -16,6 +16,11 @@ Ders özeti yedi ana bölümden oluşur:
    - Miller indisleri ve düzlemler arası uzaklık
    - Eksen kesişimlerinden Miller indislerini adım adım üreten etkileşimli düzlem laboratuvarı
    - Kristal yapıların üç boyutlu gösterimi
+   - Örgü + baz ayrımı, ilkel/geleneksel hücre, neden 14 Bravais örgüsü, nokta ve uzay grupları
+   - Kristal sistemi / örgü sistemi / kristal ailesi ayrımı (trigonal sistem notu)
+   - Merkezleme kaynaklı sönüm uyarısı, hekzagonal Miller–Bravais (hkil) gösterimi, holohedri eşdeğerleri
+   - d<sub>hkl</sub> formülünün türetilmesi, çözümlü Cu örneği, N = h² + k² + l² dizisi ve kübik d/2θ hesaplayıcı
+   - Her alt bölümde öğrenme hedefleri, “önce tahmin et, sonra kontrol et” soruları ve simülasyon görev kartları
 
 2. **X-ışınları ve Bragg kırınımı**
    - X-ışınlarının oluşumu ve karakteristik çizgiler
@@ -30,6 +35,13 @@ Ders özeti yedi ana bölümden oluşur:
    - Fourier bakışıyla ters örgü ve q = k − k₀ bağlantısı
    - Ters örgü ve Ewald yapısı
    - Yapı faktörü ve sistematik sönümler
+   - Kα₁/Kα₂ kökeni (L₂/L₃), Moseley yasası, Auger rekabeti ve tüp verimi
+   - Anot seçimi ve numune floresansı denetleyicisi; spektrumda akım, filtre kalınlığı, pencere/hava soğurması ve Kα yakınlaştırma
+   - “Neden geliş açısı = saçılma açısı?” düzlem içi girişim laboratuvarı ve kinematik yaklaşım notu
+   - N-düzlem şiddetinde f² · LP · Debye–Waller zarfı, 2θ ekseni ve FWHM/Scherrer karşılaştırması
+   - Ewald yapısında merkezleme sönümleri, sınırlayıcı küre (2/λ), çokluk ve Laue (beyaz ışın) modu
+   - 3B gerçek/ters örgü görüntüleyici (HMK ↔ YMK ters örgü ilişkisi)
+   - Fazör simülasyonunda gerçek atomlarla CsCl, NaCl ve elmas (Si) yapıları
 
 3. **Toz kırınım yöntemi**
    - Rastgele yönlenmiş kristalitler
