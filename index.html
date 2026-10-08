@@ -308,22 +308,29 @@ legend{font-size:13px;color:var(--muted);padding:0 4px}
 .scatter-main-idea{padding:15px 16px;border:1px solid color-mix(in srgb,var(--cobalt) 38%,var(--line));border-left:5px solid var(--cobalt);border-radius:0 10px 10px 0;background:var(--panel2);font-size:15px;line-height:1.62}
 .scatter-main-idea h4{margin:0 0 7px;font-size:15px}
 .scatter-main-idea p{margin:0}
-.scatter-wave-lab{padding:15px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
-.scatter-wave-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:11px}
-.scatter-wave-head h3{margin:0 0 4px}
-.scatter-wave-head p{margin:0;max-width:64em;color:var(--muted);font-size:13px;line-height:1.45}
+.scatter-wave-lab{padding:16px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+.scatter-wave-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:10px}
+.scatter-wave-head h3{margin:0 0 5px}
+.scatter-wave-head p{margin:0;max-width:62em;color:var(--muted);font-size:13px;line-height:1.5}
 .scatter-wave-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .scatter-wave-controls button[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--onAccent)}
-.scatter-wave-canvas{height:390px!important;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+.scatter-wave-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:8px 0 10px;font-size:12px;color:var(--muted)}
+.scatter-wave-legend span{display:inline-flex;align-items:center;gap:6px}
+.scatter-wave-legend i{display:inline-block;width:22px;height:4px;border-radius:999px}
+.scatter-wave-legend .e1{background:var(--cobalt)}
+.scatter-wave-legend .e2{background:var(--teal)}
+.scatter-wave-legend .esum{background:var(--forbid)}
+.scatter-wave-canvas{height:520px!important;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
 .scatter-wave-readout{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
 .scatter-wave-readout>div{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);min-width:0}
 .scatter-wave-readout span{display:block;color:var(--muted);font-size:11px}
 .scatter-wave-readout b{display:block;margin-top:2px;font-size:14px;overflow-wrap:anywhere}
-.scatter-wave-explain{margin-top:10px;padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 7px 7px 0;font-size:14px;line-height:1.55}
+.scatter-wave-explain{margin-top:10px;padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 7px 7px 0;font-size:14px;line-height:1.58}
 .scatter-wave-explain.extinct{border-left-color:var(--forbid)}
 .scatter-wave-explain.allowed{border-left-color:var(--ok)}
-@media(max-width:920px){.scatter-intro,.scatter-bridge-grid{grid-template-columns:1fr}.scatter-rules{grid-template-columns:1fr}.scatter-flow{grid-template-columns:1fr}.scatter-flow>div:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-13px;transform:translate(-50%,50%)}.scatter-wave-readout{grid-template-columns:repeat(2,minmax(0,1fr))}.scatter-wave-canvas{height:430px!important}}
-@media(max-width:540px){.scatter-wave-readout{grid-template-columns:1fr}.scatter-wave-controls{width:100%}.scatter-wave-controls button{flex:1 1 auto}.scatter-wave-canvas{height:460px!important}}
+.scatter-wave-physics{margin-top:9px;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:12.5px;line-height:1.5}
+@media(max-width:920px){.scatter-intro,.scatter-bridge-grid{grid-template-columns:1fr}.scatter-rules{grid-template-columns:1fr}.scatter-flow{grid-template-columns:1fr}.scatter-flow>div:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-13px;transform:translate(-50%,50%)}.scatter-wave-readout{grid-template-columns:repeat(2,minmax(0,1fr))}.scatter-wave-canvas{height:540px!important}}
+@media(max-width:540px){.scatter-wave-readout{grid-template-columns:1fr}.scatter-wave-controls{width:100%}.scatter-wave-controls button{flex:1 1 auto}.scatter-wave-canvas{height:560px!important}.scatter-wave-legend{gap:8px 12px}}
 
 /* tables, equations */
 .scroll{overflow-x:auto}
@@ -1530,8 +1537,8 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       <div class="scatter-wave-lab" id="scatterWaveLab">
         <div class="scatter-wave-head">
           <div>
-            <h3>Canlı saçılma: geri dönen dalgalar dedektörde ne yapıyor?</h3>
-            <p>Üç senaryoyu karşılaştırın. Hareketli paketler aynı Bragg yönüne saçılan iki eşdeğer katkıyı temsil eder; dedektördeki alt grafik bu iki dalganın gerçek zamanlı toplamıdır.</p>
+            <h3>Canlı süperpozisyon: iki saçılmış dalga aynı yerde ne yapıyor?</h3>
+            <p>Bu kez iki katkıyı ayrı satırlarda değil, <b>aynı yayılma ekseni üzerinde gerçekten üst üste</b> çiziyoruz. Böylece HMK (100)'de tepe + çukurun nasıl sıfıra indiği, HMK (200)'de ise tepe + tepenin nasıl daha büyük bir alan ürettiği doğrudan görülür.</p>
           </div>
           <div class="scatter-wave-controls" role="group" aria-label="Saçılma animasyonu senaryosu">
             <button type="button" data-scatter-mode="simple" aria-pressed="false">Basit kübik (komşu hücreler)</button>
@@ -1541,11 +1548,17 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
           </div>
         </div>
 
-        <canvas id="cScatterReturn" class="cv scatter-wave-canvas" role="img" aria-label="X-ışını dalgalarının iki atomik katkıdan saçılıp dedektörde yapıcı veya yıkıcı girişim oluşturmasını gösteren animasyon"></canvas>
+        <div class="scatter-wave-legend" aria-hidden="true">
+          <span><i class="e1"></i>1. atomun alanı E₁</span>
+          <span><i class="e2"></i>2. atomun alanı E₂</span>
+          <span><i class="esum"></i>net alan E = E₁ + E₂</span>
+        </div>
+
+        <canvas id="cScatterReturn" class="cv scatter-wave-canvas" role="img" aria-label="Aynı eksen üzerinde üst üste binen iki saçılmış X-ışını elektrik alanını ve bunların toplam alanını gösteren animasyon"></canvas>
 
         <div class="scatter-wave-readout" id="scatterWaveReadout"></div>
         <div class="scatter-wave-explain" id="scatterWaveExplain" aria-live="polite"></div>
-        <p class="cap">Bu, faz ilişkisini öğretmek için hazırlanmış bir 1B şemadır; atom düzlemlerini gerçek bir ayna gibi çizmez. Fiziksel sonuç, aynı saçılma vektörü yönünde atomlardan gelen kompleks genliklerin dedektörde toplanmasıdır.</p>
+        <div class="scatter-wave-physics"><b>Fiziksel sınır:</b> “Deniz dalgası” görünümü yalnızca süperpozisyonu sezdirir. X-ışınında hareket eden şey su yüzeyi değil elektromanyetik alandır. Mavi ve turkuaz eğriler aynı <b>q = g<sub>hkl</sub></b> yönünde saçılan koherent elektrik alanı katkılarını temsil eder. Dedektör alanları toplar; ölçülen şiddet zaman ortalaması olarak <b>I ∝ ⟨|E₁ + E₂|²⟩</b> ile ilişkilidir.</div>
       </div>
 
       <div class="scatter-flow" aria-label="Bir yansımanın görülme zinciri">
@@ -2603,6 +2616,13 @@ Object.assign(I18N_HTML,{
 "Saçılma koşulları":"Scattering conditions",
 "Temel fizik resmi: dalgalar geri dönüp üst üste geliyor":"Core physical picture: the returning waves overlap",
 "Kristale X-ışınları, yani elektromanyetik dalgalar gönderiyoruz. İlk sezgisel resimde atom düzlemlerini düzenli “saçıcı duvarlar” gibi düşünebiliriz. Farklı katmanlardan saçılan dalgalar dedektöre <b>aynı fazda</b> geri gelirse tepe tepeye biner ve büyük bir sinyal oluşturur: <b>yapıcı girişim / difraksiyon piki</b>. Basit bir hücrede köşe atomlarının periyodik katkıları uygun Bragg koşulunda birbirini kuvvetlendirir. Merkezli hücrelerde ise araya eklenen atomların katkısı bazı (hkl) seçimlerinde yarım periyot kayarak bu toplamı söndürebilir.":"We send X-rays—electromagnetic waves—into the crystal. As a first intuitive picture, imagine the atomic planes as regularly spaced scattering walls. If waves scattered from different layers return to the detector <b>in phase</b>, crest meets crest and a large signal forms: a <b>constructive-interference / diffraction peak</b>. In a primitive cell, periodic contributions from corner atoms reinforce under the appropriate Bragg condition. In centered cells, additional atoms can shift some (hkl) contributions by half a period and extinguish the sum.",
+"Canlı süperpozisyon: iki saçılmış dalga aynı yerde ne yapıyor?":"Live superposition: what do two scattered waves do at the same place?",
+"Bu kez iki katkıyı ayrı satırlarda değil, <b>aynı yayılma ekseni üzerinde gerçekten üst üste</b> çiziyoruz. Böylece HMK (100)'de tepe + çukurun nasıl sıfıra indiği, HMK (200)'de ise tepe + tepenin nasıl daha büyük bir alan ürettiği doğrudan görülür.":"This time the two contributions are not drawn on separate rows; they are <b>truly superposed on the same propagation axis</b>. This makes it directly visible how crest + trough cancels for BCC (100), while crest + crest produces a larger field for BCC (200).",
+"1. atomun alanı E₁":"field from atom 1, E₁",
+"2. atomun alanı E₂":"field from atom 2, E₂",
+"net alan E = E₁ + E₂":"net field E = E₁ + E₂",
+"Aynı eksen üzerinde üst üste binen iki saçılmış X-ışını elektrik alanını ve bunların toplam alanını gösteren animasyon":"Animation showing two scattered X-ray electric fields superposed on the same axis and their resultant field",
+"<b>Fiziksel sınır:</b> “Deniz dalgası” görünümü yalnızca süperpozisyonu sezdirir. X-ışınında hareket eden şey su yüzeyi değil elektromanyetik alandır. Mavi ve turkuaz eğriler aynı <b>q = g<sub>hkl</sub></b> yönünde saçılan koherent elektrik alanı katkılarını temsil eder. Dedektör alanları toplar; ölçülen şiddet zaman ortalaması olarak <b>I ∝ ⟨|E₁ + E₂|²⟩</b> ile ilişkilidir.":"<b>Physical limit of the analogy:</b> the “water-wave” appearance is only meant to build intuition for superposition. In X-rays, what propagates is an electromagnetic field, not a water surface. The blue and teal curves represent coherent electric-field contributions scattered into the same <b>q = g<sub>hkl</sub></b> direction. The detector receives the summed field, and the measured intensity is related to the time average <b>I ∝ ⟨|E₁ + E₂|²⟩</b>.",
 "Canlı saçılma: geri dönen dalgalar dedektörde ne yapıyor?":"Live scattering: what do the returning waves do at the detector?",
 "Üç senaryoyu karşılaştırın. Hareketli paketler aynı Bragg yönüne saçılan iki eşdeğer katkıyı temsil eder; dedektördeki alt grafik bu iki dalganın gerçek zamanlı toplamıdır.":"Compare three scenarios. The moving packets represent two equivalent contributions scattered into the same Bragg direction; the lower detector trace shows their real-time sum.",
 "Saçılma animasyonu senaryosu":"Scattering animation scenario",
@@ -4415,117 +4435,187 @@ reg(C2w,ewald2);
 })();
 animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2').value=T2e.om; ewald2(); } }});
 
-/* Saçılma koşulları: geri dönen iki dalganın faz toplamı */
+/* Saçılma koşulları: aynı eksende gerçek alan süperpozisyonu */
 (function initScatteringReturnWaves(){
   const cv=$('#cScatterReturn'),lab=$('#scatterWaveLab'),readout=$('#scatterWaveReadout'),explain=$('#scatterWaveExplain'),play=$('#scatterWavePlay');
   if(!cv||!lab||!readout||!explain||!play)return;
 
   const SC={mode:'100',run:!REDUCE,t:0};
   const configs={
-    simple:{phase:0,hkl:'P',nameTR:'Basit kübik: komşu hücreler',nameEN:'Simple cubic: neighbouring cells',formula:'Δφ = 2π·h → aynı faz; F_P = f'},
-    '100':{phase:Math.PI,hkl:'(100)',nameTR:'HMK (100)',nameEN:'BCC (100)',formula:'F₁₀₀ = f[1 + eⁱπ] = 0'},
-    '200':{phase:2*Math.PI,hkl:'(200)',nameTR:'HMK (200)',nameEN:'BCC (200)',formula:'F₂₀₀ = f[1 + eⁱ²π] = 2f'}
+    simple:{phase:0,nameTR:'Basit kübik: komşu hücreler',nameEN:'Simple cubic: neighbouring cells'},
+    '100':{phase:Math.PI,nameTR:'HMK (100)',nameEN:'BCC (100)'},
+    '200':{phase:2*Math.PI,nameTR:'HMK (200)',nameEN:'BCC (200)'}
   };
 
   function cfg(){return configs[SC.mode];}
-  function wave(ctx,x0,x1,y,amp,phase,color,width=2,alpha=1){
-    ctx.strokeStyle=color;ctx.lineWidth=width;ctx.globalAlpha=alpha;ctx.beginPath();
-    const L=Math.max(1,x1-x0),k=2*Math.PI/54;
-    for(let x=x0;x<=x1;x+=2){
-      const yy=y-amp*Math.sin(k*(x-x0)+phase);
-      if(x===x0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
-    }
-    ctx.stroke();ctx.globalAlpha=1;
-  }
-  function packet(ctx,cx,y,amp,phase,color,dir=-1){
-    const half=56,k=2*Math.PI/34;
-    ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.beginPath();let first=true;
-    for(let dx=-half;dx<=half;dx+=2){
-      const env=Math.exp(-Math.pow(dx/31,2));
-      const x=cx+dx,yy=y-amp*env*Math.sin(k*dx*dir+phase);
-      if(first){ctx.moveTo(x,yy);first=false}else ctx.lineTo(x,yy);
-    }
-    ctx.stroke();
-  }
   function label(ctx,text,x,y,color,align='left',font='12px "IBM Plex Sans",sans-serif'){
     ctx.font=font;ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);
   }
+  function line(ctx,x0,y0,x1,y1,color,width=1,alpha=1,dash=[]){
+    ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.globalAlpha=alpha;ctx.setLineDash(dash);
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore();
+  }
+  function arrow2(ctx,x0,y0,x1,y1,color,width=1.8){
+    ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+    const a=Math.atan2(y1-y0,x1-x0),q=8;
+    ctx.beginPath();ctx.moveTo(x1,y1);
+    ctx.lineTo(x1-q*Math.cos(a-.45),y1-q*Math.sin(a-.45));
+    ctx.lineTo(x1-q*Math.cos(a+.45),y1-q*Math.sin(a+.45));ctx.closePath();ctx.fill();ctx.restore();
+  }
+  function fieldAt(x,x0,k,omegaT,phase){return Math.sin(k*(x-x0)-omegaT+phase);}
+  function filledField(ctx,x0,x1,y0,amp,k,omegaT,phase,color,alpha,strokeWidth=2){
+    ctx.save();
+    ctx.beginPath();ctx.moveTo(x0,y0);
+    for(let x=x0;x<=x1;x+=2)ctx.lineTo(x,y0-amp*fieldAt(x,x0,k,omegaT,phase));
+    ctx.lineTo(x1,y0);ctx.closePath();ctx.fillStyle=color;ctx.globalAlpha=alpha;ctx.fill();
+    ctx.globalAlpha=.96;ctx.strokeStyle=color;ctx.lineWidth=strokeWidth;ctx.beginPath();
+    for(let x=x0;x<=x1;x+=2){
+      const y=y0-amp*fieldAt(x,x0,k,omegaT,phase);
+      if(x===x0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();ctx.restore();
+  }
+  function resultantField(ctx,x0,x1,y0,amp,k,omegaT,phase,color,alpha=1){
+    ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=3.2;ctx.globalAlpha=alpha;
+    ctx.beginPath();ctx.moveTo(x0,y0);
+    for(let x=x0;x<=x1;x+=2){
+      const e1=fieldAt(x,x0,k,omegaT,0),e2=fieldAt(x,x0,k,omegaT,phase);
+      ctx.lineTo(x,y0-amp*(e1+e2));
+    }
+    ctx.lineTo(x1,y0);ctx.closePath();ctx.globalAlpha=.08*alpha;ctx.fill();
+    ctx.globalAlpha=alpha;ctx.beginPath();
+    for(let x=x0;x<=x1;x+=2){
+      const e1=fieldAt(x,x0,k,omegaT,0),e2=fieldAt(x,x0,k,omegaT,phase);
+      const y=y0-amp*(e1+e2);
+      if(x===x0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();ctx.restore();
+  }
+  function atom(ctx,x,y,r,color){
+    ctx.save();ctx.fillStyle=color;ctx.strokeStyle=cssv('--panel');ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fill();ctx.stroke();ctx.restore();
+  }
+  function panel(ctx,x,y,w,h,fill,stroke){
+    ctx.save();ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=1;
+    ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.restore();
+  }
+
   function draw(){
     const P=prep(cv);if(!P)return;
-    const {ctx,w,h}=P,C=cfg(),ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),cb=cssv('--cobalt'),cu=cssv('--copper'),tl=cssv('--teal'),ok=cssv('--ok'),bad=cssv('--forbid');
-    const detX=70,cr0=Math.max(245,w*.42),cr1=Math.min(w-78,cr0+Math.max(135,w*.20));
-    const yIn=72,yA=164,yB=222,ySum=Math.min(h-68,324);
-    const phase0=SC.t*7.2,Cphi=C.phase;
-    const p=(SC.t*.32)%1;
-    const pEase=.5-.5*Math.cos(Math.PI*p);
-    const xA=cr0-(cr0-detX-18)*pEase,xB=cr1-(cr1-detX-18)*pEase;
-    const totalAmp=Math.abs(1+Math.cos(Cphi)+0); // only for classification; exact magnitude below
-    const re=1+Math.cos(Cphi),im=Math.sin(Cphi),F=Math.hypot(re,im),relI=(F/2)**2;
+    const {ctx,w,h}=P,C=cfg();
+    const ink=cssv('--ink'),muted=cssv('--muted'),border=cssv('--line'),panelCol=cssv('--panel');
+    const panel2=cssv('--panel2'),cb=cssv('--cobalt'),tl=cssv('--teal'),cu=cssv('--copper'),ok=cssv('--ok'),bad=cssv('--forbid');
+    const compact=w<560;
+    const phase=C.phase,omegaT=SC.t*5.2;
+    const re=1+Math.cos(phase),im=Math.sin(phase),F=Math.hypot(re,im),relI=(F/2)**2;
+    const sumColor=SC.mode==='100'?bad:ok;
 
-    // regions
-    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.fillStyle=cssv('--panel');
-    ctx.fillRect(14,18,122,h-36);ctx.strokeRect(14,18,122,h-36);
-    ctx.fillStyle=cssv('--panel');ctx.fillRect(cr0-34,18,w-cr0+20,h-36);ctx.strokeRect(cr0-34,18,w-cr0+20,h-36);
-    label(ctx,LANG==='en'?'source / detector':'kaynak / dedektör',75,39,muted,'center','600 11px "IBM Plex Sans",sans-serif');
-    label(ctx,LANG==='en'?'crystal':'kristal',cr0-18,39,muted,'left','600 11px "IBM Plex Sans",sans-serif');
+    ctx.clearRect(0,0,w,h);
 
-    // detector
-    ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(detX,54);ctx.lineTo(detX,h-38);ctx.stroke();
-    const glow=8+relI*12*(.72+.28*Math.sin(phase0)**2);
-    ctx.fillStyle=relI<.02?bad:ok;ctx.globalAlpha=.18+.45*relI;ctx.beginPath();ctx.arc(detX,ySum,glow,0,2*Math.PI);ctx.fill();ctx.globalAlpha=1;
-    ctx.fillStyle=relI<.02?bad:ok;ctx.beginPath();ctx.arc(detX,ySum,5+5*relI,0,2*Math.PI);ctx.fill();
+    // --- 1. Physical schematic: source -> unit-cell scatterers -> one detector direction
+    const topY=22,topH=130;
+    panel(ctx,16,topY,w-32,topH,panelCol,border);
+    label(ctx,LANG==='en'?'1 · COHERENT SCATTERING GEOMETRY':'1 · KOHERENT SAÇILMA GEOMETRİSİ',30,44,muted,'left','700 11px "IBM Plex Sans",sans-serif');
 
-    // incoming wave from source to crystal
-    ctx.strokeStyle=cu;ctx.fillStyle=cu;ctx.lineWidth=2;
-    wave(ctx,95,cr1+28,yIn,9,phase0,cu,2,.9);
-    arrow(ctx,112,yIn,182,yIn,8);
-    label(ctx,LANG==='en'?'incoming X-ray':'gelen X-ışını',112,yIn-15,cu);
+    const srcX=compact?38:54,beamY=92;
+    const cellX=compact?Math.max(118,w*.36):Math.max(190,w*.36);
+    const cellW=compact?82:118,cellH=74,cellY=57;
+    const detX=w-(compact?34:58),detY=82;
 
-    // scatterer planes/atoms
-    for(const [x,labText,col] of [[cr0,LANG==='en'?'contribution 1':'katkı 1',cb],[cr1,LANG==='en'?'contribution 2':'katkı 2',tl]]){
-      ctx.strokeStyle=line;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,48);ctx.lineTo(x,260);ctx.stroke();
-      for(let yy=58;yy<=250;yy+=32){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,yy,4.2,0,2*Math.PI);ctx.fill();}
-      label(ctx,labText,x,279,col,'center','600 11px "IBM Plex Sans",sans-serif');
+    // source and incoming continuous wave
+    ctx.fillStyle=cu;ctx.beginPath();ctx.arc(srcX,beamY,7,0,2*Math.PI);ctx.fill();
+    const in0=srcX+14,in1=cellX-12,kIn=2*Math.PI/(compact?38:48);
+    ctx.strokeStyle=cu;ctx.lineWidth=2;ctx.beginPath();
+    for(let x=in0;x<=in1;x+=2){
+      const y=beamY-7*Math.sin(kIn*(x-in0)-omegaT);
+      if(x===in0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
-    if(SC.mode!=='simple'){
-      label(ctx,'x = 0',cr0,295,muted,'center');
-      label(ctx,'x = 1/2',cr1,295,muted,'center');
+    ctx.stroke();arrow2(ctx,in0,beamY-19,Math.min(in0+58,in1),beamY-19,cu,1.5);
+    if(!compact)label(ctx,LANG==='en'?'incident X-ray':'gelen X-ışını',in0,beamY-27,cu);
+
+    // schematic lattice/basis. Primitive mode uses two neighboring cells;
+    // BCC modes use the two-atom basis of one conventional cell.
+    let a1,a2;
+    ctx.strokeStyle=border;ctx.lineWidth=1.5;
+    if(SC.mode==='simple'){
+      ctx.strokeRect(cellX,cellY,cellW/2,cellH);
+      ctx.strokeRect(cellX+cellW/2,cellY,cellW/2,cellH);
+      a1=[cellX+cellW*.22,cellY+cellH*.58];
+      a2=[cellX+cellW*.72,cellY+cellH*.58];
+      atom(ctx,a1[0],a1[1],6,cb);atom(ctx,a2[0],a2[1],6,tl);
+      label(ctx,compact?'P · 2 hücre':'P: iki komşu hücreden Bragg-koherent katkı',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
     }else{
-      label(ctx,'x = 0',cr0,295,muted,'center');
-      label(ctx,LANG==='en'?'x = 1 (next cell)':'x = 1 (komşu hücre)',cr1,295,muted,'center');
+      ctx.strokeRect(cellX,cellY,cellW,cellH);
+      a1=[cellX+12,cellY+cellH-12];
+      a2=[cellX+cellW*.56,cellY+cellH*.48];
+      atom(ctx,a1[0],a1[1],6,cb);atom(ctx,a2[0],a2[1],6,tl);
+      label(ctx,compact?'I · baz':'I: (0,0,0) + (½,½,½)',cellX+cellW/2,cellY+cellH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
     }
 
-    // outgoing packets moving simultaneously toward detector
-    packet(ctx,xA,yA,12,phase0,cb,-1);
-    packet(ctx,xB,yB,12,phase0+Cphi,tl,-1);
-    ctx.strokeStyle=cb;ctx.fillStyle=cb;arrow(ctx,cr0-8,yA,detX+32,yA,7);
-    ctx.strokeStyle=tl;ctx.fillStyle=tl;arrow(ctx,cr1-8,yB,detX+32,yB,7);
-    label(ctx,LANG==='en'?'return 1':'geri dönüş 1',145,yA-14,cb);
-    label(ctx,LANG==='en'?'return 2':'geri dönüş 2',145,yB-14,tl);
+    // both coherent contributions go to the same detector direction
+    arrow2(ctx,a1[0]+7,a1[1]-2,detX-14,detY,cb,1.8);
+    arrow2(ctx,a2[0]+7,a2[1],detX-14,detY,tl,1.8);
+    ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(detX,52);ctx.lineTo(detX,117);ctx.stroke();
+    label(ctx,LANG==='en'?'detector':'dedektör',detX,132,muted,'center','600 10px "IBM Plex Sans",sans-serif');
 
-    // phase relation at detector
-    const phaseText=SC.mode==='100'?'Δφ = π (180°)':SC.mode==='200'?'Δφ = 2π (360°)':'Δφ = 0';
-    label(ctx,phaseText,154,253,SC.mode==='100'?bad:ok,'left','700 13px "IBM Plex Sans",sans-serif');
+    // --- 2. Same-axis overlay: this is the main pedagogical view
+    const ovY=168,ovH=176,baseY=260,x0=32,x1=w-34;
+    panel(ctx,16,ovY,w-32,ovH,panel2,border);
+    const overlayTitle=compact?(LANG==='en'?'2 · TRUE SUPERPOSITION':'2 · GERÇEK ÜST ÜSTE BİNME'):(LANG==='en'?'2 · SAME AXIS: E₁ AND E₂ ARE REALLY SUPERPOSED':'2 · AYNI EKSEN: E₁ VE E₂ GERÇEKTEN ÜST ÜSTE');
+    label(ctx,overlayTitle,30,190,ink,'left','700 12px "IBM Plex Sans",sans-serif');
+    const phaseText=SC.mode==='100'?'Δφ = π = 180° · tepe + çukur':SC.mode==='200'?'Δφ = 2π = 360° · tepe + tepe':'Δφ = 0° · tepe + tepe';
+    label(ctx,phaseText,compact?30:w-30,compact?211:190,SC.mode==='100'?bad:ok,compact?'left':'right','700 12px "IBM Plex Sans",sans-serif');
 
-    // live sum waveform
-    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(145,ySum);ctx.lineTo(w-28,ySum);ctx.stroke();
-    const x0=145,x1=w-28,k=2*Math.PI/58;
-    ctx.strokeStyle=SC.mode==='100'?bad:ok;ctx.lineWidth=3;ctx.beginPath();
-    for(let x=x0;x<=x1;x+=2){
-      const a=Math.sin(k*(x-x0)+phase0),b=Math.sin(k*(x-x0)+phase0+Cphi),sum=a+b;
-      const yy=ySum-15*sum;
-      if(x===x0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
+    line(ctx,x0,baseY,x1,baseY,border,1,1,[5,5]);
+    const lambda=compact?54:72,k=2*Math.PI/lambda,amp=30;
+    filledField(ctx,x0,x1,baseY,amp,k,omegaT,0,cb,.16,2.1);
+    filledField(ctx,x0,x1,baseY,amp,k,omegaT,phase,tl,.16,2.1);
+
+    // resultant is drawn on the exact same axis: flat for (100), double amplitude for (200)
+    resultantField(ctx,x0,x1,baseY,amp,k,omegaT,phase,sumColor,.95);
+
+    // detector sampling point: instantaneous net E oscillates or stays zero
+    const eDet=Math.sin(k*(x1-x0)-omegaT)+Math.sin(k*(x1-x0)-omegaT+phase);
+    const sy=baseY-amp*eDet;
+    ctx.fillStyle=sumColor;ctx.globalAlpha=.18+.30*relI;ctx.beginPath();ctx.arc(x1,sy,12+8*relI,0,2*Math.PI);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle=sumColor;ctx.beginPath();ctx.arc(x1,sy,5.5,0,2*Math.PI);ctx.fill();
+    line(ctx,x1,baseY-72,x1,baseY+72,muted,1,.55,[3,4]);
+    label(ctx,LANG==='en'?'detector point':'dedektör noktası',x1-5,baseY+91,muted,'right','600 10px "IBM Plex Sans",sans-serif');
+
+    if(SC.mode==='100'){
+      label(ctx,LANG==='en'?'E₁ + E₂ = 0 at every instant':'E₁ + E₂ = 0 · her anda sönüm',x0+8,baseY+63,bad,'left','700 14px "IBM Plex Sans",sans-serif');
+    }else{
+      label(ctx,LANG==='en'?'crests coincide → resultant amplitude = 2E₀':'tepeler çakışır → net genlik = 2E₀',x0+8,baseY+63,ok,'left','700 14px "IBM Plex Sans",sans-serif');
     }
-    ctx.stroke();
-    label(ctx,LANG==='en'?'detector sum':'dedektör toplamı',150,ySum-38,ink,'left','600 12px "IBM Plex Sans",sans-serif');
-    label(ctx,SC.mode==='simple'&&LANG==='en'?'Δφ = 2π·h → in phase; F_P = f':C.formula,w-34,ySum-38,SC.mode==='100'?bad:ok,'right','700 14px "IBM Plex Sans",sans-serif');
 
-    // tiny intensity meter
-    const mx=w-48,my=62,mh=112;
-    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.strokeRect(mx-14,my,28,mh);
-    ctx.fillStyle=relI<.02?bad:ok;ctx.globalAlpha=.75;ctx.fillRect(mx-13,my+mh*(1-relI),26,mh*relI);ctx.globalAlpha=1;
-    label(ctx,'I',mx,my-8,ink,'center','700 13px "IBM Plex Sans",sans-serif');
-    label(ctx,Math.round(relI*100)+'%',mx,my+mh+17,muted,'center','600 11px "IBM Plex Sans",sans-serif');
+    // --- 3. Resultant-only water-surface analogy
+    const rsY=360,rsH=Math.max(130,h-rsY-16),rBase=rsY+rsH*.55;
+    panel(ctx,16,rsY,w-32,rsH,panelCol,border);
+    const resultTitle=compact?(LANG==='en'?'3 · RESULTANT FIELD':'3 · NET ALAN'):(LANG==='en'?'3 · RESULTANT FIELD — “WATER SURFACE” ANALOGY':'3 · NET ALAN — “DENİZ YÜZEYİ” BENZETMESİ');
+    label(ctx,resultTitle,30,rsY+23,muted,'left','700 11px "IBM Plex Sans",sans-serif');
+    line(ctx,x0,rBase,x1,rBase,border,1,1);
+
+    const resultAmp=SC.mode==='100'?0:44;
+    if(resultAmp===0){
+      line(ctx,x0,rBase,x1,rBase,bad,3,1);
+      // tiny calm-water shimmer to make "flat" visually intentional, not broken
+      ctx.save();ctx.strokeStyle=bad;ctx.globalAlpha=.22;ctx.lineWidth=1;
+      for(let j=1;j<=3;j++)line(ctx,x0,rBase+j*5,x1,rBase+j*5,bad,1,.13);
+      ctx.restore();
+      label(ctx,LANG==='en'?'calm surface → complete destructive interference':'sakin yüzey → tam yıkıcı girişim',x0+6,rBase-20,bad,'left','700 13px "IBM Plex Sans",sans-serif');
+    }else{
+      // use resultant field directly: 2E0 when phase is 0 or 2π
+      resultantField(ctx,x0,x1,rBase,22,k,omegaT,phase,ok,1);
+      label(ctx,LANG==='en'?'larger wave → constructive interference':'daha büyük dalga → yapıcı girişim',x0+6,rBase-58,ok,'left','700 13px "IBM Plex Sans",sans-serif');
+    }
+
+    // time-averaged intensity meter on the right of the result panel
+    const meterW=compact?12:18,meterH=Math.min(74,rsH-48),mx=x1-meterW,my=rsY+36;
+    ctx.strokeStyle=border;ctx.lineWidth=1;ctx.strokeRect(mx,my,meterW,meterH);
+    ctx.fillStyle=sumColor;ctx.globalAlpha=.75;ctx.fillRect(mx+1,my+meterH*(1-relI),meterW-2,meterH*relI);ctx.globalAlpha=1;
+    label(ctx,'I',mx+meterW/2,my-7,ink,'center','700 11px "IBM Plex Sans",sans-serif');
+    label(ctx,Math.round(relI*100)+'%',mx+meterW/2,my+meterH+15,muted,'center','600 10px "IBM Plex Sans",sans-serif');
   }
 
   function updateText(){
@@ -4533,28 +4623,27 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
     const phaseLabel=SC.mode==='100'?'π = 180°':SC.mode==='200'?'2π = 360°':'0°';
     readout.innerHTML=
       '<div><span>'+(LANG==='en'?'scenario':'senaryo')+'</span><b>'+(LANG==='en'?C.nameEN:C.nameTR)+'</b></div>'+
-      '<div><span>Δφ</span><b>'+phaseLabel+'</b></div>'+
-      (SC.mode==='simple'
-        ?'<div><span>'+(LANG==='en'?'|sum of 2 cells| / f':'|2 hücrenin toplamı| / f')+'</span><b>'+num(F,2)+'</b></div>'
-        :'<div><span>|F| / f</span><b>'+num(F,2)+'</b></div>')+
+      '<div><span>'+(SC.mode==='simple'?(LANG==='en'?'Δφ = 2πh (between cells)':'Δφ = 2πh (hücreler arası)'):'Δφ = π(h+k+l)')+'</span><b>'+phaseLabel+'</b></div>'+
+      '<div><span>|E₁+E₂| / E₀</span><b>'+num(F,2)+'</b></div>'+
       '<div><span>I / I<sub>max</sub></span><b>'+num(relI*100,0)+'%</b></div>';
 
     if(SC.mode==='100'){
       explain.className='scatter-wave-explain extinct';
       explain.innerHTML=LANG==='en'
-        ?'<b>No peak:</b> both scattered wave packets return to the detector together, but contribution 2 is half a period behind. Crest meets trough, so the instantaneous sum stays zero: <b>F = 0 → I = 0</b>.'
-        :'<b>Pik yok:</b> iki saçılmış dalga paketi dedektöre birlikte geri gelir; fakat 2. katkı yarım periyot geridedir. Tepe çukurla karşılaşır ve anlık toplam sürekli sıfır kalır: <b>F = 0 → I = 0</b>.';
+        ?'<b>BCC (100) is extinct:</b> the two coherent fields occupy the same detector channel, but their relative phase is π. Wherever E₁ has a crest, E₂ has an equal trough. Their point-by-point sum is therefore zero: <b>E₁ + E₂ = 0 → F₁₀₀ = 0 → I₁₀₀ = 0</b>.'
+        :'<b>HMK (100) sönüktür:</b> iki koherent alan aynı dedektör kanalında gerçekten üst üste gelir; fakat aralarındaki faz farkı π’dir. E₁’in tepe yaptığı her yerde E₂ eşit büyüklükte çukur yapar. Nokta nokta toplam bu yüzden sıfırdır: <b>E₁ + E₂ = 0 → F₁₀₀ = 0 → I₁₀₀ = 0</b>.';
     }else if(SC.mode==='200'){
       explain.className='scatter-wave-explain allowed';
       explain.innerHTML=LANG==='en'
-        ?'<b>Peak appears:</b> the extra BCC atom now differs by a full period (2π). Both returning waves have the same phase, so crest meets crest and the detector amplitude doubles: <b>F = 2f → strong intensity</b>.'
-        :'<b>Pik oluşur:</b> HMK merkez atomunun faz farkı artık tam bir turdur (2π). Geri dönen iki dalga aynı fazdadır; tepe tepeyle birleşir ve dedektörde genlik iki katına çıkar: <b>F = 2f → güçlü şiddet</b>.';
+        ?'<b>BCC (200) is allowed:</b> the basis phase difference is 2π, which is physically the same phase. Crest lies on crest and trough on trough, so the field amplitude doubles: <b>|F₂₀₀| = 2f</b>. Intensity is proportional to the square of amplitude.'
+        :'<b>HMK (200) izinlidir:</b> baz atomları arasındaki faz farkı 2π’dir; yani fiziksel olarak yeniden aynı fazdadırlar. Tepe tepenin, çukur çukurun üzerine gelir ve net alan genliği iki katına çıkar: <b>|F₂₀₀| = 2f</b>. Şiddet genliğin karesiyle orantılıdır.';
     }else{
       explain.className='scatter-wave-explain allowed';
       explain.innerHTML=LANG==='en'
         ?'<b>Simple-cubic picture:</b> here the two contributions come from <b>neighbouring unit cells</b> (x = 0 and x = 1), not from two atoms of the same cell. Under the Bragg condition their phase difference is 2π·h, so they always add: this is the <i>lattice sum</i> that produces a peak. The <i>structure factor</i> of the one-atom primitive cell is simply <b>F = f</b>; with no second atom in the cell there is nothing to cancel, so P lattices have no centring extinctions.'
         :'<b>Basit kübik resmi:</b> buradaki iki katkı aynı hücredeki iki atomdan değil, <b>komşu iki birim hücreden</b> (x = 0 ve x = 1) gelir. Bragg koşulunda aralarındaki faz farkı 2π·h olduğundan her zaman toplanırlar: pik oluşturan budur (<i>örgü toplamı</i>). Tek atomlu ilkel hücrenin <i>yapı faktörü</i> ise yalnızca <b>F = f</b>’dir; hücrede ikinci atom olmadığı için söndürecek bir katkı yoktur ve P örgüsünde merkezleme kaynaklı sönüm görülmez.';
     }
+
     $$('.scatter-wave-controls [data-scatter-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.scatterMode===SC.mode?'true':'false'));
     play.textContent=SC.run?(LANG==='en'?'Pause':'Durdur'):(LANG==='en'?'Play':'Oynat');
     draw();
@@ -4565,7 +4654,6 @@ animators.push({tab:TAB2,fn:dt=>{ if(T2e.run){ T2e.om=(T2e.om+dt*6)%360; $('#om2
   }));
   play.addEventListener('click',()=>{SC.run=!SC.run;updateText();});
   reg(cv,draw);
-  onTheme(draw);
   updateText();
   animators.push({tab:TAB2,fn:dt=>{
     if(lab.closest('.subp')?.hidden)return;
