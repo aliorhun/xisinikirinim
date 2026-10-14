@@ -35,6 +35,7 @@ Ders özeti yedi ana bölümden oluşur:
    - Fourier bakışıyla ters örgü ve q = k − k₀ bağlantısı
    - Ters örgü ve Ewald yapısı
    - Yapı faktörü ve sistematik sönümler
+   - Euler bağıntısı (e<sup>iφ</sup> = cos φ + i sin φ): faz kaydırıcısı, birim çember, sinüs/kosinüs eğrileri, e<sup>iπ</sup> = −1 ve eşit saçılma genliklerinde F = 0 göstergesi
    - Kα₁/Kα₂ kökeni (L₂/L₃), Moseley yasası, Auger rekabeti ve tüp verimi
    - Anot seçimi ve numune floresansı denetleyicisi; spektrumda akım, filtre kalınlığı, pencere/hava soğurması ve Kα yakınlaştırma
    - “Neden geliş açısı = saçılma açısı?” düzlem içi girişim laboratuvarı ve kinematik yaklaşım notu
