@@ -11,6 +11,7 @@
 <script src="./vendor/three-r128.min.js"></script>
 <script src="./vendor/prism-1.29.0.js"></script>
 <script src="./vendor/prism-python-1.29.0.js"></script>
+<link rel="stylesheet" href="./euler-lab.css">
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -1615,6 +1616,7 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
   </div>
 
   <div class="subp" id="s2d" hidden>
+<div id="eulerLab" class="lab panel euler-lab"></div>
 <div class="cols" style="align-items:start">
     <div class="prose">
       <h3>Yapı Faktörünün Matematiksel Tanımı</h3>
@@ -6780,5 +6782,6 @@ if('serviceWorker' in navigator && (
 
 requestAnimationFrame(loop);
 </script>
+<script src="./euler-lab.js"></script>
 </body>
 </html>
