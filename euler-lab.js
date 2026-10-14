@@ -259,19 +259,39 @@
   });
   document.addEventListener('visibilitychange', () => {if (document.hidden) stop();});
 
-  // Pointer interaction works for mouse, touch and pen. The slider remains keyboard accessible.
+  // SVG coordinates remain correct on narrow/mobile layouts with a letterboxed viewBox.
+  // The slider is always keyboard-accessible; the circle also supports pointer dragging.
+  let dragging = false;
+  function pointerAngle(event) {
+    const matrix = circle.getScreenCTM();
+    if (!matrix) return null;
+    const screenPoint = circle.createSVGPoint();
+    screenPoint.x = event.clientX;
+    screenPoint.y = event.clientY;
+    const point = screenPoint.matrixTransform(matrix.inverse());
+    const x = point.x - 191, y = 169 - point.y;
+    if (Math.hypot(x, y) < 15) return null;
+    const baseAngle = Math.atan2(y, x) * 180 / PI;
+    return [baseAngle - 360, baseAngle, baseAngle + 360]
+      .filter(a => a >= -360 && a <= 360)
+      .sort((a, b) => Math.abs(a - degree) - Math.abs(b - degree))[0];
+  }
   circle.addEventListener('pointerdown', event => {
-    const rect = circle.getBoundingClientRect();
-    const scaleX = 400 / rect.width, scaleY = 350 / rect.height;
-    const x = (event.clientX - rect.left) * scaleX - 191;
-    const y = 169 - (event.clientY - rect.top) * scaleY;
-    if (Math.hypot(x,y) < 15) return;
-    let angle = Math.atan2(y,x) * 180 / PI;
-    if (angle < 0 && degree > 180) angle += 360;
-    if (angle > 0 && degree < -180) angle -= 360;
+    const angle = pointerAngle(event);
+    if (angle == null) return;
     stop();
+    dragging = true;
+    circle.setPointerCapture(event.pointerId);
     setAngle(Math.round(angle));
   });
+  circle.addEventListener('pointermove', event => {
+    if (!dragging) return;
+    const angle = pointerAngle(event);
+    if (angle != null) setAngle(Math.round(angle));
+  });
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+    circle.addEventListener(type, () => {dragging = false;});
+  }
 
   // The lesson works offline, including file:// use: no external fonts, images or libraries.
   render();
