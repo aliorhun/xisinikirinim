@@ -12,7 +12,7 @@
   const close = x => Math.abs(x) < 1e-10 ? 0 : Math.abs(x - 1) < 1e-10 ? 1 : Math.abs(x + 1) < 1e-10 ? -1 : x;
   const format = (value, digits = 3) => {
     const n = close(value);
-    return n.toLocaleString(en ? 'en-US' : 'tr-TR', { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+    return n.toLocaleString(en ? 'en-US' : 'tr-TR', { maximumFractionDigits: digits, minimumFractionDigits: 0 }).replace(/^-/, '−');
   };
   const signed = (real, imag) => {
     if (!imag) return format(real);
