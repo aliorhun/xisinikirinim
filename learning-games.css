@@ -1,0 +1,47 @@
+/* Kazanım ve oyun sekmeleri — mevcut tema değişkenleriyle uyumlu */
+.xrd-games{max-width:100%;min-width:0}
+.xrd-games>.xrd-game-intro{color:var(--muted);max-width:65em}
+.xrd-chapter-goals{counter-reset:xrd-goals;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:9px;margin:16px 0 20px;padding:0;list-style:none}
+.xrd-chapter-goals li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel);font-size:14px}
+.xrd-goal-marker{flex:0 0 25px;width:25px;height:25px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;font-size:17px;color:var(--muted)}
+.xrd-chapter-goals .xrd-goal-done{border-color:var(--ok)}
+.xrd-goal-done .xrd-goal-marker{color:var(--ok);border-color:var(--ok)}
+.xrd-game-modes{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 12px}
+.xrd-game-modes button{font-weight:600;padding:10px 14px}
+.xrd-game-modes button.active{background:var(--cobalt);border-color:var(--cobalt);color:var(--onAccent)}
+.xrd-game-model{margin:0 0 16px}
+.xrd-game-model h4,.xrd-game-quest h4{font-family:"Spectral",Georgia,serif;font-size:1.19rem;margin:0 0 12px}
+.xrd-game-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
+.xrd-game-control{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:2px 8px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:13px}
+.xrd-game-control>span{grid-column:1}
+.xrd-game-control input,.xrd-game-control select{grid-column:1;min-width:0;width:100%;margin-top:5px}
+.xrd-game-value{grid-column:2;grid-row:2;font-size:12px;color:var(--cobalt);font-weight:600;font-variant-numeric:tabular-nums}
+.xrd-game-canvas{display:block;width:100%;height:250px;margin:14px 0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+.xrd-game-output{padding:10px 12px;border-left:3px solid var(--teal);background:var(--panel2);border-radius:0 7px 7px 0;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.xrd-game-quest{margin:0 0 24px}
+.xrd-quest-count{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.xrd-quest-answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr));gap:9px;margin:16px 0}
+.xrd-game-choice{min-height:56px;padding:10px 13px;text-align:left;background:var(--panel2);line-height:1.5;white-space:normal}
+.xrd-game-choice:hover{border-color:var(--cobalt)}
+.xrd-game-choice.is-answer{border-color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok)}
+.xrd-game-choice.is-miss{border-color:var(--forbid);box-shadow:inset 0 0 0 1px var(--forbid)}
+.xrd-game-feedback{padding:15px 16px;border-radius:8px;border:1px solid var(--line);border-left:4px solid var(--ok);background:var(--panel2);font-size:14px}
+.xrd-game-feedback.is-wrong{border-left-color:var(--copper)}
+.xrd-game-feedback strong{display:block;margin-bottom:7px}
+.xrd-game-feedback p{margin:6px 0 9px}
+.xrd-lesson-link,.xrd-go-game{display:inline-flex;margin-top:8px;border-color:var(--cobalt);color:var(--cobalt);background:var(--panel);font-weight:600;line-height:1.4}
+.xrd-quest-bottom{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:16px}
+.xrd-quest-history{font-size:12px;color:var(--muted)}
+.xrd-quest-bottom button:disabled{opacity:.45;cursor:not-allowed}
+.xrd-subgoals{margin-top:25px}
+@media(max-width:640px){
+ .xrd-chapter-goals{grid-template-columns:1fr}
+ .xrd-game-controls{grid-template-columns:1fr}
+ .xrd-game-modes{display:grid;grid-template-columns:1fr}
+ .xrd-quest-answers{grid-template-columns:1fr}
+ .xrd-games .panel{padding:16px 14px}
+ .xrd-game-canvas{height:250px}
+}
+@media(prefers-reduced-motion:reduce){
+ .xrd-game-canvas{scroll-behavior:auto}
+}

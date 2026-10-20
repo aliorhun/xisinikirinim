@@ -80,6 +80,29 @@ Ders özeti yedi ana bölümden oluşur:
    - Amorf arka plan, sayım istatistiği ve Kα₂ bileşeninin görsel etkileri
    - Konum, genişlik, şiddet ve arka plan değişimlerini ayırt etmeye yönelik etkileşimli tanıma laboratuvarı
 
+## Kazanımlar ve iki aşamalı oyun laboratuvarı
+
+Yedi ana ders bölümünün tamamında ayrı bir **Oyunlar / Games** alt sekmesi bulunur. Her ana bölümün beş ölçülebilir kazanımı vardır; toplam **35 ana kazanım**, bu kazanımlarla ilişkilendirilmiş **38 öğretici soru/görev** ve bölüm başına iki oyun aşaması vardır:
+
+1. **Oyun 1 — Keşfet ve tahmin et:** Simülasyonun değişkenlerini değiştirin, görünür fiziksel sonucu yorumlayın ve seçim yapın.
+2. **Oyun 2 — Yorumla ve karar ver:** Aynı fizik modeli üzerinden ölçüm, yapı ve analizle ilgili farklı durumlara karar verin.
+
+Her seçimin ardından doğru gerekçe açıklanır; yanlış seçeneklerde o seçeneğin neden yanlış olduğu ayrıca belirtilir ve ilgili anlatım alt başlığına dönüş bağlantısı gösterilir. Amaç yalnızca puan değil, kavram yanılgısını fark edip yeniden deneyebilmektir. Kazanım görevlerinin tamamlanma durumu tarayıcının yerel depolamasında tutulur; giriş, hesap veya internet bağlantısı gerekmez.
+
+İlk iki ana bölümde var olan 10 alt başlığın kazanım ve kısa sınama bölümleri korunmuştur. Kalan **21 alt başlık** için de kazanım listeleri, anlatım içeriğinin sonunda eklenmiştir. Ana bölümlerdeki oyunlar bu alt başlıkların hepsine en az bir görev üzerinden bağlanır.
+
+| Bölüm | Canlı oyun modeli |
+| --- | --- |
+| 1. Kristalografi | Kübik düzlemlerde a, hkl ve d aralığı |
+| 2. X-ışınları ve Bragg | İki eş genlikli saçılmış dalganın faz farkı ve toplam alanı |
+| 3. Toz yöntemi | Kristalit sayısı, tercihli yönelim ve Debye–Scherrer halkası |
+| 4. Desen simülatörü | P/I/F merkezleme kuralıyla izinli 2θ çizgileri |
+| 5. Veri analizi | Ölçülen 2θ ve hkl değerinden kübik a hesaplaması |
+| 6. Pratik kullanım | Koherent bölge boyutu, mikrogerinim ve Williamson–Hall yaklaşımı |
+| 7. Gerçek XRD verisini okumak | Pik kayması, genişleme, bağıl şiddet, amorf zemin ve sayım gürültüsü |
+
+Oyun görselleri **eğitimsel model** niteliğindedir. Özellikle desen simülatörü oyununun çubuk yükseklikleri gerçek saçılma şiddetlerini, Williamson–Hall oyunu cihaz profil düzeltmesini veya gerçek veri oyunu deneysel ham veriyi temsil etmez. Mevcut ayrıntılı laboratuvarlar ileri doğrulama için kullanılmalıdır.
+
 ## Sayfa nasıl kullanılmalı?
 
 İçerik doğrusal biçimde **Kristalografi → Bragg → Toz yöntemi → Simülasyon → Veri analizi → Pratik kullanım → Gerçek veriyi okuma** sırasıyla takip edilebilir. Ancak her bölüm bağımsız bir ders tekrarı olarak da kullanılabilir.
