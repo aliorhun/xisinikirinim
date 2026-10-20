@@ -302,8 +302,11 @@
     var panel=E("div","subp xrd-games"),titleNode=E("h3","", "Kazanım ve oyun laboratuvarı¦Learning outcomes and game lab");
     panel.id=subId;panel.hidden=true;panel.setAttribute("role","tabpanel");panel.setAttribute("aria-labelledby",b.id);
     var intro=E("p","xrd-game-intro","Önce değişkenleri keşfet, sonra tahminini seç. Her yanıt kavramı, nedeni ve ilgili anlatım sekmesini gösterir.¦Explore the variables, then choose a prediction. Every answer explains the concept, reason and linked lesson.");
+    var goalsHead=E("div","xrd-goals-head"),goalsTitle=E("h4","", "Kazanım haritası¦Outcome map"),goalsCount=E("span","xrd-goals-count");
+    goalsHead.append(goalsTitle,goalsCount);
     var goals=E("ol","xrd-chapter-goals"),goalEntries=[];
-    chapterGoals[ch].forEach(function(g,i){var item=E("li","");var marker=E("span","xrd-goal-marker","○");item.append(marker,document.createTextNode(tr(g)));goals.append(item);goalEntries.push({item:item,marker:marker});});
+    goals.setAttribute("aria-label",tr("Bu bölümün kazanımları¦Learning outcomes of this chapter"));
+    chapterGoals[ch].forEach(function(g,i){var item=E("li","");var marker=E("span","xrd-goal-marker",String(i+1).padStart(2,"0"));marker.setAttribute("aria-hidden","true");item.append(marker,document.createTextNode(tr(g)));goals.append(item);goalEntries.push({item:item,marker:marker});});
     var modeBar=E("div","xrd-game-modes"),modeBtns=[];
     ["Oyun 1 · Keşfet ve tahmin et¦Game 1 · Explore and predict","Oyun 2 · Yorumla ve karar ver¦Game 2 · Interpret and decide"].forEach(function(x,i){
       var m=E("button","",x);m.type="button";m.addEventListener("click",function(){changeMode(i);});modeBar.append(m);modeBtns.push(m);
@@ -318,15 +321,18 @@
     var next=E("button","primary","Sonraki görev →¦Next challenge →");next.type="button";next.disabled=true;
     var history=E("span","xrd-quest-history");
     bottom.append(history,next);play.append(counter,question,answers,fb,bottom);
-    panel.append(titleNode,intro,goals,modeBar,model,play);section.append(panel);
+    panel.append(titleNode,intro,goalsHead,goals,modeBar,model,play);section.append(panel);
     var vals=makeControls(ch,controls,function(){renderPhysics(ch,vals,cv,output);});
     var saved=cacheGet("xrd-game-complete-"+ch),completed=new Set(saved),mode=0,index=[0,0],attempted={};
     gameStates[ch]={complete:completed,mode:mode,index:index,questions:questions[ch]};
     function refreshGoalStatus(){
+      var achieved=0;
       goalEntries.forEach(function(item,i){var qs=questions[ch].filter(function(q){return q.g===i;});
         var ok=qs.every(function(q){return completed.has(questions[ch].indexOf(q));});
-        item.marker.textContent=ok?"✓":"○";item.item.classList.toggle("xrd-goal-done",ok);
+        if(ok)achieved++;
+        item.marker.textContent=ok?"✓":String(i+1).padStart(2,"0");item.item.classList.toggle("xrd-goal-done",ok);
       });
+      goalsCount.textContent=achieved+" / "+goalEntries.length+" "+tr("tamamlandı¦completed");
       history.textContent=completed.size+" / "+questions[ch].length+" "+tr("kazanım görevi tamamlandı¦outcome challenges completed");
     }
     function lessonButton(sub){
