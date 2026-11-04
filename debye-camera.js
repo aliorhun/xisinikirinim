@@ -195,8 +195,8 @@
       }
     });
   });
-  function setChoices() {
-    const previous = chosen.value;
+  function setChoices(preserveSelection = true) {
+    const previous = preserveSelection ? chosen.value : '';
     chosen.replaceChildren();
     const sampleData = SAMPLES[sample.value];
     const radiation = SOURCES[source.value];
@@ -428,7 +428,8 @@
     drawCamera(selected, all);
     drawFilm(all, dia, chosen.value, rotating.checked);
   }
-  sample.addEventListener('change', () => { setChoices(); update(); });
+  // A different crystal has different allowed (hkl): select its first accessible line.
+  sample.addEventListener('change', () => { setChoices(false); update(); });
   // Changing radiation also changes which (hkl) families satisfy Bragg's law.
   source.addEventListener('change', () => { setChoices(); update(); });
   for (const item of [diameter, filter, rotating, chosen]) {
@@ -438,5 +439,5 @@
   const tab = document.querySelector('[data-sub="s3camera"]');
   if (tab) tab.addEventListener('click', () => root.requestAnimationFrame(update));
   root.addEventListener('resize', update, { passive: true });
-  setChoices(); update();
+  setChoices(false); update();
 })(typeof globalThis !== 'undefined' ? globalThis : this);
