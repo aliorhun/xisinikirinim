@@ -91,8 +91,8 @@
     if (!material || !radiation) return [];
     return material.lines.flatMap(line => {
       const main = reflection(material.a, line.n, radiation.alpha, diameter);
-      if (!main) return [];
-      const result = [{ ...main, hkl: line.hkl, weight: line.weight, kind: 'alpha' }];
+      const result = [];
+      if (main) result.push({ ...main, hkl: line.hkl, weight: line.weight, kind: 'alpha' });
       if (!filtered) {
         const beta = reflection(material.a, line.n, radiation.beta, diameter);
         if (beta) result.push({ ...beta, hkl: line.hkl, weight: line.weight * .20, kind: 'beta' });
@@ -258,7 +258,9 @@
     const forward = selected.twoThetaDeg < 90;
     const moreThan90 = selected.twoThetaDeg > 90;
     el('dcSampleGuide').textContent = t(material.reason[0], material.reason[1]) +
-      t(' Yaklaşık kübik örgü parametresi a = ', ' Approximate cubic lattice constant a = ') + material.a.toFixed(3) + ' Å.';
+      t(' Yaklaşık kübik örgü parametresi a = ', ' Approximate cubic lattice constant a = ') + material.a.toFixed(3) + ' Å. ' +
+      t('Gerçek deneyde homojenlik, kristalit boyutu, numunenin kararlılığı ve demet boyunca soğurma da numune biçimini belirler.',
+        'In a real experiment, homogeneity, grain size, sample stability and absorption along the beam also determine sample preparation.');
     el('dcSourceGuide').textContent = t(
       source.value + ' Kα = ' + radiation.alpha.toFixed(4).replace('.', ',') + ' Å; Kβ için ' + radiation.filter + ' filtresi. λ kısaldıkça aynı d için 2θ küçülür, ancak daha küçük d değerlerine erişilebilir. Geometrik sınır d ≥ ' + lowD.toFixed(3).replace('.', ',') + ' Å.',
       source.value + ' Kα = ' + radiation.alpha.toFixed(4) + ' Å; ' + radiation.filter + ' filter suppresses Kβ. Shorter λ lowers 2θ at fixed d but accesses smaller spacings. Geometric limit d ≥ ' + lowD.toFixed(3) + ' Å.'
