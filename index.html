@@ -1848,6 +1848,23 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
         <p data-l="tr">Numuneyi, dalga boyunu, filtreyi ve kamera çapını değiştir. Sağdaki filmdeki çizgi aralıkları ile kesitteki 2θ açısının nasıl bağlandığını incele.</p>
         <p data-l="en">Change the specimen, wavelength, filter and camera diameter. Connect the 2θ angle in the cross-section with the positions of marks on the unrolled film.</p>
       </div>
+      <div class="dc-selection-intro">
+        <strong data-l="tr">Seçimi nasıl yapmalıyım?</strong><strong data-l="en">How should I choose?</strong>
+        <p data-l="tr">Önce malzemenin gerçek fazını ve numune hazırlanabilirliğini belirleyin. Ardından floresans ve soğurmayı dikkate alarak ışınımı seçin. Kamera çapı filmdeki açısal ölçeği, (hkl) seçimi ise ölçmek istediğiniz çizgiyi belirler. Aşağıdaki açıklamalar seçime göre güncellenir.</p>
+        <p data-l="en">First identify the material's phase and whether a suitable specimen can be prepared. Choose radiation considering fluorescence and absorption. Camera diameter sets the angular scale on film, and (hkl) selects the line to observe. The explanations below update with your settings.</p>
+      </div>
+      <section id="dcSelectionAdvice" class="dc-selection-advice" aria-label="Selection guidance">
+        <div class="dc-advice-tabs" role="tablist" aria-label="Selection criteria">
+          <button type="button" role="tab" id="dcAdviceTabSample" aria-controls="dcAdvicePanel" aria-selected="true" tabindex="0"><span data-l="tr">Numune</span><span data-l="en">Specimen</span></button>
+          <button type="button" role="tab" id="dcAdviceTabRadiation" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">Işınım</span><span data-l="en">Radiation</span></button>
+          <button type="button" role="tab" id="dcAdviceTabDiameter" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">Kamera çapı</span><span data-l="en">Camera diameter</span></button>
+          <button type="button" role="tab" id="dcAdviceTabReflection" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">İzlenen yansıma</span><span data-l="en">Reflection (hkl)</span></button>
+        </div>
+        <div id="dcAdvicePanel" class="dc-advice-panel" role="tabpanel" aria-labelledby="dcAdviceTabSample" tabindex="0" aria-live="polite">
+          <strong id="dcAdviceHeading"></strong>
+          <p id="dcAdviceDescription"></p>
+        </div>
+      </section>
       <div class="dc-controls">
         <label><span data-l="tr">Numune</span><span data-l="en">Sample</span>
           <select id="dcSample">
@@ -1869,23 +1886,6 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
         <label class="dc-check"><input type="checkbox" id="dcFilter" checked><span>Ni filtresi (Kβ bastırma)</span></label>
         <label class="dc-check"><input type="checkbox" id="dcRotation" checked><span data-l="tr">Numuneyi döndür</span><span data-l="en">Rotate sample</span></label>
       </div>
-      <div class="dc-selection-intro">
-        <strong data-l="tr">Seçimi nasıl yapmalıyım?</strong><strong data-l="en">How should I choose?</strong>
-        <p data-l="tr">Önce malzemenin gerçek fazını ve numune hazırlanabilirliğini belirleyin. Ardından floresans ve soğurmayı dikkate alarak ışınımı seçin. Kamera çapı filmdeki açısal ölçeği, (hkl) seçimi ise ölçmek istediğiniz çizgiyi belirler. Aşağıdaki açıklamalar seçime göre güncellenir.</p>
-        <p data-l="en">First identify the material's phase and whether a suitable specimen can be prepared. Choose radiation considering fluorescence and absorption. Camera diameter sets the angular scale on film, and (hkl) selects the line to observe. The explanations below update with your settings.</p>
-      </div>
-      <section id="dcSelectionAdvice" class="dc-selection-advice" aria-label="Selection guidance">
-        <div class="dc-advice-tabs" role="tablist" aria-label="Selection criteria">
-          <button type="button" role="tab" id="dcAdviceTabSample" aria-controls="dcAdvicePanel" aria-selected="true" tabindex="0"><span data-l="tr">Numune</span><span data-l="en">Specimen</span></button>
-          <button type="button" role="tab" id="dcAdviceTabRadiation" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">Işınım</span><span data-l="en">Radiation</span></button>
-          <button type="button" role="tab" id="dcAdviceTabDiameter" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">Kamera çapı</span><span data-l="en">Camera diameter</span></button>
-          <button type="button" role="tab" id="dcAdviceTabReflection" aria-controls="dcAdvicePanel" aria-selected="false" tabindex="-1"><span data-l="tr">İzlenen yansıma</span><span data-l="en">Reflection (hkl)</span></button>
-        </div>
-        <div id="dcAdvicePanel" class="dc-advice-panel" role="tabpanel" aria-labelledby="dcAdviceTabSample" tabindex="0" aria-live="polite">
-          <strong id="dcAdviceHeading"></strong>
-          <p id="dcAdviceDescription"></p>
-        </div>
-      </section>
       <div class="dc-visuals">
         <div class="dc-visual">
           <h4 data-l="tr">Kamera: demet eksenine dik değil, numune ekseni boyunca üstten kesit</h4>
