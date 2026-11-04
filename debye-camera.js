@@ -45,12 +45,12 @@
       reason:['YMK metal: Cu ile benzer fakat daha küçük a değerinin 2θ üzerindeki etkisini incelemek için.','FCC metal: compare how a slightly smaller lattice constant shifts lines relative to Cu.'] },
     fe: { name:'α-Fe', a:2.8665, family:'bcc', recommended:'Co', ironRich:true,
       reason:['HMK ferrit: (110) ilk izinli çizgidir; Cu Kα demir floresansı oluşturabildiğinden Co Kα daha uygun başlangıçtır.','BCC ferrite: (110) is the first allowed line; Co Kα avoids the strong Fe fluorescence caused by Cu Kα.'] },
-    w: { name:'W', a:3.1652, family:'bcc', recommended:'Mo',
-      reason:['HMK ve ağır element: kısa Mo dalga boyu ile yüksek indisli yansımaların geometrisini karşılaştırın; gerçek soğurma ayrıca değerlendirilmelidir.','Heavy BCC element: compare access to higher-order lines with short Mo radiation; real absorption still needs assessment.'] },
+    w: { name:'W', a:3.1652, family:'bcc', recommended:'Cu',
+      reason:['HMK ağır metal: Cu Kα ile başlayın; Mo Kα yüksek indisli çizgileri açabilir fakat W L-floresansını uyarabilir. Gerçek soğurma ayrıca değerlendirilmelidir.','Heavy BCC metal: start with Cu Kα; Mo Kα can expose higher-order lines but may excite W L fluorescence. Real absorption must also be assessed.'] },
     si: { name:'Si', a:5.431, family:'diamond', recommended:'Cu',
       reason:['Elmas-tipi yarıiletken: (200) sönümünü ve (111)/(220) çizgilerini öğretmek için iyi bir referans.','Diamond-type semiconductor: useful for demonstrating the (200) extinction and the (111)/(220) peaks.'] },
-    ge: { name:'Ge', a:5.658, family:'diamond', recommended:'Mo',
-      reason:['Elmas-tipi yarıiletken: Si ile hücre boyutunu karşılaştırın; ağır atomlar için Mo ile geçirgenlik/açı takasını tartışın.','Diamond-type semiconductor: compare with Si and discuss penetration versus angular spread using Mo.'] },
+    ge: { name:'Ge', a:5.658, family:'diamond', recommended:'Cu',
+      reason:['Elmas-tipi yarıiletken: Si ile hücre boyutunu karşılaştırın. Mo Kα, Ge K-floresansını uyarabildiğinden önce Cu Kα ile başlayın.','Diamond-type semiconductor: compare its lattice size with Si. Start with Cu Kα because Mo Kα can excite Ge K fluorescence.'] },
     diamond: { name:'C (elmas)', a:3.567, family:'diamond', recommended:'Cu',
       reason:['Düşük Z ve elmas yapı: sistematik sönümler gözlenir; gerçek film şiddeti bu modelden tahmin edilemez.','Low-Z diamond structure: shows systematic absences; real film intensity is not predicted by this model.'] },
     nacl: { name:'NaCl', a:5.640, family:'rocksalt', recommended:'Cu',
@@ -288,6 +288,18 @@
       warnings.push(t(
         'Fe içeren numune + ' + source.value + ' Kα: Fe K floresansı/arka planı artabilir. Co Kα veya uygun enerji ayrımı olan optikler tercih edilebilir; bu etki film parlaklığında hesaplanmıyor.',
         'Fe-rich sample + ' + source.value + ' Kα: Fe K fluorescence/background can increase. Co Kα or energy-selective optics can help; this effect is not simulated on the film.'
+      ));
+    }
+    if (source.value === 'Mo' && sample.value === 'ge') {
+      warnings.push(t(
+        'Mo Kα enerjisi Ge K-soğurma kenarının üzerindedir; Ge floresansı arka planı artırabilir. Bu optik etki modelde hesaplanmıyor.',
+        'Mo Kα lies above the Ge K absorption edge and may raise the fluorescence background; this optical effect is not modeled.'
+      ));
+    }
+    if (source.value === 'Mo' && sample.value === 'w') {
+      warnings.push(t(
+        'Mo Kα enerjisi W L-soğurma kenarlarının üzerindedir; W L-floresansı mümkün olduğundan gerçek optik ve soğurmayı doğrulayın.',
+        'Mo Kα is above W L absorption edges; W L fluorescence is possible, so check actual optics and absorption.'
       ));
     }
     if (accessibleCount < max) {
