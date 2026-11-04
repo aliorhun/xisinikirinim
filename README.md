@@ -47,6 +47,9 @@ Ders özeti yedi ana bölümden oluşur:
 3. **Toz kırınım yöntemi**
    - Rastgele yönlenmiş kristalitler
    - Debye–Scherrer konileri ve halkaları
+   - Klasik silindirik Debye–Scherrer kamerasının çalışma sırası (ışınım seçimi, numune merkezleme, film yerleşimi, dönüş, pozlama, banyo)
+   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: Cu/Si numune, Cu/Mo kaynağı, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Düz alan dedektörünün halkaları ile silindirik film çizgilerinin farkı; nitel beneklilik deneyi ve kısa sorular
    - Toz deseninin oluşumu
    - Pik konumu, şiddeti ve biçimini belirleyen etkenler
    - Atomik saçılma faktörü, çokluk, Lorentz–polarizasyon ve Debye–Waller etkileri
