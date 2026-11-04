@@ -1850,20 +1850,51 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
       <div class="dc-controls">
         <label><span data-l="tr">Numune</span><span data-l="en">Sample</span>
-          <select id="dcSample"><option value="cu">Cu · YMK/FCC</option><option value="si">Si · elmas/diamond</option></select>
+          <select id="dcSample" aria-describedby="dcSampleGuide"></select>
         </label>
         <label><span data-l="tr">Işınım</span><span data-l="en">Radiation</span>
-          <select id="dcSource"><option value="Cu">Cu Kα</option><option value="Mo">Mo Kα</option></select>
+          <select id="dcSource" aria-describedby="dcSourceGuide"></select>
         </label>
         <label><span data-l="tr">Kamera çapı</span><span data-l="en">Camera diameter</span>
-          <select id="dcDiameter"><option value="57.3">57,3 mm</option><option value="114.6">114,6 mm</option></select>
+          <select id="dcDiameter" aria-describedby="dcDiameterGuide"><option value="57.3">57,3 mm</option><option value="114.6">114,6 mm</option></select>
         </label>
         <label><span data-l="tr">İzlenen yansıma</span><span data-l="en">Selected reflection</span>
-          <select id="dcReflection" aria-label="Selected hkl"></select>
+          <select id="dcReflection" aria-label="Selected hkl" aria-describedby="dcReflectionGuide"></select>
         </label>
         <label class="dc-check"><input type="checkbox" id="dcFilter" checked><span>Ni filtresi (Kβ bastırma)</span></label>
         <label class="dc-check"><input type="checkbox" id="dcRotation" checked><span data-l="tr">Numuneyi döndür</span><span data-l="en">Rotate sample</span></label>
       </div>
+      <section class="dc-selection-guide" aria-label="Experiment selection rationale">
+        <h4 data-l="tr">Deney parametrelerini hangi ölçüte göre seçmeliyim?</h4>
+        <h4 data-l="en">How should I choose the experimental parameters?</h4>
+        <p data-l="tr" class="dc-guide-lead">Numune seçimi öğrenmek istediğiniz <b>kristal yapısına</b>; ışınım seçimi <b>dalga boyu, floresans ve soğurmaya</b>; kamera çapı <b>film üzerindeki çizgi aralıklarına</b>; yansıma seçimi ise <b>2θ bölgesine ve yansımanın izinli olmasına</b> bağlıdır. Aşağıdaki gerekçeler seçiminize göre güncellenir.</p>
+        <p data-l="en" class="dc-guide-lead">Sample choice follows the <b>crystal structure</b> under study; radiation follows <b>wavelength, fluorescence and absorption</b>; camera diameter controls <b>line spacing on film</b>; and reflection choice depends on <b>angular coverage and selection rules</b>. The reasons below update when you change a control.</p>
+        <div class="dc-guide-grid">
+          <article><h5 data-l="tr">Numune neden seçilir?</h5><h5 data-l="en">Why this specimen?</h5><p id="dcSampleGuide"></p></article>
+          <article><h5 data-l="tr">Işınım neden seçilir?</h5><h5 data-l="en">Why this radiation?</h5><p id="dcSourceGuide"></p></article>
+          <article><h5 data-l="tr">Kamera çapı neden seçilir?</h5><h5 data-l="en">Why this diameter?</h5><p id="dcDiameterGuide"></p></article>
+          <article><h5 data-l="tr">Hangi (hkl) seçilir?</h5><h5 data-l="en">Which (hkl) to follow?</h5><p id="dcReflectionGuide"></p></article>
+        </div>
+        <p class="dc-selection-warning" id="dcSelectionWarning" role="status" hidden></p>
+        <details class="dc-selection-rules">
+          <summary data-l="tr">Yansımaların seçim kuralları (YMK / HMK / elmas / kaya tuzu / spinel)</summary>
+          <summary data-l="en">Reflection selection rules (FCC / BCC / diamond / rocksalt / spinel)</summary>
+          <div data-l="tr">
+            <p><b>YMK/FCC:</b> h,k,l ya hepsi tek ya da hepsi çift olmalıdır; (111), (200), (220) izinlidir, (100) sönüktür.</p>
+            <p><b>HMK/BCC:</b> h+k+l çift olmalıdır; (110), (200), (211) izinlidir, (100) sönüktür.</p>
+            <p><b>Elmas (Si, Ge, C):</b> YMK kuralı yanında tümü çift indisli yansımalarda h+k+l = 4n gerekir; (200) yasak, (400) izinlidir.</p>
+            <p><b>Kaya tuzu (NaCl, MgO, LiF):</b> YMK izinli çizgileri vardır; tek indisli/ailelerin bağıl şiddeti atomların saçılma faktörlerine bağlıdır.</p>
+            <p><b>Spinel (Fe₃O₄):</b> Daha karmaşık uzay grubu sönümleri nedeniyle yalnızca öğretim için seçilmiş izinli aileler listelenmiştir.</p>
+          </div>
+          <div data-l="en">
+            <p><b>FCC:</b> h,k,l must be all odd or all even; (111), (200), (220) are allowed but (100) is forbidden.</p>
+            <p><b>BCC:</b> h+k+l must be even; (110), (200), (211) are allowed but (100) is forbidden.</p>
+            <p><b>Diamond (Si, Ge, C):</b> in addition to the FCC condition, all-even reflections require h+k+l = 4n; (200) is absent while (400) is allowed.</p>
+            <p><b>Rocksalt (NaCl, MgO, LiF):</b> FCC selection rules apply; relative intensities depend on the atomic scattering factors.</p>
+            <p><b>Spinel (Fe₃O₄):</b> its space-group absences are more complex, so only a curated set of allowed teaching examples is listed.</p>
+          </div>
+        </details>
+      </section>
       <div class="dc-visuals">
         <div class="dc-visual">
           <h4 data-l="tr">Kamera: demet eksenine dik değil, numune ekseni boyunca üstten kesit</h4>
@@ -1878,8 +1909,8 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
       <div class="dc-readout" id="dcReadout" aria-live="polite"></div>
       <p class="dc-note" id="dcInterpretation" aria-live="polite"></p>
-      <p class="dc-footnote" data-l="tr"><b>Model sınırı:</b> Çizgi konumları kübik d<sub>hkl</sub> ve Bragg bağıntısından hesaplanır; parlaklıklar deneysel şiddet, film dozu veya gerçekçi tane istatistiği değildir. Dönme anahtarı beneklilik etkisini nitel olarak gösterir. Filmin açılma noktası doğrudan demet çıkışı olarak seçilmiştir; gerçek Straumanis–Ieviņš film düzeninde işaret ve ölçüm referansları farklı olabilir. Numunenin tam merkezde ve demetin ideal olduğu varsayılır.</p>
-      <p class="dc-footnote" data-l="en"><b>Model limits:</b> Line positions follow cubic d<sub>hkl</sub> and Bragg's law; brightness is not experimental intensity, film dose or a grain-statistics calculation. The rotation toggle depicts spotty lines qualitatively. The unrolled film is cut at the forward beam exit; real Straumanis–Ieviņš layouts use different marks and measuring references. Ideal sample centering and beam geometry are assumed.</p>
+      <p class="dc-footnote" data-l="tr"><b>Model sınırı:</b> Katalogda 12 yaklaşık oda sıcaklığı kübik numunesi, ideal tek fazlı toz ve yalnızca seçilmiş izinli düzlem aileleri kullanılır. İzinli olmak güçlü bir çizgi olacağı anlamına gelmez. Çizgi konumları kübik d<sub>hkl</sub> ve Bragg bağıntısından hesaplanır; parlaklıklar deneysel şiddet, film dozu veya gerçekçi tane istatistiği değildir. Dönme anahtarı beneklilik etkisini nitel olarak gösterir. Filmin açılma noktası doğrudan demet çıkışı olarak seçilmiştir; gerçek Straumanis–Ieviņš film düzeninde işaret ve ölçüm referansları farklı olabilir. Numunenin tam merkezde ve demetin ideal olduğu varsayılır.</p>
+      <p class="dc-footnote" data-l="en"><b>Model limits:</b> The catalog contains 12 approximate room-temperature cubic specimens, ideal single-phase powders and selected allowed plane families only. An allowed reflection is not necessarily intense. Line positions follow cubic d<sub>hkl</sub> and Bragg's law; brightness is not experimental intensity, film dose or a grain-statistics calculation. The rotation toggle depicts spotty lines qualitatively. The unrolled film is cut at the forward beam exit; real Straumanis–Ieviņš layouts use different marks and measuring references. Ideal sample centering and beam geometry are assumed.</p>
     </div>
     <section class="dc-quiz panel">
       <h3 data-l="tr">Kendini sına: deney sonucu ne değişir?</h3>
@@ -1888,11 +1919,13 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       <details data-l="en"><summary>If the camera diameter doubles, what happens to 2θ and arc distance s for the same (hkl)?</summary><p>2θ stays <b>unchanged</b>; Bragg's law depends on wavelength and d. Since <b>s = R · 2θ</b>, the film distance doubles.</p></details>
       <details data-l="tr"><summary>Numunenin dönüşünü durdurmak neden çizgileri benekli hale getirebilir?</summary><p>İri veya az sayıdaki kristalitler her azimut yönünü yeterince dolduramayabilir. Döndürme, pozlama sırasında daha çok kristalitin uygun yönelime gelmesine yardım eder; tam rastgele bir tozda etki numuneye bağlıdır.</p></details>
       <details data-l="en"><summary>Why can stopping specimen rotation make diffraction lines spotty?</summary><p>Large or too few crystallites may not populate all azimuths. Rotation samples additional orientations during exposure; the effect depends on the specimen.</p></details>
-      <details data-l="tr"><summary>Ni filtresini kaldırmak Cu hedefli ölçümde hangi ek çizgileri oluşturabilir?</summary><p>Kβ daha kısa dalga boyuna sahiptir; aynı d için <b>daha küçük 2θ</b> açısında ilave zayıf çizgiler görülebilir. Filtre ayrıca Kα'yı da bir miktar soğurur.</p></details>
+      <details data-l="tr"><summary>Cu hedef için Ni filtresini kaldırmak hangi ek çizgileri oluşturabilir?</summary><p>Kβ daha kısa dalga boyuna sahiptir; aynı d için <b>daha küçük 2θ</b> açısında ilave zayıf çizgiler görülebilir. Filtre ayrıca Kα'yı da bir miktar soğurur.</p></details>
       <details data-l="en"><summary>What extra marks may appear with a Cu target if the Ni filter is removed?</summary><p>Kβ has a shorter wavelength, creating additional weak lines at <b>smaller 2θ</b> for the same d. A real filter also attenuates some Kα.</p></details>
     </section>
     <p class="dc-footnote" data-l="tr"><b>Kaynak:</b> L. V. Azároff ve M. J. Buerger, <i>The Powder Method in X-Ray Crystallography</i> (1958), Bölüm 5, s. 32–45: “Işınım seçimi”, “Numune” ve “Toz kamerasının kullanımı”.</p>
     <p class="dc-footnote" data-l="en"><b>Reference:</b> L. V. Azároff & M. J. Buerger, <i>The Powder Method in X-Ray Crystallography</i> (1958), Chapter 5, pp. 32–45: radiation selection, specimen preparation and powder-camera operation.</p>
+    <p class="dc-footnote" data-l="tr"><b>Ek kaynak:</b> National Physical Laboratory, <i>Measurement Good Practice Guide No. 52</i>, Bölüm 7: ışınım seçiminde numune floresansı, kırınım açısı ve düzlem ailesinin önemi. Katalogdaki örgü parametreleri yaklaşık eğitim değerleridir.</p>
+    <p class="dc-footnote" data-l="en"><b>Additional reference:</b> National Physical Laboratory, <i>Measurement Good Practice Guide No. 52</i>, Section 7: consider sample fluorescence, diffraction angle and plane choice when selecting radiation. Catalog lattice constants are approximate teaching values.</p>
   </div>
   <div class="subp" id="s3c" hidden>
 <div class="lab panel" id="ringToPatternLab">
