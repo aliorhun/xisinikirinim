@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v9';
+const CACHE_NAME = 'xisinikirinim-offline-v10';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const APP_SHELL = [
   './learning-games.js',
   './debye-camera.css',
   './debye-camera.js',
+  './debye-camera.js?v=20261104-sample-refresh',
   './vendor/three-r128.min.js',
   './vendor/prism-1.29.0.js',
   './vendor/prism-python-1.29.0.js'
@@ -46,13 +47,15 @@ async function networkFirstNavigation(request) {
 }
 
 async function cacheFirstLocalAsset(request) {
-  const cached = await caches.match(request);
+  // Match ONLY the activated shell. Looking across old caches can mix the new
+  // HTML sample list with a previous camera module lacking those samples.
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
   if (cached) return cached;
 
   try {
     const response = await fetch(request);
     if (response && response.status === 200 && response.type !== 'opaque') {
-      const cache = await caches.open(CACHE_NAME);
       await cache.put(request, response.clone());
     }
     return response;
