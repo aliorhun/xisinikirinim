@@ -8,6 +8,12 @@
   const BCC = ['110','200','211','220','310','222','321','400','330','420','332'];
   const DIAMOND = ['111','220','311','400','331','422','333','440','531','620'];
   const ROCKSALT = FCC;
+  // Pm-3m primitive-cubic perovskite: no lattice-centering systematic absences.
+  // Some SrTiO3 reflections can nevertheless be weak due to the atomic basis.
+  const PEROVSKITE = ['100','110','111','200','210','211','220','221','310','311','222','320','321','400'];
+  // Curated, observed alpha-Al2O3 (R-3c, hexagonal axes) powder lines;
+  // not a general R-3c extinction-rule or full structure-factor engine.
+  const CORUNDUM = ['012','104','110','113','024','116','018','214','300','119'];
   function makeSample(name, a, structure, reflections, notes, containsFe) {
     return { name, a, structure, notes, containsFe: !!containsFe,
       lines: reflections.map((hkl, i) => ({
@@ -46,7 +52,13 @@
        'Rock-salt has an FCC Bravais lattice and a two-atom basis; all-odd lines are allowed but may be weak.']),
     mgo: makeSample('MgO', 4.212, 'rocksalt', ROCKSALT,
       ['MgO, NaCl ile aynı kaya tuzu yapısındadır; farklı atomik saçılmalar bağıl şiddetleri değiştirir.',
-       'MgO shares the rock-salt structure with NaCl; different atomic scattering changes relative intensities.'])
+       'MgO shares the rock-salt structure with NaCl; different atomic scattering changes relative intensities.']),
+    srtio3: makeSample('SrTiO₃', 3.9053, 'perovskite', PEROVSKITE,
+      ['Oda sıcaklığında Pm-3m kübik perovskittir (a ≈ 3,9053 Å). İlkel kübik örgüde (100) yansıması sistematik olarak yasak değildir; atomik baz bazı çizgileri zayıflatabilir.',
+       'At room temperature it is cubic perovskite Pm-3m (a ≈ 3.9053 Å). The primitive cubic lattice permits (100), although the atomic basis can weaken some lines.']),
+    al2o3: { ...makeSample('α-Al₂O₃', 4.7589, 'corundum', CORUNDUM,
+      ['Korundum fazı (R-3c), trigonal simetrili olup hekzagonal eksenlerde a ≈ 4,7589 Å ve c ≈ 12,991 Å ile anlatılır. Kübik d=a/√(h²+k²+l²) formülü bu numunede geçerli değildir.',
+       'Corundum (R-3c) is trigonal, described in hexagonal axes by a ≈ 4.7589 Å and c ≈ 12.991 Å. The cubic plane-spacing equation does not apply.']), c: 12.991 }
   };
   const SOURCES = {
     Cu: { alpha: 1.5418, beta: 1.39217, filter: 'Ni' },
@@ -55,12 +67,23 @@
     Cr: { alpha: 2.2909, beta: 2.08479, filter: 'V' },
     Fe: { alpha: 1.9373, beta: 1.75654, filter: 'Mn' }
   };
-  function reflection(a, n, wavelength, diameter) {
-    if (!(a > 0 && n > 0 && wavelength > 0 && diameter > 0)) return null;
-    const d = a / Math.sqrt(n);
-    const s = wavelength / (2 * d);
-    if (s > 1) return null; // inaccessible reflection, not an angle to be clipped
-    const twoThetaRad = 2 * Math.asin(s);
+  function planeSpacing(material, line) {
+    if (!material || !line) return null;
+    if (material.structure === 'corundum') {
+      if (!(material.a > 0 && material.c > 0) || !/^[0-9]{3}$/.test(line.hkl)) return null;
+      const [h, k, l] = [...line.hkl].map(Number);
+      // Trigonal alpha-Al2O3 in the conventional hexagonal-axis setting.
+      const inverseDSquared = 4 * (h*h + h*k + k*k) / (3 * material.a * material.a)
+        + l*l / (material.c * material.c);
+      return inverseDSquared > 0 ? 1 / Math.sqrt(inverseDSquared) : null;
+    }
+    return material.a > 0 && line.n > 0 ? material.a / Math.sqrt(line.n) : null;
+  }
+  function reflectionFromSpacing(d, wavelength, diameter) {
+    if (!(d > 0 && wavelength > 0 && diameter > 0)) return null;
+    const ratio = wavelength / (2 * d);
+    if (ratio > 1) return null; // Bragg condition cannot be met
+    const twoThetaRad = 2 * Math.asin(ratio);
     return {
       d,
       twoThetaDeg: twoThetaRad * 180 / Math.PI,
@@ -69,15 +92,23 @@
       filmPositionsMm: [-diameter * twoThetaRad / 2, diameter * twoThetaRad / 2]
     };
   }
+  // Preserve the existing cubic API for the other teaching modules and tests.
+  function reflection(a, n, wavelength, diameter) {
+    if (!(a > 0 && n > 0)) return null;
+    return reflectionFromSpacing(a / Math.sqrt(n), wavelength, diameter);
+  }
+  function reflectionForLine(material, line, wavelength, diameter) {
+    return reflectionFromSpacing(planeSpacing(material, line), wavelength, diameter);
+  }
   function linesFor(sample, source, diameter, filtered) {
     const material = SAMPLES[sample], radiation = SOURCES[source];
     if (!material || !radiation) return [];
     return material.lines.flatMap(line => {
-      const main = reflection(material.a, line.n, radiation.alpha, diameter);
+      const main = reflectionForLine(material, line, radiation.alpha, diameter);
       if (!main) return [];
       const result = [{ ...main, hkl: line.hkl, weight: line.weight, kind: 'alpha' }];
       if (!filtered) {
-        const beta = reflection(material.a, line.n, radiation.beta, diameter);
+        const beta = reflectionForLine(material, line, radiation.beta, diameter);
         if (beta) result.push({ ...beta, hkl: line.hkl, weight: line.weight * .20, kind: 'beta' });
       }
       return result;
@@ -110,7 +141,7 @@
       feFluorescenceWarning: material.containsFe && (source === 'Cu' || source === 'Mo')
     };
   }
-  const physics = { reflection, linesFor, selectionFacts, SAMPLES, SOURCES };
+  const physics = { reflection, reflectionForLine, planeSpacing, linesFor, selectionFacts, SAMPLES, SOURCES };
   if (typeof module !== 'undefined' && module.exports) module.exports = physics;
   root.XRDDebyeCamera = physics;
 
@@ -170,7 +201,7 @@
     const sampleData = SAMPLES[sample.value];
     const radiation = SOURCES[source.value];
     for (const line of sampleData.lines) {
-      const r = reflection(sampleData.a, line.n, radiation.alpha, Number(diameter.value));
+      const r = reflectionForLine(sampleData, line, radiation.alpha, Number(diameter.value));
       const option = document.createElement('option');
       option.value = line.hkl;
       option.disabled = !r;
@@ -179,7 +210,7 @@
       chosen.append(option);
     }
     const previousAllowed = sampleData.lines.some(x =>
-      x.hkl === previous && !!reflection(sampleData.a, x.n, radiation.alpha, Number(diameter.value)));
+      x.hkl === previous && !!reflectionForLine(sampleData, x, radiation.alpha, Number(diameter.value)));
     const firstAllowed = [...chosen.options].find(x => !x.disabled);
     chosen.value = previousAllowed ? previous : firstAllowed ? firstAllowed.value : '';
     chosen.disabled = !firstAllowed;
@@ -218,7 +249,9 @@
           : '');
     const cards = [
       [t('Numune neden seçilir?', 'Why this specimen?'),
-       t(material.name + ' — ' + material.structure + ', a ≈ ' + material.a.toFixed(3) + ' Å. ', material.name + ' — ' + material.structure + ', a ≈ ' + material.a.toFixed(3) + ' Å. ') +
+       t(material.name + ' — ' + material.structure + ', a ≈ ' + material.a.toFixed(3) +
+         ' Å' + (material.c ? ', c ≈ ' + material.c.toFixed(3) + ' Å' : '') + '. ', material.name + ' — ' + material.structure + ', a ≈ ' + material.a.toFixed(3) +
+         ' Å' + (material.c ? ', c ≈ ' + material.c.toFixed(3) + ' Å' : '') + '. ') +
        t(...material.notes) + ' ' +
        t('Gerçekte saf, ince taneli ve rastgele yönelimli toz gerekir.', 'Real measurements require suitably prepared, fine-grained, randomly oriented powder.')],
       [t('Işınım neden seçilir?', 'Why this radiation?'),
