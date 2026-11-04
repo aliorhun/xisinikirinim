@@ -120,6 +120,90 @@ test('film mm/degree scale matches the historic 57.3 and 114.6 mm diameters', ()
   almost(small.selected.twoThetaDeg, large.selected.twoThetaDeg);
 });
 
+test('selection guidance uses exactly four accessible tabs and a single shared panel', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(__dirname, '..', 'debye-camera.css'), 'utf8');
+  const section = html.match(/<section id="dcSelectionAdvice"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(section);
+  assert.equal((section.match(/role="tab"/g) || []).length, 4);
+  assert.equal((section.match(/role="tabpanel"/g) || []).length, 1);
+  assert.equal((section.match(/aria-selected="true"/g) || []).length, 1);
+  assert.equal((section.match(/aria-controls="dcAdvicePanel"/g) || []).length, 4);
+  for (const id of ['dcAdviceTabSample','dcAdviceTabRadiation','dcAdviceTabDiameter','dcAdviceTabReflection']) {
+    assert.match(section, new RegExp('id="' + id + '"'));
+  }
+  assert.match(css, /\.dc-advice-tabs\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(css, /overflow-x:auto/);
+});
+
+test('advice tab selection survives input changes and supports arrow/Home/End', () => {
+  const vm = require('node:vm');
+  const code = fs.readFileSync(path.join(__dirname, '..', 'debye-camera.js'), 'utf8');
+  function makeElement(value='', tagName='SELECT') {
+    const node = {
+      value, tagName, checked:false, textContent:'', innerHTML:'', disabled:false,
+      children:[], attrs:{}, listeners:{}, options:[],
+      addEventListener(event, fn) { this.listeners[event] = fn; },
+      setAttribute(name, value) { this.attrs[name] = value; },
+      focus() { this.focused = true; },
+      replaceChildren() { this.children=[]; this.options=this.children; this.value=''; },
+      append(...children) { this.children.push(...children); }
+    };
+    return node;
+  }
+  const ids=['dcSample','dcSource','dcDiameter','dcFilter','dcRotation','dcReflection',
+    'dcReadout','dcInterpretation','dcAdvicePanel','dcAdviceHeading','dcAdviceDescription'];
+  const dom=Object.fromEntries(ids.map(id => [id, makeElement()]));
+  dom.dcSample.value='cu';
+  dom.dcSource.value='Cu';
+  dom.dcDiameter.value='57.3';
+  dom.dcFilter.checked=true;
+  dom.dcRotation.checked=true;
+  dom.dcFilter.nextElementSibling={textContent:''};
+  const tabs=['Sample','Radiation','Diameter','Reflection'].map(key => {
+    const e=makeElement('', 'BUTTON');
+    e.id='dcAdviceTab'+key;
+    return e;
+  });
+  dom.dcSelectionAdvice={querySelectorAll:() => tabs};
+  const ctx={};
+  for (const name of ['setTransform','clearRect','beginPath','arc','stroke','fill',
+    'setLineDash','moveTo','lineTo','fillRect','strokeRect','fillText']) ctx[name]=()=>{};
+  for (const name of ['dcCamera','dcFilm']) {
+    dom[name]={getBoundingClientRect:()=>({width:440}),getContext:()=>ctx};
+  }
+  const lab={querySelector(selector){return dom[selector.slice(1)] || null;}};
+  const win={devicePixelRatio:1,addEventListener(){},requestAnimationFrame(fn){fn();}};
+  const document={
+    documentElement:{lang:'tr'},
+    getElementById(id){return id==='debyeCameraLab' ? lab : null;},
+    querySelector(){return null;},
+    createElement(tag){return makeElement('',tag.toUpperCase());}
+  };
+  vm.runInNewContext(code,{
+    document,globalThis:win,module:{exports:{}},
+    getComputedStyle:()=>({getPropertyValue:()=>''})
+  });
+  assert.equal(tabs[0].attrs['aria-selected'],'true');
+  assert.equal(dom.dcAdvicePanel.attrs['aria-labelledby'],tabs[0].id);
+  tabs[1].listeners.click();
+  assert.equal(tabs[1].attrs['aria-selected'],'true');
+  assert.match(dom.dcAdviceHeading.textContent,/Işınım/);
+  const original=dom.dcAdviceDescription.textContent;
+  dom.dcSource.value='Co';dom.dcSource.listeners.change();
+  assert.equal(tabs[1].attrs['aria-selected'],'true');
+  assert.match(dom.dcAdviceDescription.textContent,/Co Kα/);
+  assert.notEqual(dom.dcAdviceDescription.textContent,original);
+  tabs[1].listeners.keydown({key:'ArrowRight',preventDefault(){}});
+  assert.equal(tabs[2].attrs['aria-selected'],'true');
+  assert.equal(dom.dcAdvicePanel.attrs['aria-labelledby'],tabs[2].id);
+  assert.equal(tabs[2].focused,true);
+  tabs[2].listeners.keydown({key:'End',preventDefault(){}});
+  assert.equal(tabs[3].attrs['aria-selected'],'true');
+  tabs[3].listeners.keydown({key:'Home',preventDefault(){}});
+  assert.equal(tabs[0].attrs['aria-selected'],'true');
+});
+
 test('mounting and offline caching follow existing project conventions', () => {
   const read = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
   const html = read('index.html'), worker = read('service-worker.js');

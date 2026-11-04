@@ -127,6 +127,43 @@
   const cameraCanvas = el('dcCamera'), filmCanvas = el('dcFilm');
 
   const advice = el('dcSelectionAdvice');
+  const adviceTabs = [...advice.querySelectorAll('[role="tab"]')];
+  const advicePanel = el('dcAdvicePanel');
+  const adviceHeading = el('dcAdviceHeading');
+  const adviceDescription = el('dcAdviceDescription');
+  let activeAdviceIndex = 0;
+  let adviceData = [];
+
+  function showAdvice(index, moveFocus = false) {
+    if (index < 0 || index >= adviceTabs.length) return;
+    activeAdviceIndex = index;
+    adviceTabs.forEach((tab, i) => {
+      const selected = i === activeAdviceIndex;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    advicePanel.setAttribute('aria-labelledby', adviceTabs[index].id);
+    if (adviceData[index]) {
+      adviceHeading.textContent = adviceData[index][0];
+      adviceDescription.textContent = adviceData[index][1];
+    }
+    if (moveFocus) adviceTabs[index].focus();
+  }
+
+  adviceTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => showAdvice(index));
+    tab.addEventListener('keydown', event => {
+      let next = null;
+      if (event.key === 'ArrowRight') next = (index + 1) % adviceTabs.length;
+      if (event.key === 'ArrowLeft') next = (index - 1 + adviceTabs.length) % adviceTabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = adviceTabs.length - 1;
+      if (next !== null) {
+        event.preventDefault();
+        showAdvice(next, true);
+      }
+    });
+  });
   function setChoices() {
     const previous = chosen.value;
     chosen.replaceChildren();
@@ -201,16 +238,9 @@
          'Choose a permitted, observable line. Low-angle lines are often strong; high-angle lines may be sensitive to lattice parameters.') +
        reflectionNote]
     ];
-    advice.replaceChildren();
-    for (const [heading, description] of cards) {
-      const card = document.createElement('div');
-      const title = document.createElement('strong');
-      const p = document.createElement('p');
-      title.textContent = heading;
-      p.textContent = description;
-      card.append(title, p);
-      advice.append(card);
-    }
+    // Refresh the selected explanation without resetting the active tab.
+    adviceData = cards;
+    showAdvice(activeAdviceIndex);
   }
   function canvasContext(canvas, height) {
     const width = Math.max(280, Math.round(canvas.getBoundingClientRect().width || 450));

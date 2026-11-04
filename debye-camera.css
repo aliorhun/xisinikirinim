@@ -35,8 +35,17 @@
 .dc-selection-intro{margin:6px 0 10px;padding:11px 13px;background:var(--panel2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;font-size:14px}
 .dc-selection-intro strong{display:block;font-weight:700;margin-bottom:3px}
 .dc-selection-intro p{margin:0;color:var(--ink)}
-.dc-selection-advice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 20px}
-.dc-selection-advice>div{min-width:0;border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:11px 13px}
-.dc-selection-advice strong{display:block;color:var(--cobalt);font-size:13px;margin-bottom:5px}
-.dc-selection-advice p{margin:0;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
-@media(max-width:650px){.dc-selection-advice{grid-template-columns:1fr}}
+.dc-selection-advice{margin:0 0 16px;min-width:0}
+.dc-advice-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 8px}
+.dc-advice-tabs button{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;cursor:pointer;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--muted);padding:9px 12px;font:600 13px/1.4 "IBM Plex Sans",system-ui,sans-serif}
+.dc-advice-tabs button[aria-selected="true"]{border-color:var(--cobalt);background:var(--panel2);color:var(--cobalt);box-shadow:inset 0 -2px 0 var(--cobalt)}
+.dc-advice-tabs button:hover:not([aria-selected="true"]){background:var(--panel2);color:var(--ink)}
+.dc-advice-tabs button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
+.dc-advice-panel{border:1px solid var(--line);border-radius:9px;background:var(--panel2);padding:12px 15px;min-height:72px}
+.dc-advice-panel strong{display:block;color:var(--cobalt);font-size:13px;margin:0 0 4px}
+.dc-advice-panel p{margin:0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:650px){
+  .dc-advice-tabs{display:flex;overflow-x:auto;scrollbar-width:thin;gap:5px;padding-bottom:3px}
+  .dc-advice-tabs button{flex:0 0 auto;padding:9px 12px}
+  .dc-advice-panel{padding:11px 12px}
+}
