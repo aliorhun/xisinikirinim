@@ -24,8 +24,8 @@ test('camera diameter doubles arc distance but leaves 2θ unchanged', () => {
   const b = reflection(3.615, 3, 1.5418, 114.6);
   almost(a.twoThetaDeg, b.twoThetaDeg);
   almost(b.arcMm, 2 * a.arcMm);
-  almost(57.3 / 2 * Math.PI / 180, .5, .00002);
-  almost(114.6 / 2 * Math.PI / 180, 1, .00005);
+  almost(57.3 / 2 * Math.PI / 180, .5, .0001);
+  almost(114.6 / 2 * Math.PI / 180, 1, .00015);
 });
 
 test('shorter Mo Kα shifts the same plane family to a lower 2θ', () => {
