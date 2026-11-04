@@ -48,12 +48,15 @@ Ders özeti yedi ana bölümden oluşur:
    - Rastgele yönlenmiş kristalitler
    - Debye–Scherrer konileri ve halkaları
    - Klasik silindirik Debye–Scherrer kamerasının çalışma sırası (ışınım seçimi, numune merkezleme, film yerleşimi, dönüş, pozlama, banyo)
-   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: 10 kübik malzeme (YMK, HMK, elmas ve kaya tuzu), Cu/Co/Fe/Cr/Mo Kα kaynakları, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: 12 malzeme (YMK, HMK, elmas, kaya tuzu, SrTiO₃ kübik perovskit ve α-Al₂O₃ trigonal korundum); Cu/Co/Fe/Cr/Mo Kα kaynakları, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - **SrTiO₃ (Pm-3m):** a = 3,9053 Å (oda sıcaklığı), ilkel kübik örgü için (100)/(110)/(111) dahil seçilmiş yansımalar; [IUCr SrTiO₃ kafes parametresi](https://journals.iucr.org/paper?buy=yes&cnor=kd5054).
+   - **α-Al₂O₃ (korundum, R-3c):** hekzagonal eksenlerde a = 4,7589 Å, c = 12,991 Å; `1/d² = 4(h²+hk+k²)/(3a²) + l²/c²`. (012), (104), (110), (113), (024), (116) vb. literatürde gözlenen örnekler; [Crystallography Open Database bağlantılı korundum kaydı](https://solsa.crystallography.net/rod/8100048.html), [α-Al₂O₃ gözlenen yansımaları](https://www.nature.com/articles/s41598-023-43309-1).
+   - **Sınırlama:** Al₂O₃ için tüm R-3c sönüm kuralları veya gerçek yapı faktörleri hesaplanmıyor; yalnızca seçilmiş deneysel yansıma aileleri modelleniyor.
    - Numune, kaynak, kamera çapı ve seçili yansımaya göre otomatik yenilenen seçim gerekçeleri; Fe numunesinde Cu/Mo floresans uyarısı, dalga boyu nedeniyle erişilemeyen (hkl) seçeneklerinin devre dışı bırakılması
    - Seçim rehberi dört yatay sekme halinde sunulur (Numune / Işınım / Kamera çapı / İzlenen yansıma): aynı anda yalnızca bir açıklama gösterilir; seçili sekme parametreler değiştiğinde korunur; mobilde yatay kaydırma ve klavye ok tuşları desteklenir
    - Deney parametrelerini belirleyen combobox'lar ve filtre/döndürme kontrolleri seçim rehberinin **altında**, kamera ve film görsellerinin hemen önünde konumlanır
    - Kamera/film sonuçlarındaki **dₕₖₗ, 2θ, s ve R** değerlerinin her biri bilgi düğmesiyle mevcut ortak modala bağlanır; 2θ modali Bragg yasası ve yedi parametrenin açısal etkisini Türkçe/İngilizce tabloyla açıklar
-   - Veriler ideal/kübik sınırlıdır; atomik yapı faktöründen hesaplanan gerçek çizgi şiddetleri, filtre geçirgenliği veya dedektör arka planı modellenmez
+   - Veriler ideal kristal modelleriyle sınırlıdır; SrTiO₃ kübik, α-Al₂O₃ ise **trigonal** yapıdadır. Atomik yapı faktöründen hesaplanan gerçek çizgi şiddetleri, filtre geçirgenliği veya dedektör arka planı modellenmez
    - Floresans uyarıları örnek elementlerin K-soğurma kenarlarını ve Kα foton enerjilerini karşılaştırır; **floresans şiddeti veya gerçek ölçüm kalitesi hesabı değildir**. K kenarı verileri için [NIST X-ray Transition Energies](https://physics.nist.gov/cgi-bin/XrayTrans/search.pl?lower=0&sorttype=transition&units=eV&upper=1e6); örnek metal kafes sabitleri için [cubic metals reference table](https://www.sciencedirect.com/topics/engineering/centered-cubic-metal)
    - Düz alan dedektörünün halkaları ile silindirik film çizgilerinin farkı; nitel beneklilik deneyi ve kısa sorular
    - Toz deseninin oluşumu
