@@ -91,7 +91,18 @@ test('Co Kα is the recommended illustrative Fe case; Cu and Mo warn about Fe fl
   assert.equal(copper.feFluorescenceWarning, true);
   assert.equal(molybdenum.feFluorescenceWarning, true);
   assert.equal(cobalt.feFluorescenceWarning, false);
+  assert.equal(copper.mayExciteKFluorescence, true);
+  assert.equal(cobalt.mayExciteKFluorescence, false);
   assert.ok(cobalt.selected && cobalt.selected.hkl === '110');
+});
+
+test('K-edge alerts cover Cr, Cu, Ni and Ge without claiming absolute background intensity', () => {
+  assert.equal(selectionFacts('cr','Cu',57.3,'110').mayExciteKFluorescence, true);
+  assert.equal(selectionFacts('cr','Cr',57.3,'110').mayExciteKFluorescence, false);
+  assert.equal(selectionFacts('ni','Cu',57.3,'111').mayExciteKFluorescence, false);
+  assert.equal(selectionFacts('ni','Mo',57.3,'111').mayExciteKFluorescence, true);
+  assert.equal(selectionFacts('ge','Mo',57.3,'111').mayExciteKFluorescence, true);
+  assert.equal(selectionFacts('cu','Cu',57.3,'111').mayExciteKFluorescence, false);
 });
 
 test('longer Cr radiation excludes some high-index peaks; selector can disable them', () => {
