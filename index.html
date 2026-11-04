@@ -1850,10 +1850,15 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
       <div class="dc-controls">
         <label><span data-l="tr">Numune</span><span data-l="en">Sample</span>
-          <select id="dcSample"><option value="cu">Cu · YMK/FCC</option><option value="si">Si · elmas/diamond</option></select>
+          <select id="dcSample">
+            <optgroup label="YMK / FCC"><option value="cu">Cu · bakır</option><option value="al">Al · alüminyum</option><option value="ni">Ni · nikel</option></optgroup>
+            <optgroup label="HMK / BCC"><option value="fe">α-Fe · ferrit</option><option value="w">W · tungsten</option><option value="cr">Cr · krom</option></optgroup>
+            <optgroup label="Elmas kübik / Diamond cubic"><option value="si">Si · silisyum</option><option value="ge">Ge · germanyum</option></optgroup>
+            <optgroup label="Kaya tuzu / Rock salt"><option value="nacl">NaCl · sodyum klorür</option><option value="mgo">MgO · magnezyum oksit</option></optgroup>
+          </select>
         </label>
         <label><span data-l="tr">Işınım</span><span data-l="en">Radiation</span>
-          <select id="dcSource"><option value="Cu">Cu Kα</option><option value="Mo">Mo Kα</option></select>
+          <select id="dcSource"><option value="Cu">Cu Kα</option><option value="Co">Co Kα</option><option value="Fe">Fe Kα</option><option value="Cr">Cr Kα</option><option value="Mo">Mo Kα</option></select>
         </label>
         <label><span data-l="tr">Kamera çapı</span><span data-l="en">Camera diameter</span>
           <select id="dcDiameter"><option value="57.3">57,3 mm</option><option value="114.6">114,6 mm</option></select>
@@ -1864,6 +1869,12 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
         <label class="dc-check"><input type="checkbox" id="dcFilter" checked><span>Ni filtresi (Kβ bastırma)</span></label>
         <label class="dc-check"><input type="checkbox" id="dcRotation" checked><span data-l="tr">Numuneyi döndür</span><span data-l="en">Rotate sample</span></label>
       </div>
+      <div class="dc-selection-intro">
+        <strong data-l="tr">Seçimi nasıl yapmalıyım?</strong><strong data-l="en">How should I choose?</strong>
+        <p data-l="tr">Önce malzemenin gerçek fazını ve numune hazırlanabilirliğini belirleyin. Ardından floresans ve soğurmayı dikkate alarak ışınımı seçin. Kamera çapı filmdeki açısal ölçeği, (hkl) seçimi ise ölçmek istediğiniz çizgiyi belirler. Aşağıdaki açıklamalar seçime göre güncellenir.</p>
+        <p data-l="en">First identify the material's phase and whether a suitable specimen can be prepared. Choose radiation considering fluorescence and absorption. Camera diameter sets the angular scale on film, and (hkl) selects the line to observe. The explanations below update with your settings.</p>
+      </div>
+      <div id="dcSelectionAdvice" class="dc-selection-advice" aria-live="polite"></div>
       <div class="dc-visuals">
         <div class="dc-visual">
           <h4 data-l="tr">Kamera: demet eksenine dik değil, numune ekseni boyunca üstten kesit</h4>
@@ -1878,8 +1889,8 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
       <div class="dc-readout" id="dcReadout" aria-live="polite"></div>
       <p class="dc-note" id="dcInterpretation" aria-live="polite"></p>
-      <p class="dc-footnote" data-l="tr"><b>Model sınırı:</b> Çizgi konumları kübik d<sub>hkl</sub> ve Bragg bağıntısından hesaplanır; parlaklıklar deneysel şiddet, film dozu veya gerçekçi tane istatistiği değildir. Dönme anahtarı beneklilik etkisini nitel olarak gösterir. Filmin açılma noktası doğrudan demet çıkışı olarak seçilmiştir; gerçek Straumanis–Ieviņš film düzeninde işaret ve ölçüm referansları farklı olabilir. Numunenin tam merkezde ve demetin ideal olduğu varsayılır.</p>
-      <p class="dc-footnote" data-l="en"><b>Model limits:</b> Line positions follow cubic d<sub>hkl</sub> and Bragg's law; brightness is not experimental intensity, film dose or a grain-statistics calculation. The rotation toggle depicts spotty lines qualitatively. The unrolled film is cut at the forward beam exit; real Straumanis–Ieviņš layouts use different marks and measuring references. Ideal sample centering and beam geometry are assumed.</p>
+      <p class="dc-footnote" data-l="tr"><b>Model sınırı:</b> Yalnız ideal kübik fazlar (YMK, HMK, elmas ve kaya tuzu) kapsamdadır; örgü sabitleri oda sıcaklığına yakın temsilî değerlerdir. Ni/Fe/V/Mn/Zr filtrelerinin gerçek geçirgenliği ve Kα şiddet kaybı hesaplanmaz.  Çizgi konumları kübik d<sub>hkl</sub> ve Bragg bağıntısından hesaplanır; parlaklıklar deneysel şiddet, film dozu veya gerçekçi tane istatistiği değildir. Dönme anahtarı beneklilik etkisini nitel olarak gösterir. Filmin açılma noktası doğrudan demet çıkışı olarak seçilmiştir; gerçek Straumanis–Ieviņš film düzeninde işaret ve ölçüm referansları farklı olabilir. Numunenin tam merkezde ve demetin ideal olduğu varsayılır.</p>
+      <p class="dc-footnote" data-l="en"><b>Model limits:</b> Only ideal cubic phases (FCC, BCC, diamond and rock salt) are covered; lattice parameters are representative near-room-temperature values. Actual filter transmissions (Ni/Fe/V/Mn/Zr) and Kα attenuation are not calculated.  Line positions follow cubic d<sub>hkl</sub> and Bragg's law; brightness is not experimental intensity, film dose or a grain-statistics calculation. The rotation toggle depicts spotty lines qualitatively. The unrolled film is cut at the forward beam exit; real Straumanis–Ieviņš layouts use different marks and measuring references. Ideal sample centering and beam geometry are assumed.</p>
     </div>
     <section class="dc-quiz panel">
       <h3 data-l="tr">Kendini sına: deney sonucu ne değişir?</h3>
