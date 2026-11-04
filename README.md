@@ -48,7 +48,9 @@ Ders özeti yedi ana bölümden oluşur:
    - Rastgele yönlenmiş kristalitler
    - Debye–Scherrer konileri ve halkaları
    - Klasik silindirik Debye–Scherrer kamerasının çalışma sırası (ışınım seçimi, numune merkezleme, film yerleşimi, dönüş, pozlama, banyo)
-   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: Cu/Si numune, Cu/Mo kaynağı, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: **12 kübik numune** (YMK, HMK, elmas, kaya tuzu ve spinel örnekleri); **Cr/Fe/Co/Cu/Mo** ışınımı, uygun Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Seçimin nedenleri: numuneye uygun önerilen anot, floresans/soğurma değerlendirmesi, 57,3 ve 114,6 mm kamera çaplarının açısal ayrımı, ileri/geri kırınım bölgesi ve (hkl) seçim kuralları
+   - Seçili dalga boyunda Bragg koşulunu sağlamayan yansımaların otomatik elenmesi; örneğin Fe içeren numunede Cu Kα floresans riskine ilişkin uyarı
    - Düz alan dedektörünün halkaları ile silindirik film çizgilerinin farkı; nitel beneklilik deneyi ve kısa sorular
    - Toz deseninin oluşumu
    - Pik konumu, şiddeti ve biçimini belirleyen etkenler
@@ -105,6 +107,10 @@ Her seçimin ardından doğru gerekçe açıklanır; yanlış seçeneklerde o se
 | 7. Gerçek XRD verisini okumak | Pik kayması, genişleme, bağıl şiddet, amorf zemin ve sayım gürültüsü |
 
 Oyun görselleri **eğitimsel model** niteliğindedir. Özellikle desen simülatörü oyununun çubuk yükseklikleri gerçek saçılma şiddetlerini, Williamson–Hall oyunu cihaz profil düzeltmesini veya gerçek veri oyunu deneysel ham veriyi temsil etmez. Mevcut ayrıntılı laboratuvarlar ileri doğrulama için kullanılmalıdır.
+
+### Silindirik kamera dersinin bilimsel sınırları
+
+Bu kamera bölümündeki numuneler ideal tek fazlı kübik modellerdir; örgü parametreleri yaklaşık öğretim değerleri, film şiddetleri ise şematiktir. Gerçek floresans, soğurma, tane istatistiği ve cihaz fonksiyonu hesaplanmaz.
 
 ## Sayfa nasıl kullanılmalı?
 
