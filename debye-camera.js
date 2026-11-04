@@ -200,6 +200,10 @@
     chosen.replaceChildren();
     const sampleData = SAMPLES[sample.value];
     const radiation = SOURCES[source.value];
+    if (!sampleData || !radiation) {
+      chosen.disabled = true;
+      return; // Fail visibly in update(), without leaving an old reflection selected.
+    }
     for (const line of sampleData.lines) {
       const r = reflectionForLine(sampleData, line, radiation.alpha, Number(diameter.value));
       const option = document.createElement('option');
@@ -365,9 +369,24 @@
     ctx.fillText('+' + (Math.PI * diameterMm / 2).toFixed(1) + ' mm', cx + halfFilm, h - 18);
     ctx.textAlign = 'start';
   }
+  function clearCameraViews() {
+    for (const canvas of [cameraCanvas, filmCanvas]) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
   function update() {
     const dia = Number(diameter.value);
     const material = SAMPLES[sample.value], radiation = SOURCES[source.value];
+    if (!material || !radiation) {
+      display.textContent = t(
+        'Bu numune veya ışınım kamera modülünde tanınmıyor. Sayfayı yenileyerek güncel dosyaları yükleyin.',
+        'This sample or radiation is not recognized by the camera module. Reload to obtain updated assets.'
+      );
+      note.textContent = '';
+      clearCameraViews();
+      return;
+    }
     filter.nextElementSibling.textContent = t(radiation.filter + ' filtresi (Kβ bastırma)', radiation.filter + ' filter (suppress Kβ)');
     const all = linesFor(sample.value, source.value, dia, filter.checked);
     const selected = all.find(x => x.hkl === chosen.value && x.kind === 'alpha');
@@ -376,6 +395,7 @@
     if (!selected) {
       display.textContent = t('Seçili koşullarda erişilebilir yansıma yok.', 'No accessible reflection for these settings.');
       note.textContent = '';
+      clearCameraViews();
       return;
     }
     const readoutCard = (label, value, key, captionTr, captionEn) =>
