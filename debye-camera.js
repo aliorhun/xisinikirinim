@@ -83,6 +83,9 @@
       return result;
     });
   }
+  // Representative K absorption edges (keV), used only as a qualitative
+  // fluorescence warning, never as an absorption/intensity calculation.
+  const K_EDGES = { cu: 8.979, ni: 8.333, fe: 7.112, cr: 5.989, ge: 11.103 };
   function selectionFacts(sample, source, diameter, hkl) {
     const material = SAMPLES[sample], radiation = SOURCES[source];
     if (!material || !radiation || !(diameter > 0)) return null;
@@ -91,7 +94,12 @@
     const nearby = selected ? Math.min(Infinity, ...available
       .filter(x => x.hkl !== selected.hkl)
       .map(x => Math.abs(x.twoThetaDeg - selected.twoThetaDeg))) : null;
+    const energyKeV = 12.39842 / radiation.alpha;
+    const edgeKeV = K_EDGES[sample] || null;
     return {
+      energyKeV,
+      edgeKeV,
+      mayExciteKFluorescence: edgeKeV !== null && energyKeV > edgeKeV,
       available: available.length,
       total: material.lines.length,
       unavailable: material.lines.length - available.length,
@@ -145,9 +153,15 @@
       ? t(' ' + facts.unavailable + ' yüksek indisli yansıma Bragg koşulunu sağlamıyor.',
           ' ' + facts.unavailable + ' high-index reflections cannot satisfy Bragg\'s law.')
       : '';
-    const sourceCaution = facts.feFluorescenceWarning
-      ? t(' Fe içerikli numunede Cu/Mo ışınımı K-floresansı uyarabilir; Co Kα ile karşılaştırın.',
-          ' Cu/Mo can excite Fe K fluorescence; compare Co Kα.')
+    const sourceCaution = facts.mayExciteKFluorescence
+      ? t(' Foton enerjisi (' + facts.energyKeV.toFixed(2) + ' keV), ' + material.name +
+            ' K-soğurma kenarının (' + facts.edgeKeV.toFixed(2) +
+            ' keV) üstünde: K-floresansı oluşabilir. Arka planın önemi dedektöre ve numuneye bağlıdır.' +
+            (material.containsFe ? ' Co Kα deneyini karşılaştırın.' : ''),
+          ' Photon energy (' + facts.energyKeV.toFixed(2) + ' keV) exceeds the ' + material.name +
+            ' K absorption edge (' + facts.edgeKeV.toFixed(2) +
+            ' keV): K fluorescence is possible. Its impact depends on the detector and specimen.' +
+            (material.containsFe ? ' Compare Co Kα.' : ''))
       : material.containsFe && source.value === 'Co'
         ? t(' Co Kα, Fe K soğurma kenarının altında olduğundan Fe floresansını azaltmak için uygundur.',
             ' Co Kα lies below the Fe K edge and reduces Fe fluorescence background.')
