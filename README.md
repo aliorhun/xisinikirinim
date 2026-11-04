@@ -48,7 +48,9 @@ Ders özeti yedi ana bölümden oluşur:
    - Rastgele yönlenmiş kristalitler
    - Debye–Scherrer konileri ve halkaları
    - Klasik silindirik Debye–Scherrer kamerasının çalışma sırası (ışınım seçimi, numune merkezleme, film yerleşimi, dönüş, pozlama, banyo)
-   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: Cu/Si numune, Cu/Mo kaynağı, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: 10 kübik malzeme (YMK, HMK, elmas ve kaya tuzu), Cu/Co/Fe/Cr/Mo Kα kaynakları, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
+   - Numune, kaynak, kamera çapı ve seçili yansımaya göre otomatik yenilenen seçim gerekçeleri; Fe numunesinde Cu/Mo floresans uyarısı, dalga boyu nedeniyle erişilemeyen (hkl) seçeneklerinin devre dışı bırakılması
+   - Veriler ideal/kübik sınırlıdır; atomik yapı faktöründen hesaplanan gerçek çizgi şiddetleri, filtre geçirgenliği veya dedektör arka planı modellenmez
    - Düz alan dedektörünün halkaları ile silindirik film çizgilerinin farkı; nitel beneklilik deneyi ve kısa sorular
    - Toz deseninin oluşumu
    - Pik konumu, şiddeti ve biçimini belirleyen etkenler
