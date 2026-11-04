@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { reflection, linesFor, selectionFacts, SOURCES, SAMPLES } = require('../debye-camera.js');
+const { reflection, reflectionForLine, planeSpacing, linesFor, selectionFacts, SOURCES, SAMPLES } = require('../debye-camera.js');
 
 const almost = (actual, expected, eps = 1e-8) =>
   assert.ok(Math.abs(actual - expected) < eps, `expected ${actual} ≈ ${expected}`);
@@ -57,11 +57,12 @@ test('diamond Si sample excludes the forbidden (200) reflection', () => {
 });
 
 
-test('sample library spans FCC, BCC, diamond and rock-salt cubic structures', () => {
+test('sample library covers FCC, BCC, diamond, rock salt, perovskite and corundum', () => {
   const structures = new Set(Object.values(SAMPLES).map(x => x.structure));
   assert.ok(SAMPLES.fe && SAMPLES.ge && SAMPLES.nacl && SAMPLES.mgo);
-  assert.equal(Object.keys(SAMPLES).length, 10);
-  assert.deepEqual([...structures].sort(), ['BCC','FCC','diamond','rocksalt'].sort());
+  assert.ok(SAMPLES.srtio3 && SAMPLES.al2o3);
+  assert.equal(Object.keys(SAMPLES).length, 12);
+  assert.deepEqual([...structures].sort(), ['BCC','FCC','diamond','rocksalt','perovskite','corundum'].sort());
   assert.equal(Object.keys(SOURCES).length, 5);
 });
 
@@ -80,6 +81,54 @@ test('listed reflections respect ideal lattice and basis selection rules', () =>
         assert.ok(allOddOrEven, material.name+' '+line.hkl);
         if (h%2 === 0) assert.equal((h+k+l)%4,0, material.name+' '+line.hkl);
       }
+    }
+  }
+});
+
+test('SrTiO3 is primitive cubic Pm-3m: (100) is allowed and matches reference angles', () => {
+  const material = SAMPLES.srtio3;
+  assert.equal(material.structure, 'perovskite');
+  assert.ok(material.lines.some(line => line.hkl === '100'));
+  assert.ok(material.lines.some(line => line.hkl === '110'));
+  assert.ok(material.lines.some(line => line.hkl === '111'));
+  almost(planeSpacing(material, material.lines.find(line => line.hkl === '100')), 3.9053);
+  const first = linesFor('srtio3','Cu',57.3,true);
+  assert.ok(first.length > 5);
+  const angle = hkl => first.find(line => line.hkl === hkl).twoThetaDeg;
+  assert.ok(Math.abs(angle('100') - 22.77) < .2);
+  assert.ok(Math.abs(angle('110') - 32.42) < .2);
+  assert.ok(Math.abs(angle('200') - 46.51) < .2);
+});
+
+test('alpha-Al2O3 is trigonal corundum, not a cubic lattice', () => {
+  const sample = SAMPLES.al2o3;
+  assert.equal(sample.structure,'corundum');
+  almost(sample.a, 4.7589);
+  almost(sample.c,12.991);
+  const hkl104 = sample.lines.find(line => line.hkl === '104');
+  const hkl012 = sample.lines.find(line => line.hkl === '012');
+  const hkl300 = sample.lines.find(line => line.hkl === '300');
+  almost(planeSpacing(sample,hkl104), 2.550887141716714);
+  assert.ok(Math.abs(planeSpacing(sample,hkl012) - 3.4797) < .01);
+  assert.ok(Math.abs(planeSpacing(sample,hkl300) - 1.3737) < .01);
+  // Treating the hexagonal corundum indices as cubic gives the wrong d(104).
+  assert.ok(Math.abs(planeSpacing(sample,hkl104) - sample.a / Math.sqrt(hkl104.n)) > .01);
+  assert.ok(Math.abs(reflectionForLine(sample,hkl104,SOURCES.Cu.alpha,57.3).twoThetaDeg - 35.18) < .2);
+  const angles = linesFor('al2o3','Cu',57.3,true);
+  assert.ok(Math.abs(angles.find(line => line.hkl === '012').twoThetaDeg - 25.60) < .2);
+  assert.ok(Math.abs(angles.find(line => line.hkl === '113').twoThetaDeg - 43.39) < .2);
+});
+
+test('new oxide samples work for all radiation choices and obey Bragg accessibility', () => {
+  for (const sample of ['srtio3','al2o3']) {
+    for (const source of Object.keys(SOURCES)) {
+      const lines = linesFor(sample,source,57.3,true);
+      assert.ok(lines.length > 0);
+      const facts = selectionFacts(sample,source,57.3,lines[0].hkl);
+      assert.ok(facts.selected && facts.selected.twoThetaDeg > 0);
+      assert.equal(facts.available + facts.unavailable, facts.total);
+      assert.ok(lines.every(line => line.twoThetaDeg > 0 && line.twoThetaDeg <= 180));
+      assert.ok(lines.every(line => Number.isFinite(line.d) && line.d > 0));
     }
   }
 });
@@ -273,6 +322,10 @@ test('mounting and offline caching follow existing project conventions', () => {
   assert.match(html, /id="dcSelectionAdvice"/);
   assert.match(html, /value="fe"/);
   assert.match(html, /value="mgo"/);
+  assert.match(html, /value="srtio3"/);
+  assert.match(html, /value="al2o3"/);
+  assert.match(html, /hekzagonal d/);
+  assert.match(html, /1\/d<sub>hkl<\/sub>²/);
   assert.match(html, /value="Co"/);
   assert.match(html, /src="\.\/debye-camera\.js"/);
   assert.match(html, /href="\.\/debye-camera\.css"/);
