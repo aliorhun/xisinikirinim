@@ -13,6 +13,7 @@
 <script src="./vendor/prism-python-1.29.0.js"></script>
 <link rel="stylesheet" href="./euler-lab.css">
 <link rel="stylesheet" href="./learning-games.css">
+<link rel="stylesheet" href="./debye-camera.css">
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -1770,6 +1771,7 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
 <div class="subnav" role="tablist" aria-label="Toz yöntemi alt bölümleri">
     <button role="tab" data-sub="s3a" aria-selected="true">Rastgele yönelim</button>
     <button role="tab" data-sub="s3b" aria-selected="false">Debye–Scherrer konileri</button>
+    <button role="tab" data-sub="s3camera" aria-selected="false"><span data-l="tr">Silindirik toz kamerası</span><span data-l="en">Cylindrical camera</span></button>
     <button role="tab" data-sub="s3c" aria-selected="false">Halka → 1B desen</button>
     <button role="tab" data-sub="s3d" aria-selected="false">Bragg–Brentano</button>
     <button role="tab" data-sub="s3e" aria-selected="false">2θ taraması</button>
@@ -1813,6 +1815,84 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
     </div>
   </div>
+  </div>
+
+  <!-- Historic cylindrical-film camera, following the cone lesson and before flat-panel integration. -->
+  <div class="subp" id="s3camera" hidden>
+    <div class="dc-intro">
+      <div class="learn-box" data-l="tr">
+        <b>Öğrenme hedefleri:</b> X-ışını tüpü, kolimatör, numune, ışın tutucu ve filmi tanımlamak; Debye–Scherrer konilerini silindirik filmdeki çizgilerle ilişkilendirmek; numune döndürmenin ve kamera yarıçapının rolünü açıklamak; filmden 2θ ve d aralığını hesaplamak.
+        <p class="cap" style="margin:8px 0 0"><b>Ön bilgi:</b> Bragg yasası ve bir önceki “Debye–Scherrer konileri” alt bölümü.</p>
+      </div>
+      <div class="learn-box" data-l="en">
+        <b>Learning goals:</b> Identify the X-ray tube, collimator, sample, beam stop and film; relate Debye–Scherrer cones to marks on cylindrical film; explain the roles of sample rotation and camera radius; derive 2θ and d from film distances.
+        <p class="cap" style="margin:8px 0 0"><b>Prerequisites:</b> Bragg's law and the preceding “Debye–Scherrer cones” lesson.</p>
+      </div>
+      <h3 data-l="tr">Debye–Scherrer kamerası nasıl çalışır?</h3>
+      <h3 data-l="en">How does a Debye–Scherrer camera work?</h3>
+      <p data-l="tr">Bu klasik <b>iletim geometrisinde</b>, daraltılmış X-ışını demeti silindirik kameranın merkezindeki ince toz numuneden geçer. Rastgele yönlenmiş kristalitler Bragg koşulunu farklı yönlerde sağlar. Her izinli {hkl} yansıması demet çevresinde <b>yarı açısı 2θ olan bir kırınım konisi</b> oluşturur. Koninin silindirik filmle kesişimi fotoğraf üzerinde karşılıklı çizgiler/yaylar bırakır. Düz alan dedektöründeki <b>eşmerkezli halkalar</b> ile silindirik kameradaki <b>film çizgileri</b> aynı geometrinin farklı kesitleridir.</p>
+      <p data-l="en">In this classic <b>transmission geometry</b>, a collimated X-ray beam passes through a thin powder specimen at the center of a cylindrical camera. Randomly oriented crystallites meet Bragg's condition in different directions. Each allowed {hkl} reflection forms a <b>diffraction cone of half-angle 2θ</b> around the incident beam. Its intersection with the cylindrical film leaves paired lines/arcs. <b>Concentric rings</b> on a flat area detector and <b>lines on cylindrical film</b> are different sections of the same cones.</p>
+    </div>
+    <div class="dc-steps" aria-label="Camera workflow">
+      <div class="dc-step"><strong data-l="tr">1 · Işınımı seç</strong><strong data-l="en">1 · Choose radiation</strong><p data-l="tr">Tüpün anodu karakteristik Kα/Kβ dalga boylarını belirler. Uygun filtre Kβ'yı büyük ölçüde bastırır.</p><p data-l="en">The tube target sets the characteristic Kα/Kβ wavelengths; a suitable filter strongly suppresses Kβ.</p></div>
+      <div class="dc-step"><strong data-l="tr">2 · Numuneyi hazırla</strong><strong data-l="en">2 · Prepare sample</strong><p data-l="tr">İnce toz küçük bir çubuk veya kapiler içinde, kamera merkezinde ve demetin yolunda tutulur.</p><p data-l="en">Fine powder is mounted as a slender rod or in a capillary, centered in the beam.</p></div>
+      <div class="dc-step"><strong data-l="tr">3 · Filmi yerleştir</strong><strong data-l="en">3 · Load the film</strong><p data-l="tr">Film kamera çeperine oturur. Kolimatör ve doğrudan ışın tutucu demetin yolunu tanımlar.</p><p data-l="en">Film follows the camera wall. The collimator and direct-beam stop define the beam path.</p></div>
+      <div class="dc-step"><strong data-l="tr">4 · Döndür ve pozla</strong><strong data-l="en">4 · Rotate and expose</strong><p data-l="tr">Numunenin dönmesi daha çok kristalitin kırınıma katkı vermesini sağlar ve benekli çizgileri azaltır.</p><p data-l="en">Sample rotation lets more crystallites contribute, reducing spotty diffraction lines.</p></div>
+      <div class="dc-step"><strong data-l="tr">5 · Filmi banyo et</strong><strong data-l="en">5 · Develop the film</strong><p data-l="tr">Klasik fotoğraf filminde pozlanan çizgiler kimyasal banyodan sonra incelenebilir hale gelir.</p><p data-l="en">On photographic film, exposed diffraction marks become visible after chemical development.</p></div>
+      <div class="dc-step"><strong data-l="tr">6 · Çizgileri ölç</strong><strong data-l="en">6 · Measure the lines</strong><p data-l="tr">Merkezden ölçülen film yay uzunluğu <b>s = R · 2θ</b> (radyan). Buradan 2θ ve ardından Bragg yasasıyla d bulunur.</p><p data-l="en">Film arc distance from the beam reference is <b>s = R · 2θ</b> (radians). Recover 2θ, then d using Bragg's law.</p></div>
+    </div>
+    <div class="lab panel dc-lab" id="debyeCameraLab">
+      <div class="lab-head">
+        <h3 data-l="tr">Sanal silindirik kamera ve açılmış film</h3>
+        <h3 data-l="en">Virtual cylindrical camera and unrolled film</h3>
+        <p data-l="tr">Numuneyi, dalga boyunu, filtreyi ve kamera çapını değiştir. Sağdaki filmdeki çizgi aralıkları ile kesitteki 2θ açısının nasıl bağlandığını incele.</p>
+        <p data-l="en">Change the specimen, wavelength, filter and camera diameter. Connect the 2θ angle in the cross-section with the positions of marks on the unrolled film.</p>
+      </div>
+      <div class="dc-controls">
+        <label><span data-l="tr">Numune</span><span data-l="en">Sample</span>
+          <select id="dcSample"><option value="cu">Cu · YMK/FCC</option><option value="si">Si · elmas/diamond</option></select>
+        </label>
+        <label><span data-l="tr">Işınım</span><span data-l="en">Radiation</span>
+          <select id="dcSource"><option value="Cu">Cu Kα</option><option value="Mo">Mo Kα</option></select>
+        </label>
+        <label><span data-l="tr">Kamera çapı</span><span data-l="en">Camera diameter</span>
+          <select id="dcDiameter"><option value="57.3">57,3 mm</option><option value="114.6">114,6 mm</option></select>
+        </label>
+        <label><span data-l="tr">İzlenen yansıma</span><span data-l="en">Selected reflection</span>
+          <select id="dcReflection" aria-label="Selected hkl"></select>
+        </label>
+        <label class="dc-check"><input type="checkbox" id="dcFilter" checked><span>Ni filtresi (Kβ bastırma)</span></label>
+        <label class="dc-check"><input type="checkbox" id="dcRotation" checked><span data-l="tr">Numuneyi döndür</span><span data-l="en">Rotate sample</span></label>
+      </div>
+      <div class="dc-visuals">
+        <div class="dc-visual">
+          <h4 data-l="tr">Kamera: demet eksenine dik değil, numune ekseni boyunca üstten kesit</h4>
+          <h4 data-l="en">Camera: top view along the sample rotation axis</h4>
+          <canvas id="dcCamera" role="img" aria-label="Cylindrical camera cross-section, incident and diffracted beams"></canvas>
+        </div>
+        <div class="dc-visual">
+          <h4 data-l="tr">Film: kırınım çizgileri (şematik)</h4>
+          <h4 data-l="en">Film: diffraction lines (schematic)</h4>
+          <canvas id="dcFilm" role="img" aria-label="Unrolled cylindrical film with diffraction marks"></canvas>
+        </div>
+      </div>
+      <div class="dc-readout" id="dcReadout" aria-live="polite"></div>
+      <p class="dc-note" id="dcInterpretation" aria-live="polite"></p>
+      <p class="dc-footnote" data-l="tr"><b>Model sınırı:</b> Çizgi konumları kübik d<sub>hkl</sub> ve Bragg bağıntısından hesaplanır; parlaklıklar deneysel şiddet, film dozu veya gerçekçi tane istatistiği değildir. Dönme anahtarı beneklilik etkisini nitel olarak gösterir. Filmin açılma noktası doğrudan demet çıkışı olarak seçilmiştir; gerçek Straumanis–Ieviņš film düzeninde işaret ve ölçüm referansları farklı olabilir. Numunenin tam merkezde ve demetin ideal olduğu varsayılır.</p>
+      <p class="dc-footnote" data-l="en"><b>Model limits:</b> Line positions follow cubic d<sub>hkl</sub> and Bragg's law; brightness is not experimental intensity, film dose or a grain-statistics calculation. The rotation toggle depicts spotty lines qualitatively. The unrolled film is cut at the forward beam exit; real Straumanis–Ieviņš layouts use different marks and measuring references. Ideal sample centering and beam geometry are assumed.</p>
+    </div>
+    <section class="dc-quiz panel">
+      <h3 data-l="tr">Kendini sına: deney sonucu ne değişir?</h3>
+      <h3 data-l="en">Check your understanding: what changes?</h3>
+      <details data-l="tr"><summary>Kamera çapı iki katına çıkarsa aynı (hkl) çizgisinin 2θ açısı ve filmdeki s uzaklığı ne olur?</summary><p>2θ <b>değişmez</b>; Bragg koşulu dalga boyu ve d aralığına bağlıdır. <b>s = R · 2θ</b> olduğu için filmdeki uzaklık iki katına çıkar.</p></details>
+      <details data-l="en"><summary>If the camera diameter doubles, what happens to 2θ and arc distance s for the same (hkl)?</summary><p>2θ stays <b>unchanged</b>; Bragg's law depends on wavelength and d. Since <b>s = R · 2θ</b>, the film distance doubles.</p></details>
+      <details data-l="tr"><summary>Numunenin dönüşünü durdurmak neden çizgileri benekli hale getirebilir?</summary><p>İri veya az sayıdaki kristalitler her azimut yönünü yeterince dolduramayabilir. Döndürme, pozlama sırasında daha çok kristalitin uygun yönelime gelmesine yardım eder; tam rastgele bir tozda etki numuneye bağlıdır.</p></details>
+      <details data-l="en"><summary>Why can stopping specimen rotation make diffraction lines spotty?</summary><p>Large or too few crystallites may not populate all azimuths. Rotation samples additional orientations during exposure; the effect depends on the specimen.</p></details>
+      <details data-l="tr"><summary>Ni filtresini kaldırmak Cu hedefli ölçümde hangi ek çizgileri oluşturabilir?</summary><p>Kβ daha kısa dalga boyuna sahiptir; aynı d için <b>daha küçük 2θ</b> açısında ilave zayıf çizgiler görülebilir. Filtre ayrıca Kα'yı da bir miktar soğurur.</p></details>
+      <details data-l="en"><summary>What extra marks may appear with a Cu target if the Ni filter is removed?</summary><p>Kβ has a shorter wavelength, creating additional weak lines at <b>smaller 2θ</b> for the same d. A real filter also attenuates some Kα.</p></details>
+    </section>
+    <p class="dc-footnote" data-l="tr"><b>Kaynak:</b> L. V. Azároff ve M. J. Buerger, <i>The Powder Method in X-Ray Crystallography</i> (1958), Bölüm 5, s. 32–45: “Işınım seçimi”, “Numune” ve “Toz kamerasının kullanımı”.</p>
+    <p class="dc-footnote" data-l="en"><b>Reference:</b> L. V. Azároff & M. J. Buerger, <i>The Powder Method in X-Ray Crystallography</i> (1958), Chapter 5, pp. 32–45: radiation selection, specimen preparation and powder-camera operation.</p>
   </div>
   <div class="subp" id="s3c" hidden>
 <div class="lab panel" id="ringToPatternLab">
@@ -6785,5 +6865,6 @@ requestAnimationFrame(loop);
 </script>
 <script src="./euler-lab.js"></script>
 <script src="./learning-games.js"></script>
+<script src="./debye-camera.js"></script>
 </body>
 </html>
