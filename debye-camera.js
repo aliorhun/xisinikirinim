@@ -345,10 +345,25 @@
       note.textContent = '';
       return;
     }
-    display.innerHTML = '<div><small>d<sub>hkl</sub></small><strong>' + selected.d.toFixed(4) + ' Å</strong></div>' +
-      '<div><small>2θ</small><strong>' + selected.twoThetaDeg.toFixed(2) + '°</strong></div>' +
-      '<div><small>s = R × 2θ</small><strong>' + selected.arcMm.toFixed(2) + ' mm</strong></div>' +
-      '<div><small>R</small><strong>' + (dia / 2).toFixed(2) + ' mm</strong></div>';
+    const readoutCard = (label, value, key, captionTr, captionEn) =>
+      '<div class="dc-info-card"><small>' + label + '</small>' +
+      '<strong>' + value + '</strong>' +
+      '<button type="button" class="info-btn small dc-readout-info" data-info="' + key +
+      '" aria-haspopup="dialog" aria-controls="infoModal" aria-label="' +
+      t(captionTr, captionEn) + '" title="' + t(captionTr, captionEn) + '">i</button></div>';
+    display.innerHTML =
+      readoutCard('d<sub>hkl</sub>', selected.d.toFixed(4) + ' Å',
+        'dcPlaneSpacing', 'Düzlemler arası uzaklık hakkında bilgi',
+        'About interplanar spacing') +
+      readoutCard('2θ', selected.twoThetaDeg.toFixed(2) + '°',
+        'dcTwoTheta', '2θ açısını neler değiştirir?',
+        'What affects the 2θ angle?') +
+      readoutCard('s = R × 2θ', selected.arcMm.toFixed(2) + ' mm',
+        'dcFilmDistance', 'Film üzerindeki yay uzunluğu hakkında bilgi',
+        'About the arc distance on the film') +
+      readoutCard('R', (dia / 2).toFixed(2) + ' mm',
+        'dcCameraRadius', 'Kamera yarıçapı hakkında bilgi',
+        'About camera radius');
     note.textContent = t(
       'Seçili (' + chosen.value + ') yansıması filmin iki yanında doğrudan demet referansından ±' + selected.arcMm.toFixed(2).replace('.', ',') + ' mm uzaklıkta görülür. Film, demet çıkışından açılmıştır. ' +
       (rotating.checked ? 'Dönen numune daha sürekli çizgiler elde etmeye yardımcı olur.' : 'Döndürme kapalı: az sayıdaki kristalitin benekli çizgi etkisi kavramsal olarak gösterilir.') +

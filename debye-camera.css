@@ -49,3 +49,15 @@
   .dc-advice-tabs button{flex:0 0 auto;padding:9px 12px}
   .dc-advice-panel{padding:11px 12px}
 }
+
+/* Keep the readout values compact while displaying an accessible info trigger. */
+.dc-readout>div.dc-info-card{position:relative;padding-right:40px;min-width:0}
+.dc-readout>div.dc-info-card .dc-readout-info{position:absolute;right:9px;top:9px}
+.dc-readout>div.dc-info-card strong{overflow-wrap:anywhere}
+.dc-info-table-wrap{max-width:100%;overflow-x:auto;margin:10px 0 14px;border:1px solid var(--line);border-radius:8px}
+.dc-info-table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.5}
+.dc-info-table th,.dc-info-table td{padding:9px 11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.dc-info-table th{font-weight:650;color:var(--ink);background:var(--panel2)}
+.dc-info-table tr:last-child td{border-bottom:0}
+.dc-info-table td:first-child{font-weight:600}
+@media(max-width:520px){.dc-info-table{min-width:520px}}

@@ -184,6 +184,13 @@ test('advice tab selection survives input changes and supports arrow/Home/End', 
     document,globalThis:win,module:{exports:{}},
     getComputedStyle:()=>({getPropertyValue:()=>''})
   });
+  const readoutInfoKeys = ['dcPlaneSpacing','dcTwoTheta','dcFilmDistance','dcCameraRadius'];
+  assert.equal((dom.dcReadout.innerHTML.match(/data-info="/g) || []).length, 4);
+  for (const key of readoutInfoKeys) {
+    assert.ok(dom.dcReadout.innerHTML.includes('data-info="' + key + '"'));
+  }
+  assert.match(dom.dcReadout.innerHTML, /aria-label="2θ açısını neler değiştirir\?"/);
+  assert.match(dom.dcReadout.innerHTML, /aria-haspopup="dialog"/);
   assert.equal(tabs[0].attrs['aria-selected'],'true');
   assert.equal(dom.dcAdvicePanel.attrs['aria-labelledby'],tabs[0].id);
   tabs[1].listeners.click();
@@ -202,6 +209,35 @@ test('advice tab selection survives input changes and supports arrow/Home/End', 
   assert.equal(tabs[3].attrs['aria-selected'],'true');
   tabs[3].listeners.keydown({key:'Home',preventDefault(){}});
   assert.equal(tabs[0].attrs['aria-selected'],'true');
+});
+
+test('information modal definitions cover all four Debye camera readouts in Turkish and English', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const tag = '// Debye–Scherrer camera readout explanations (TR/EN)';
+  const begin = html.indexOf(tag), end = html.indexOf('function infoLang(entry)', begin);
+  assert.ok(begin > 0 && end > begin);
+  const code = html.slice(begin + tag.length, end);
+  const registry = {};
+  Function('INFO', code)(registry);
+  for (const key of ['dcTwoTheta', 'dcPlaneSpacing', 'dcFilmDistance', 'dcCameraRadius']) {
+    assert.ok(registry[key]);
+    for (const language of ['tr', 'en']) {
+      assert.ok(registry[key][language].title);
+      assert.ok(registry[key][language].body.length > 200);
+    }
+  }
+  assert.match(registry.dcTwoTheta.tr.body, /Bragg/);
+  assert.match(registry.dcTwoTheta.tr.body, /Dalga boyu/);
+  assert.match(registry.dcTwoTheta.tr.body, /Düzlem aralığı/);
+  assert.match(registry.dcTwoTheta.tr.body, /Örgü parametresi/);
+  assert.match(registry.dcTwoTheta.tr.body, /Kamera çapı/);
+  assert.match(registry.dcTwoTheta.tr.body, /Numunenin döndürülmesi/);
+  assert.match(registry.dcTwoTheta.tr.body, /Kα\/Kβ filtreleme/);
+  assert.equal((registry.dcTwoTheta.tr.body.match(/<tr>/g) || []).length, 8);
+  assert.equal((registry.dcTwoTheta.en.body.match(/<tr>/g) || []).length, 8);
+  assert.match(html, /id="infoModal"/);
+  assert.match(html, /function openInfo\(key\)/);
+  assert.match(html, /\[data-info\]/);
 });
 
 test('experiment selectors follow the guidance tabs and precede the visualizations', () => {
