@@ -240,6 +240,32 @@ test('advice tab selection survives input changes and supports arrow/Home/End', 
   }
   assert.match(dom.dcReadout.innerHTML, /aria-label="2θ açısını neler değiştirir\?"/);
   assert.match(dom.dcReadout.innerHTML, /aria-haspopup="dialog"/);
+  // Regression: these two new samples were visible in HTML while older cached
+  // JS did not recognize them, leaving the reflection list and film unchanged.
+  const originalReadout = dom.dcReadout.innerHTML;
+  dom.dcSample.value='srtio3';
+  dom.dcSample.listeners.change();
+  assert.equal(dom.dcReflection.disabled, false);
+  assert.ok(dom.dcReflection.options.length >= 5);
+  assert.match(dom.dcReflection.options[0].textContent, /\(100\)/);
+  assert.ok(dom.dcReadout.innerHTML !== originalReadout);
+  assert.match(dom.dcReadout.innerHTML, /22\.7[0-9]/);
+  const srtio3Readout = dom.dcReadout.innerHTML;
+  dom.dcSample.value='al2o3';
+  dom.dcSample.listeners.change();
+  assert.equal(dom.dcReflection.disabled, false);
+  assert.ok(dom.dcReflection.options.length >= 5);
+  assert.match(dom.dcReflection.options[0].textContent, /\(012\)/);
+  assert.ok(dom.dcReadout.innerHTML !== srtio3Readout);
+  assert.match(dom.dcReadout.innerHTML, /25\.6[0-9]/);
+  dom.dcSample.value='unknown-old-module-sample';
+  dom.dcSample.listeners.change();
+  assert.equal(dom.dcReflection.disabled, true);
+  assert.match(dom.dcReadout.textContent, /tanınmıyor/);
+  dom.dcSample.value='cu';
+  dom.dcSample.listeners.change();
+  assert.equal(dom.dcReflection.disabled, false);
+  assert.ok(dom.dcReflection.options.length > 0);
   assert.equal(tabs[0].attrs['aria-selected'],'true');
   assert.equal(dom.dcAdvicePanel.attrs['aria-labelledby'],tabs[0].id);
   tabs[1].listeners.click();
@@ -327,8 +353,31 @@ test('mounting and offline caching follow existing project conventions', () => {
   assert.match(html, /hekzagonal d/);
   assert.match(html, /1\/d<sub>hkl<\/sub>²/);
   assert.match(html, /value="Co"/);
-  assert.match(html, /src="\.\/debye-camera\.js"/);
+  assert.match(html, /src="\.\/debye-camera\.js\?v=20261104-sample-refresh"/);
   assert.match(html, /href="\.\/debye-camera\.css"/);
   assert.match(worker, /'\.\/debye-camera\.js'/);
+  assert.match(worker, /'\.\/debye-camera\.js\?v=20261104-sample-refresh'/);
   assert.match(worker, /'\.\/debye-camera\.css'/);
+});
+
+test('shared lecture attribution appears on every tab in both languages', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const credit = html.match(/<footer class="course-footer"[\s\S]*?<\/footer>/)?.[0];
+  assert.ok(credit, 'The footer must be outside the tab panels');
+  assert.match(credit, /data-l="tr">Prof\. Dr\. Mehmet Kabak'ın ders notlarından derlenmiştir\./);
+  assert.match(credit, /data-l="en">Compiled from the lecture notes of Prof\. Dr\. Mehmet Kabak\./);
+  assert.equal((html.match(/<footer class="course-footer"/g) || []).length, 1);
+  assert.ok(html.indexOf('</main>') < html.indexOf('<footer class="course-footer"'));
+  assert.ok(html.indexOf('<footer class="course-footer"') < html.indexOf('<dialog class="info-modal"'));
+  assert.match(html, /html\[lang="tr"\] \[data-l="en"\]/);
+});
+
+test('camera asset cache busting prevents mixed-version HTML and JS', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const worker = fs.readFileSync(path.join(__dirname, '..', 'service-worker.js'), 'utf8');
+  assert.match(html, /src="\.\/debye-camera\.js\?v=20261104-sample-refresh"/);
+  assert.match(worker, /'\.\/debye-camera\.js\?v=20261104-sample-refresh'/);
+  assert.match(worker, /xisinikirinim-offline-v10/);
+  assert.match(worker, /const cached = await cache\.match\(request\)/);
+  assert.doesNotMatch(worker, /caches\.match\(request\)/);
 });

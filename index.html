@@ -439,6 +439,9 @@ svg.arch .ar{stroke:var(--muted);stroke-width:1.4}svg.arch .ahd{fill:var(--muted
 .task-card{border:1px dashed var(--line);border-radius:8px;padding:8px 12px;margin:0 0 14px;background:var(--panel2);font-size:14px}
 .task-card summary{cursor:pointer;font-weight:600}
 .task-card ol{margin:8px 0 2px;padding-left:20px}
+/* The attribution belongs to the shared shell, not to an individual lesson tab. */
+.course-footer{box-sizing:border-box;max-width:1300px;margin:0 auto 28px;padding:16px 22px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;line-height:1.5}
+.course-footer p{margin:0}
 html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!important}
 </style>
 </head>
@@ -2665,6 +2668,10 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
 </section>
 
 </main>
+<footer class="course-footer" aria-label="Ders notu kaynağı">
+  <p data-l="tr">Prof. Dr. Mehmet Kabak'ın ders notlarından derlenmiştir.</p>
+  <p data-l="en">Compiled from the lecture notes of Prof. Dr. Mehmet Kabak.</p>
+</footer>
 
 <dialog class="info-modal" id="infoModal" aria-labelledby="infoModalTitle">
   <div class="info-modal-head">
@@ -6932,6 +6939,6 @@ requestAnimationFrame(loop);
 </script>
 <script src="./euler-lab.js"></script>
 <script src="./learning-games.js"></script>
-<script src="./debye-camera.js"></script>
+<script src="./debye-camera.js?v=20261104-sample-refresh"></script>
 </body>
 </html>
