@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v3';
+const CACHE_NAME = 'xisinikirinim-offline-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,8 @@ const APP_SHELL = [
   './euler-lab.js',
   './learning-games.css',
   './learning-games.js',
+  './debye-camera.css',
+  './debye-camera.js',
   './vendor/three-r128.min.js',
   './vendor/prism-1.29.0.js',
   './vendor/prism-python-1.29.0.js'
