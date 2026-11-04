@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v5';
+const CACHE_NAME = 'xisinikirinim-offline-v6';
 const APP_SHELL = [
   './',
   './index.html',
