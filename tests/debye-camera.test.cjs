@@ -204,6 +204,28 @@ test('advice tab selection survives input changes and supports arrow/Home/End', 
   assert.equal(tabs[0].attrs['aria-selected'],'true');
 });
 
+test('experiment selectors follow the guidance tabs and precede the visualizations', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const start = html.indexOf('id="debyeCameraLab"');
+  const end = html.indexOf('id="dcCamera"', start);
+  assert.ok(start >= 0 && end > start);
+  const lesson = html.slice(start, end);
+  const guide = lesson.indexOf('id="dcSelectionAdvice"');
+  const guidePanel = lesson.indexOf('id="dcAdvicePanel"');
+  const controls = lesson.indexOf('class="dc-controls"');
+  const sample = lesson.indexOf('id="dcSample"');
+  const radiation = lesson.indexOf('id="dcSource"');
+  const diameter = lesson.indexOf('id="dcDiameter"');
+  const reflection = lesson.indexOf('id="dcReflection"');
+  const filter = lesson.indexOf('id="dcFilter"');
+  const rotation = lesson.indexOf('id="dcRotation"');
+  const visual = lesson.indexOf('class="dc-visuals"');
+  assert.ok(guide > -1 && guide < guidePanel && guidePanel < controls);
+  assert.ok(controls < sample && sample < radiation && radiation < diameter);
+  assert.ok(diameter < reflection && reflection < filter && filter < rotation && rotation < visual);
+  assert.equal((lesson.match(/class="dc-controls"/g) || []).length, 1);
+});
+
 test('mounting and offline caching follow existing project conventions', () => {
   const read = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
   const html = read('index.html'), worker = read('service-worker.js');
