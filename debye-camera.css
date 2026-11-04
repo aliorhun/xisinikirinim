@@ -31,3 +31,18 @@
   .dc-steps{grid-template-columns:1fr}
   .dc-controls label:not(.dc-check){min-width:calc(50% - 12px);flex:1}
 }
+
+/* Selection guidance follows the live experiment controls and uses existing theme tokens. */
+.dc-selection-guide{margin:0 0 16px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.dc-selection-guide h4{margin:0 0 8px;font-size:1.02rem;color:var(--ink)}
+.dc-guide-lead{margin:0 0 12px;font-size:14px;color:var(--muted);line-height:1.6}
+.dc-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dc-guide-grid article{min-width:0;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px}
+.dc-guide-grid h5{font-size:13px;margin:0 0 6px;color:var(--cobalt)}
+.dc-guide-grid p{font-size:13px;line-height:1.55;color:var(--ink);margin:0;overflow-wrap:anywhere}
+.dc-selection-warning{font-size:13px;line-height:1.55;border-left:3px solid var(--copper);background:var(--panel2);padding:10px 12px;margin:12px 0 0}
+.dc-selection-warning[hidden]{display:none}
+.dc-selection-rules{font-size:13px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.dc-selection-rules summary{cursor:pointer;font-weight:600}
+.dc-selection-rules p{margin:8px 0;line-height:1.5}
+@media(max-width:700px){.dc-guide-grid{grid-template-columns:1fr}}
