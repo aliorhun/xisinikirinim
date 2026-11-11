@@ -61,3 +61,6 @@
 .dc-info-table tr:last-child td{border-bottom:0}
 .dc-info-table td:first-child{font-weight:600}
 @media(max-width:520px){.dc-info-table{min-width:520px}}
+
+/* Debye–Scherrer konileri laboratuvarı kamera sekmesinin üst kısmında */
+.ds-cones{margin:0 0 24px}
