@@ -137,6 +137,41 @@
     return { r, pairs, all };
   }
 
+  /** Geleneksel hücredeki atomlar (kesirli). HCP için orijin bir atom üzerinde. */
+  const STRUCTURES = {
+    fcc: { sys: 'cubic', atoms: [[0, 0, 0], [0, .5, .5], [.5, 0, .5], [.5, .5, 0]] },
+    bcc: { sys: 'cubic', atoms: [[0, 0, 0], [.5, .5, .5]] },
+    diamond: { sys: 'cubic', atoms: [[0, 0, 0], [0, .5, .5], [.5, 0, .5], [.5, .5, 0], [.25, .25, .25], [.25, .75, .75], [.75, .25, .75], [.75, .75, .25]] },
+    bct: { sys: 'tetragonal', atoms: [[0, 0, 0], [.5, .5, .5]] },
+    hcp: { sys: 'hexagonal', atoms: [[0, 0, 0], [2 / 3, 1 / 3, .5]] }
+  };
+  const frac1 = x => { const r = x - Math.floor(x); return r > 1 - 1e-9 ? 0 : r; };
+  /** F/f = Σ exp(2πi(hx+ky+lz)) (tüm atomlar aynı f ile). */
+  function structureFactor(atoms, h, k, l) {
+    let re = 0, im = 0;
+    const phases = atoms.map(p => frac1(h * p[0] + k * p[1] + l * p[2]));
+    phases.forEach(ph => { re += Math.cos(2 * Math.PI * ph); im += Math.sin(2 * Math.PI * ph); });
+    if (Math.abs(re) < 1e-9) re = 0;
+    if (Math.abs(im) < 1e-9) im = 0;
+    return { re, im, abs2: re * re + im * im, abs: Math.hypot(re, im), phases };
+  }
+  const perms3 = a => [[a[0], a[1], a[2]], [a[0], a[2], a[1]], [a[1], a[0], a[2]], [a[1], a[2], a[0]], [a[2], a[0], a[1]], [a[2], a[1], a[0]]];
+  /** Toz çokluğu: Laue sınıfı m-3m, 4/mmm ya da 6/mmm altındaki eşdeğer (hkl) sayısı. */
+  function multiplicity(sys, h, k, l) {
+    const set = new Set(), z = x => (x === 0 ? 0 : x), add = (a, b, c) => set.add(z(a) + ',' + z(b) + ',' + z(c)), sg = [1, -1];
+    if (sys === 'cubic') perms3([h, k, l]).forEach(q => sg.forEach(a => sg.forEach(b => sg.forEach(c => add(a * q[0], b * q[1], c * q[2])))));
+    else if (sys === 'tetragonal') [[h, k], [k, h]].forEach(q => sg.forEach(a => sg.forEach(b => sg.forEach(c => add(a * q[0], b * q[1], c * l)))));
+    else perms3([h, k, -h - k]).forEach(q => sg.forEach(a => sg.forEach(c => add(a * q[0], a * q[1], c * l))));
+    return set.size;
+  }
+  function dHKL(sys, a, c, h, k, l) {
+    if (sys === 'cubic') return a / Math.sqrt(h * h + k * k + l * l);
+    if (sys === 'tetragonal') return 1 / Math.sqrt((h * h + k * k) / (a * a) + l * l / (c * c));
+    return 1 / Math.sqrt(4 / 3 * (h * h + h * k + k * k) / (a * a) + l * l / (c * c));
+  }
+  /** Dört indisli Miller–Bravais gösterimi (h k i l), i = −(h + k). */
+  const millerBravais = (h, k, l) => [h, k, -(h + k), l];
+
   function solve() {
     const L1 = LAMBDA.CuKa1;
     // 10-1
@@ -186,7 +221,8 @@
   }
 
   const api = { LAMBDA, REF, DATA, deg, rad, thetaRad, twoThetaDeg, sin2FromTwoTheta, dSpacing, aCubic, nelsonRiley,
-    linearFit, lsqK, lsq2, CUBIC_SETS, HKL_OF_N, cubicSearch, expectedReflections, pairKaKb, solve };
+    linearFit, lsqK, lsq2, CUBIC_SETS, HKL_OF_N, cubicSearch, expectedReflections, pairKaKb, solve,
+    STRUCTURES, structureFactor, multiplicity, dHKL, millerBravais };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.PowderExercises = api;
   if (typeof document === 'undefined') return;
@@ -291,11 +327,12 @@
         return [i + 1, f(s, 4)].concat(cells, [g[1] || 0, g[1] ? f(r / g[1], 4) : 'hk0', { v: '(' + g[2] + ')', c: 'pe-em' }]);
       }));
     }
-    function expTable(list, S) {
-      return table(['(hkl)', t('sin²θ (hes.)', 'sin²θ (calc.)'), t('En yakın gözlenen', 'Nearest observed'), t('Durum', 'Status')], list.map(e => {
-        if (e.extinct) return ['(' + e.hkl + ')', f(e.sin2, 4), '—', { v: t('Söner (HCP kuralı) · gözlenmiyor ✓', 'Extinct (HCP rule) · not observed ✓'), c: 'pe-ok' }];
+    function expTable(list, S, hex) {
+      const mb = e => hex ? [mbStr(...parseHKL(e.hkl))] : [];
+      return table(['(hkl)'].concat(hex ? ['(hkil)'] : [], [t('sin²θ (hes.)', 'sin²θ (calc.)'), t('En yakın gözlenen', 'Nearest observed'), t('Durum', 'Status')]), list.map(e => {
+        if (e.extinct) return ['(' + e.hkl + ')'].concat(mb(e), [f(e.sin2, 4), '—', { v: t('Söner (HCP kuralı) · gözlenmiyor ✓', 'Extinct (HCP rule) · not observed ✓'), c: 'pe-ok' }]);
         const nearest = S.reduce((a, b) => Math.abs(b - e.sin2) < Math.abs(a - e.sin2) ? b : a), d = nearest - e.sin2;
-        return ['(' + e.hkl + ')', f(e.sin2, 4), f(nearest, 4), Math.abs(d) < .0015 ? { v: t('Gözleniyor ✓', 'Observed ✓'), c: 'pe-ok' } : { v: t('Uyumsuz: ', 'Mismatch: ') + f(nearest, 4) + ' (Δ = ' + f(d, 4) + ')', c: 'pe-bad' }];
+        return ['(' + e.hkl + ')'].concat(mb(e), [f(e.sin2, 4), f(nearest, 4), Math.abs(d) < .0015 ? { v: t('Gözleniyor ✓', 'Observed ✓'), c: 'pe-ok' } : { v: t('Uyumsuz: ', 'Mismatch: ') + f(nearest, 4) + ' (Δ = ' + f(d, 4) + ')', c: 'pe-bad' }]);
       }));
     }
     const lsqStepsText = (fit, P, Q, name) => [
@@ -318,7 +355,7 @@
       ])}
       <h4>${t('Kübik olmayan sistemler (PDF s. 22–55)', 'Non-cubic systems (PDF pp. 22–55)')}</h4>
       ${fx(`${t('Tetragonal', 'Tetragonal')}: sin²θ = A(h²+k²) + C·l², &nbsp; A = ${P('λ²', '4a²')}, C = ${P('λ²', '4c²')} &nbsp;&nbsp;|&nbsp;&nbsp; ${t('Hekzagonal', 'Hexagonal')}: sin²θ = A(h²+hk+k²) + C·l², &nbsp; A = ${P('λ²', '3a²')}, C = ${P('λ²', '4c²')}`)}
-      ${note('', t('<b>Sönüm kuralları:</b> I-merkezli tetragonalde h+k+l çift olmalıdır. HCP yapısında <b>h+2k = 3n ve aynı anda l tek</b> ise yansıma gözlenmez (001, 003, 111 …); yalnız biri sağlanıyorsa yansıma vardır (101, 110, 002).', '<b>Extinction rules:</b> body-centred tetragonal requires h+k+l even. In HCP a reflection is absent when <b>h+2k = 3n and l is odd</b> (001, 003, 111 …); if only one condition holds it is present (101, 110, 002).'))}
+      ${note('', t('<b>Miller–Bravais:</b> hekzagonalde dört indisli (hkil) gösterimi kullanılır, i = −(h+k); ör. (101) = (1 0 <span class="pe-ov">1</span> 1). <b>Sönüm kuralları:</b> I-merkezli tetragonalde h+k+l çift olmalıdır. HCP yapısında <b>h+2k = 3n ve aynı anda l tek</b> ise yansıma gözlenmez (001, 003, 111 …); yalnız biri sağlanıyorsa yansıma vardır (101, 110, 002).', '<b>Miller–Bravais:</b> hexagonal planes use the four-index (hkil) notation with i = −(h+k); e.g. (101) = (1 0 <span class="pe-ov">1</span> 1). <b>Extinction rules:</b> body-centred tetragonal requires h+k+l even. In HCP a reflection is absent when <b>h+2k = 3n and l is odd</b> (001, 003, 111 …); if only one condition holds it is present (101, 110, 002).'))}
       <h4>${t('Hassasiyet ve ekstrapolasyon', 'Precision and extrapolation')}</h4>
       <p>${t('Bragg yasasının türevi <b>Δd/d = −cotθ·Δθ</b> verir: aynı açı hatası θ → 90° iken örgü parametresinde giderek küçülen hataya yol açar. Sistematik hatalar açıya bağlı olduğundan a değerleri <b>Nelson–Riley</b> fonksiyonuna karşı çizilip f = 0\'a (θ = 90°) uzatılır. Bu ekstrapolasyon ders PDF\'inde yoktur; tamamlayıcı olarak eklenmiştir.', 'Differentiating Bragg\'s law gives <b>Δd/d = −cotθ·Δθ</b>: the same angular error produces an ever smaller lattice-parameter error as θ → 90°. Because systematic errors depend on angle, the a values are plotted against the <b>Nelson–Riley</b> function and extended to f = 0 (θ = 90°). This extrapolation is not in the course PDF; it is added as a supplement.')}</p>
       ${fx(`f(θ) = ½ ( ${P('cos²θ', 'sinθ')} + ${P('cos²θ', 'θ')} ) &nbsp; (${t('θ radyan', 'θ in radians')}) &nbsp;⇒&nbsp; a = a₀ + m·f(θ)`)}
@@ -520,6 +557,10 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
     const question = (id, text, vals, extra) => `<div class="pe-q"><div class="pe-qh"><span class="pe-pill">${t('PROBLEM', 'PROBLEM')} ${id}</span><span class="pe-ql">${t('Soru', 'Question')}</span></div><p>${text}${extra || ''}</p>${chips(vals)}</div>`;
     const answerHead = title => `<div class="pe-ah"><span class="pe-ql pe-ans">${t('Çözüm', 'Solution')}</span><h4>${title}</h4></div>`;
     const fv = v => f(v, v < 0.2 ? 4 : 3); // problem listesindeki basamak sayısı
+    const bar = n => n < 0 ? `<span class="pe-ov">${-n}</span>` : String(n);
+    const mbStr = (h, k, l) => '(' + millerBravais(h, k, l).map(bar).join(' ') + ')';
+    const mbPlain = (h, k, l) => '(' + millerBravais(h, k, l).map(n => n < 0 ? '−' + (-n) : n).join(' ') + ')';
+    const parseHKL = str => str.split('').map(Number);
 
     /* ---------- 10-1 ---------- */
     const p1 = R.p101;
@@ -656,21 +697,85 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
       ${subTable(p6.S, p6.Aest, [0, 1, 3, 4], p6.assign)}
       ${note('pe-danger', t(`<b>Uyumsuz çizgi: ${f(p6.S[2], 4)}.</b> Hiçbir nA çıkarıldığında C·l² elde edilmez. Aynı A ve C ile (101) <b>${f(p6.expected101, 4)}</b>'da beklenir; Mg'de (101) desenin <b>en şiddetli</b> çizgisidir. Değer görseldeki tabloda ve PDF'deki problem listesinde (s. 56) aynıdır; kaynakta <b>baskı/aktarım hatası</b> (≈ 0,0988) en olası açıklamadır. Orijinal kaynakla karşılaştırılması önerilir.`, `<b>Mismatched line: ${f(p6.S[2], 4)}.</b> No nA subtraction yields C·l². With the same A and C, (101) is expected at <b>${f(p6.expected101, 4)}</b>; in Mg, (101) is the <b>strongest</b> line. The value is identical in the problem sheet and in the PDF (p. 56), so a <b>typographical/transcription error</b> (≈ 0.0988) is the most likely explanation. Check against the original source.`).replace('0,0988', f(.0988, 4)))}
       <h5>${t('Adım 4 — İndisleme, en küçük kareler, sönüm kontrolü', 'Step 4 — Indexing, least squares, extinction check')}</h5>
-      ${table(['#', t('sin²θ (göz.)', 'sin²θ (obs.)'), '(hkl)', 'h²+hk+k²', 'l²', t('sin²θ (hes.)', 'sin²θ (calc.)'), 'Δ', 'd (Å)', 'a (hk0) Å', 'c (00l) Å'], p6.S.map((s, i) => {
+      ${table(['#', t('sin²θ (göz.)', 'sin²θ (obs.)'), '(hkl)', '(hkil)', 'h²+hk+k²', 'l²', t('sin²θ (hes.)', 'sin²θ (calc.)'), 'Δ', 'd (Å)', 'a (hk0) Å', 'c (00l) Å', 'p'], p6.S.map((s, i) => {
         const g = p6.assign[i];
-        if (!g) { const e = p6.expected101; return [i + 1, { v: f(s, 4), c: 'pe-bad' }, { v: '(101)?', c: 'pe-bad' }, 1, 1, f(e, 4), { v: f(s - e, 4), c: 'pe-bad' }, f(dSpacing(s, L1), 4), '—', '—']; }
-        const c = g[0] * p6.fit.A + g[1] * p6.fit.C, sn = Math.sqrt(s);
-        return [i + 1, f(s, 4), { v: '(' + g[2] + ')', c: 'pe-em' }, g[0], g[1], f(c, 4), f(s - c, 4), f(dSpacing(s, L1), 4), g[1] === 0 ? f(L1 * Math.sqrt(g[0]) / (Math.sqrt(3) * sn), 4) : '—', g[0] === 0 ? f(L1 * Math.sqrt(g[1]) / (2 * sn), 4) : '—'];
+        if (!g) { const e = p6.expected101; return [i + 1, { v: f(s, 4), c: 'pe-bad' }, { v: '(101)?', c: 'pe-bad' }, { v: mbStr(1, 0, 1) + '?', c: 'pe-bad' }, 1, 1, f(e, 4), { v: f(s - e, 4), c: 'pe-bad' }, f(dSpacing(s, L1), 4), '—', '—', multiplicity('hexagonal', 1, 0, 1)]; }
+        const c = g[0] * p6.fit.A + g[1] * p6.fit.C, sn = Math.sqrt(s), hk = parseHKL(g[2]);
+        return [i + 1, f(s, 4), { v: '(' + g[2] + ')', c: 'pe-em' }, { v: mbStr(...hk), c: 'pe-em' }, g[0], g[1], f(c, 4), f(s - c, 4), f(dSpacing(s, L1), 4), g[1] === 0 ? f(L1 * Math.sqrt(g[0]) / (Math.sqrt(3) * sn), 4) : '—', g[0] === 0 ? f(L1 * Math.sqrt(g[1]) / (2 * sn), 4) : '—', multiplicity('hexagonal', ...hk)];
       }))}
+      <p class="pe-small">${t('(hkil): dört indisli Miller–Bravais gösterimi, i = −(h+k). p: toz çokluğu (6/mmm). Dört indisle simetri eşdeğeri düzlemler aynı rakamlarla görünür: (100), (010) ve (<span class="pe-ov">1</span>10) → (1 0 <span class="pe-ov">1</span> 0), (0 1 <span class="pe-ov">1</span> 0), (<span class="pe-ov">1</span> 1 0 0).', '(hkil): four-index Miller–Bravais notation, i = −(h+k). p: powder multiplicity (6/mmm). With four indices, symmetry-equivalent planes share the same digits: (100), (010) and (<span class="pe-ov">1</span>10) → (1 0 <span class="pe-ov">1</span> 0), (0 1 <span class="pe-ov">1</span> 0), (<span class="pe-ov">1</span> 1 0 0).')}</p>
       ${algo({ tag: t('ALGORİTMA 7 · UYGULAMA', 'ALGORITHM 7 · APPLIED'), title: t('A ve C\'nin en küçük kareler ile hesabı (0,0913 hariç 7 çizgi)', 'Least-squares A and C (7 lines, 0.0913 excluded)').replace(t('0,0913', '0.0913'), f(.0913, 4)),
         steps: lsqStepsText(p6.fit, 0, 0, 'h²+hk+k²').concat([[t('Örgü parametreleri (hekzagonal)', 'Lattice parameters (hexagonal)'), 'a = λ/√(3A) ; c = λ/(2√C)', `a = ${f(L1, 6)}/√(3×${f(p6.fit.A, 5)}) = ${f(p6.a, 4)} Å ; c = ${f(p6.c, 4)} Å ; c/a = ${f(p6.c / p6.a, 3)}`]]) })}
       <h5>${t('Beklenen ama gözlenmeyen yansıma var mı? (Algoritma 9)', 'Any expected but unobserved reflection? (Algorithm 9)')}</h5>
       <p>${t('(001), (003) ve (111) HCP kuralı gereği söner ve gözlenmez. Model tam 8 çizgi öngörür; 0,0913 dışında hepsi ±0,0003 içinde eşleşir.', '(001), (003) and (111) are extinct by the HCP rule and are not observed. The model predicts exactly 8 lines; all but 0.0913 match within ±0.0003.').replace(/0,0913|0\.0913/, f(.0913, 4)).replace(/0,0003|0\.0003/, f(.0003, 4))}</p>
-      ${expTable(p6.expected, p6.S)}
+      ${expTable(p6.expected, p6.S, true)}
       <p class="pe-small">${t('Çok küçük A ve C ile daha büyük hücreler 0,0913 dahil 8 çizgiye sayısal olarak uydurulabilir, ancak bunlar gözlenmeyen çok sayıda çizgi öngörür. En küçük ve eksiksiz hücre ilkesi Mg modelini destekler.', 'Larger cells (very small A and C) can be fitted numerically to all 8 lines including 0.0913, but they predict many unobserved lines. The smallest-complete-cell principle supports the Mg model.').replace(/0,0913|0\.0913/, f(.0913, 4))}</p>
       ${metrics([[t('Sistem · yapı', 'System · structure'), t('Hekzagonal · HCP', 'Hexagonal · HCP'), t('P örgüsü + 2 atomlu baz', 'P lattice + two-atom basis')], [t('Örgü parametreleri (7 çizgi)', 'Lattice parameters (7 lines)'), `a = ${f(p6.a, 3)} Å<br>c = ${f(p6.c, 3)} Å`, `c/a = ${f(p6.c / p6.a, 3)}`], [t('Olası element', 'Likely element'), t('Magnezyum (Mg)', 'Magnesium (Mg)'), `ref. a = ${f(REF.Mg.a, 4)}, c = ${f(REF.Mg.c, 4)} Å`]])}
       ${sticks(p6.S.map((s, i) => ({ s, h: .5 + (i % 3) * .12, c: p6.assign[i] ? 'pe-c4' : 'pe-c5', label: p6.assign[i] ? p6.assign[i][2] : f(s, 4) })).concat([{ s: p6.expected101, h: .95, c: 'pe-c6', dash: true, label: t('101 (bekl.)', '101 (exp.)') }]))}
       <p class="pe-small">${t('Kırmızı: verilen 0,0913; kesikli gri: beklenen (101) konumu.', 'Red: the given 0.0913; dashed grey: expected (101) position.').replace(/0,0913|0\.0913/, f(.0913, 4))}</p>`;
+
+    /* ---------- 3B: birim hücre, (hkl) düzlemleri ve faz ---------- */
+    const PH = [[0, '0'], [1 / 6, '1/6'], [1 / 4, '1/4'], [1 / 3, '1/3'], [1 / 2, '1/2'], [2 / 3, '2/3'], [3 / 4, '3/4'], [5 / 6, '5/6']];
+    const phaseTxt = ph => { const m = PH.find(q => Math.abs(q[0] - ph) < 1e-6); return m ? m[1] : f(ph, 3); };
+    const phaseVar = ph => { const q = Math.round(ph * 12) % 12; return q === 0 ? '--ok' : q === 6 ? '--forbid' : (q === 3 || q === 9) ? '--copper' : '--cobalt'; };
+    const LABS = {
+      101: { st: 'fcc', a: R.p101.nr.intercept, lam: L1, lamName: 'Cu Kα₁', obs: R.p101.hkl.flatMap((h, i) => h.split('/').map(x => [x, R.p101.S[i]])), forb: ['100', '110', '210'] },
+      102: { st: 'bcc', a: R.p102.mean, lam: LAMBDA.CrKa, lamName: 'Cr Kα', obs: R.p102.hkl.map((h, i) => [h, R.p102.SA[i]]), forb: ['100', '111', '210'] },
+      103: { st: 'bct', a: R.p103.a, c: R.p103.c, lam: L1, lamName: 'Cu Kα₁', obs: R.p103.assign.map((g, i) => [g[2], R.p103.S[i]]), forb: ['100', '001', '111'] },
+      104: { st: 'diamond', a: R.p104.mean, lam: L1, lamName: 'Cu Kα₁', obs: R.p104.hkl.flatMap((h, i) => h.split('/').map(x => [x, R.p104.S[i]])), forb: ['200', '222', '420', '100'] },
+      105: { st: 'bcc', a: R.p105.nr.intercept, lam: L1, lamName: 'Cu Kα₁', obs: R.p105.hkl.map((h, i) => [h, R.p105.S[i]]), forb: ['100', '111', '210'] },
+      106: { st: 'hcp', a: R.p106.a, c: R.p106.c, lam: L1, lamName: 'Cu Kα₁', obs: R.p106.assign.map((g, i) => [g ? g[2] : '101', R.p106.S[i], !g]), forb: ['001', '003', '111'] }
+    };
+    const structName = { fcc: t('YMK (F)', 'FCC (F)'), bcc: t('HMK (I)', 'BCC (I)'), diamond: t('elmas kübik', 'diamond cubic'), bct: t('I-merkezli tetragonal', 'body-centred tetragonal'), hcp: 'HCP' };
+    const hklLabel = (st, hkl, plain) => { const [h, k, l] = parseHKL(hkl); return '(' + hkl + ')' + (STRUCTURES[st].sys === 'hexagonal' ? ' = ' + (plain ? mbPlain : mbStr)(h, k, l) : ''); };
+    function lab3dHTML(key) {
+      const L = LABS[key], hex = L.st === 'hcp';
+      const opt = (hkl, extra) => `<option value="${hkl}">${hklLabel(L.st, hkl, true)}${extra || ''}</option>`;
+      const seenOpt = new Set();
+      const obsOpts = L.obs.filter(o => !seenOpt.has(o[0]) && seenOpt.add(o[0])).map(o => opt(o[0], ' · sin²θ = ' + fv(o[1]) + (o[2] ? ' ?' : ''))).join('');
+      const legend = [['--ok', t('0 (eş faz)', '0 (in phase)')], ['--forbid', t('π (zıt faz)', 'π (opposite)')], ['--copper', 'π/2, 3π/2'], ['--cobalt', t('diğer (ör. 2π/3)', 'other (e.g. 2π/3)')]]
+        .map(c => `<span><i style="background:var(${c[0]})"></i>${c[1]}</span>`).join('');
+      return `<h5>${t('3B: birim hücre, (hkl) düzlemleri ve yapı faktörü', '3D: unit cell, (hkl) planes and structure factor')}</h5>
+      <p>${t(`Bulunan yapının (${structName[L.st]}) geleneksel birim hücresi. Bir yansıma seçin: düzlem ailesi turkuaz çizilir; atomlar o yansıma için saçtıkları dalganın fazına (φ = 2π(hx+ky+lz)) göre renklenir. Aynı renkteki atomlar aynı düzlem kümesindedir. Zıt fazdaki (kırmızı) atomların oluşturduğu ara düzlemler katkıları götürür: <b>sönümün geometrik nedeni</b> budur.`, `The conventional unit cell of the structure found (${structName[L.st]}). Choose a reflection: the plane family is drawn in teal and atoms are coloured by the phase of their scattered wave for that reflection (φ = 2π(hx+ky+lz)). Atoms of the same colour lie on the same set of planes. Interleaved planes of opposite-phase (red) atoms cancel the contribution: this is the <b>geometric reason for an extinction</b>.`)}</p>
+      <div class="pe-3d" data-lab="${key}">
+        <div class="pe-3d-view"><div class="pe-3d-slot"></div><div class="pe-3d-legend">${legend}</div></div>
+        <div class="pe-3d-side">
+          <label class="pe-3d-lab">${t('Yansıma', 'Reflection')}<select class="pe-3d-sel">
+            <optgroup label="${t('Gözlenen (indislenmiş) çizgiler', 'Observed (indexed) lines')}">${obsOpts}</optgroup>
+            <optgroup label="${t('Sönen yansıma örnekleri', 'Examples of extinct reflections')}">${L.forb.map(x => opt(x, ' · ' + t('söner', 'extinct'))).join('')}</optgroup>
+          </select></label>
+          <label class="pe-chk"><input type="checkbox" class="pe-3d-phase" checked> ${t('Atomları faza göre renklendir', 'Colour atoms by phase')}</label>
+          <label class="pe-chk"><input type="checkbox" class="pe-3d-half" checked> ${t('Faz kayması olan ara düzlemleri göster', 'Show phase-shifted interleaved planes')}</label>
+          ${hex ? `<label class="pe-chk"><input type="checkbox" class="pe-3d-prism"> ${t('Altıgen prizma (3 hücre)', 'Hexagonal prism (3 cells)')}</label>` : ''}
+          <div class="pe-3d-info"></div>
+        </div>
+      </div>`;
+    }
+    function info3d(key) {
+      const L = LABS[key], box = host.querySelector(`.pe-3d[data-lab="${key}"]`);
+      const hkl = box.querySelector('.pe-3d-sel').value, [h, k, l] = parseHKL(hkl), S = STRUCTURES[L.st], sys = S.sys;
+      const d = dHKL(sys, L.a, L.c, h, k, l), x = L.lam / (2 * d), F = structureFactor(S.atoms, h, k, l), p = multiplicity(sys, h, k, l);
+      const ob = L.obs.find(o => o[0] === hkl), counts = {};
+      F.phases.forEach(ph => { const q = phaseTxt(ph); counts[q] = (counts[q] || 0) + 1; });
+      const idx = sys === 'cubic' ? `N = h²+k²+l² = ${h * h + k * k + l * l}` : sys === 'tetragonal' ? `h²+k² = ${h * h + k * k} ; l² = ${l * l}` : `h²+hk+k² = ${h * h + h * k + k * k} ; l² = ${l * l}`;
+      const cplx = F.im === 0 ? f(F.re, 3) : `${f(F.re, 3)} ${F.im < 0 ? '−' : '+'} ${f(Math.abs(F.im), 3)}i`;
+      const extinct = F.abs2 < 1e-9;
+      const rows = [
+        [t('İndis', 'Indices'), hklLabel(L.st, hkl) + (sys === 'hexagonal' ? `<br><span class="pe-small">i = −(h+k) = ${bar(-(h + k))}</span>` : '')],
+        [t('Toplamlar', 'Sums'), idx],
+        ['d (Å)', `${f(d, 4)} <span class="pe-small">(${sys === 'cubic' ? 'a = ' + f(L.a, 4) : 'a = ' + f(L.a, 3) + ', c = ' + f(L.c, 3)} Å)</span>`],
+        [t('sin²θ hes. / göz.', 'sin²θ calc. / obs.'), x <= 1 ? `${f(x * x, 4)} / ${ob ? (ob[2] ? `<b class="pe-bad-t">${fv(ob[1])}</b>` : fv(ob[1])) : '—'}` : t('erişilemez (λ/2d > 1)', 'inaccessible (λ/2d > 1)')],
+        ['2θ (' + L.lamName + ')', x <= 1 ? f(2 * deg(Math.asin(x)), 2) + '°' : '—'],
+        [t('Atom fazları φ/2π', 'Atom phases φ/2π'), Object.entries(counts).map(([q, n]) => `<span class="pe-dot" style="background:var(${phaseVar(PH.find(r => r[1] === q) ? PH.find(r => r[1] === q)[0] : 0.1)})"></span>${q} (×${n})`).join(' &nbsp; ')],
+        ['F / f = Σ e<sup>2πiφ</sup>', `${cplx} &nbsp; → &nbsp; |F|²/f² = ${f(F.abs2, 2)}`],
+        [t('Çokluk p', 'Multiplicity p'), p],
+      ];
+      let verdict;
+      if (extinct) verdict = `<div class="pe-note pe-danger">${t('<b>Söner:</b> faz katkılarının toplamı sıfır. Ara düzlemlerdeki atomlar ana düzlemlerdekilerle tam zıt fazda saçar.', '<b>Extinct:</b> the phase contributions sum to zero. Atoms on the interleaved planes scatter exactly out of phase with those on the main planes.')}</div>`;
+      else if (ob && ob[2]) verdict = `<div class="pe-note pe-warn">${t(`<b>İzinli ve güçlü</b> (p = ${p}). Bu modelde ${f(x * x, 4)}'te beklenir; verilen ${fv(ob[1])} uyumsuz (olası veri hatası).`, `<b>Allowed and strong</b> (p = ${p}). Expected at ${f(x * x, 4)} in this model; the given ${fv(ob[1])} does not fit (likely data error).`)}</div>`;
+      else verdict = `<div class="pe-note pe-success">${t(`<b>İzinli:</b> katkılar ${F.abs2 > S.atoms.length ** 2 - 1e-6 ? 'tamamen' : 'kısmen'} toplanır (|F|²/f² = ${f(F.abs2, 2)}; en büyük değer ${S.atoms.length ** 2}).`, `<b>Allowed:</b> contributions add ${F.abs2 > S.atoms.length ** 2 - 1e-6 ? 'fully' : 'partly'} (|F|²/f² = ${f(F.abs2, 2)}; maximum ${S.atoms.length ** 2}).`)}</div>`;
+      box.querySelector('.pe-3d-info').innerHTML = `<table class="pe-kv">${rows.map(r => `<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`).join('')}</table>${verdict}`;
+    }
 
     /* ---------- özet ---------- */
     const sumRows = [
@@ -679,7 +784,7 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
       ['10-3', t('Tetragonal', 'Tetragonal'), t('I (hacim merkezli)', 'I (body-centred)'), '(101), (002), (110)', `a = ${f(p3.a, 3)}, c = ${f(p3.c, 3)} Å`, `${f(REF.In.a, 4)} / ${f(REF.In.c, 4)} Å`, 'In'],
       ['10-4', t('Kübik', 'Cubic'), t('Elmas (F + baz)', 'Diamond (F + basis)'), '(111), (220), (311)', f(p4.mean, 3) + ' Å', f(REF.Si, 4) + ' Å', 'Si'],
       ['10-5', t('Kübik', 'Cubic'), t('I (HMK)', 'I (BCC)'), '(110), (200), (211)', f(p5.nr.intercept, 3) + ' Å (N–R)', f(REF.W, 4) + ' Å', 'W'],
-      ['10-6', t('Hekzagonal', 'Hexagonal'), t('P (HCP yapısı)', 'P (HCP structure)'), '(100), (002), (101)*', `a = ${f(p6.a, 3)}, c = ${f(p6.c, 3)} Å`, `${f(REF.Mg.a, 4)} / ${f(REF.Mg.c, 4)} Å`, 'Mg']
+      ['10-6', t('Hekzagonal', 'Hexagonal'), t('P (HCP yapısı)', 'P (HCP structure)'), mbStr(1, 0, 0) + ', ' + mbStr(0, 0, 2) + ', ' + mbStr(1, 0, 1) + '*', `a = ${f(p6.a, 3)}, c = ${f(p6.c, 3)} Å`, `${f(REF.Mg.a, 4)} / ${f(REF.Mg.c, 4)} Å`, 'Mg']
     ].map(r => [{ v: `<button type="button" class="pe-link" data-go="${r[0].replace('-', '')}">${r[0]}</button>` }].concat(r.slice(1, 6), [{ v: '<b>' + r[6] + '</b>' }]));
     const summaryHTML = table([t('Problem', 'Problem'), t('Sistem', 'System'), t('Bravais / yapı', 'Bravais / structure'), t('İlk üç (hkl)', 'First three (hkl)'), t('Hesaplanan', 'Calculated'), t('Referans', 'Reference'), t('Element', 'Element')], sumRows) +
       `<p class="pe-small">* ${t('10-6: (101) ', '10-6: (101) ')}${f(p6.expected101, 4)}${t('\'da beklenir; verilen ', ' expected; the given ')}${f(.0913, 4)}${t(' uyumsuzdur (olası veri hatası).', ' does not fit (likely data error).')}</p>
@@ -693,8 +798,8 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
       <p class="pe-small"><b>${t('Kaynak', 'Source')}:</b> <i>Tozkirinim007.pdf</i>, ${t('Bölüm 6 “XRD deseninin indislenmesi”: kübik bağıntılar ve N dizileri (s. 2–4), oran yöntemi (s. 5–12), analitik K (s. 13–21), kübik olmayan sistemler ve Hull–Davey (s. 22–37), Ti örneği (s. 38–46), kübik olmayan analitik yöntem (s. 47–55), problemler (s. 56–57). Problemler B. D. Cullity, <i>Elements of X-Ray Diffraction</i> kitabındaki alıştırmalardır. Nelson–Riley ekstrapolasyonu, Kβ şiddet ölçütü, floresans notu, aday karşılaştırmaları ve algoritmalar ek olarak verilmiştir.', 'Chapter 6 “Indexing an XRD pattern”: cubic relations and N sequences (pp. 2–4), ratio method (pp. 5–12), analytical K (pp. 13–21), non-cubic systems and Hull–Davey (pp. 22–37), Ti example (pp. 38–46), non-cubic analytical method (pp. 47–55), problems (pp. 56–57). The problems are exercises from B. D. Cullity, <i>Elements of X-Ray Diffraction</i>. Nelson–Riley extrapolation, the Kβ intensity criterion, the fluorescence note, candidate comparisons and the algorithms are supplementary.')}</p>`;
 
     /* ---------- birleştir ---------- */
-    const panels = [panel1, panel2, panel3, panel4, panel5, panel6];
     const ids = ['101', '102', '103', '104', '105', '106'];
+    const panels = [panel1, panel2, panel3, panel4, panel5, panel6].map((pn, i) => pn + lab3dHTML(ids[i]));
     host.innerHTML = `
       <div class="pe-root">
         <div class="pe-top">
@@ -716,10 +821,81 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
         <details class="pe-fold"><summary><span><b>${t('Sonuçların karşılaştırılması', 'Summary of results')}</b><small>${t('Altı problemin özeti, kontrol listesi ve kaynak', 'Summary of all six problems, checklist and source')}</small></span></summary><div class="pe-fold-body">${summaryHTML}</div></details>
       </div>`;
 
+    /* ---------- 3B görüntüleyici (sitenin Viewer3D'si; tek WebGL bağlamı, sekmeler arasında taşınır) ---------- */
+    ids.forEach(info3d);
+    const canvasBox = document.createElement('div');
+    canvasBox.className = 'pe-3d-canvas';
+    canvasBox.innerHTML = `<span class="pe-3d-hint">${t('Sürükleyerek döndürün, tekerlekle yakınlaştırın', 'Drag to rotate, scroll to zoom')}</span>`;
+    host.querySelector('.pe-3d[data-lab="101"] .pe-3d-slot').appendChild(canvasBox);
+    let viewer = null, current = '101';
+    const G = root;
+    const has3D = typeof Viewer3D === 'function' && typeof clipBox === 'function' && typeof basis === 'function' && typeof addSphere === 'function' && typeof THREE !== 'undefined';
+    if (has3D) { try { viewer = new Viewer3D(canvasBox, { dist: 10.5, rx: .36, ry: -.62, label: t('3B birim hücre ve düzlemler', '3D unit cell and planes') }); } catch (e) { viewer = null; } }
+    if (!viewer) canvasBox.insertAdjacentHTML('beforeend', `<p class="pe-small pe-3d-off">${t('3B görünüm bu ortamda kullanılamıyor (WebGL/Three.js yok). Sağdaki yapı faktörü tablosu yine de geçerlidir.', '3D view is unavailable here (no WebGL/Three.js). The structure-factor table on the right still applies.')}</p>`);
+    function build3d(key) {
+      if (!viewer || !viewer.ok) return;
+      const L = LABS[key], box = host.querySelector(`.pe-3d[data-lab="${key}"]`), S = STRUCTURES[L.st], hex = S.sys === 'hexagonal';
+      const [h, k, l] = parseHKL(box.querySelector('.pe-3d-sel').value);
+      const phaseOn = box.querySelector('.pe-3d-phase').checked, halfOn = box.querySelector('.pe-3d-half').checked;
+      const prism = hex && !!(box.querySelector('.pe-3d-prism') || {}).checked;
+      viewer.clear();
+      const g = viewer.content, B = basis({ a: L.a, b: L.a, c: L.c || L.a, al: 90, be: 90, ga: hex ? 120 : 90 });
+      const cart = q => [0, 1, 2].map(i => q[0] * B[0][i] + q[1] * B[1][i] + q[2] * B[2][i]);
+      const inPrism = q => Math.abs(q[0]) <= 1 + 1e-9 && Math.abs(q[1]) <= 1 + 1e-9 && Math.abs(q[0] - q[1]) <= 1 + 1e-9;
+      const atoms = [], seen = new Set();
+      S.atoms.forEach(a0 => { for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let m = 0; m <= 1; m++) {
+        const q = [a0[0] + i, a0[1] + j, a0[2] + m];
+        if (q[2] < -1e-9 || q[2] > 1 + 1e-9) continue;
+        const ok = prism ? inPrism(q) : q.every(v => v > -1e-9 && v < 1 + 1e-9);
+        const id = q.map(v => v.toFixed(4)).join();
+        if (ok && !seen.has(id)) { seen.add(id); atoms.push(q); }
+      } });
+      const box01 = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]], cellEdges = [];
+      for (let i = 0; i < 4; i++) { const A = box01[i], Bq = box01[(i + 1) % 4]; cellEdges.push([A, Bq], [[A[0], A[1], 1], [Bq[0], Bq[1], 1]], [A, [A[0], A[1], 1]]); }
+      const hexV = [[1, 0], [1, 1], [0, 1], [-1, 0], [-1, -1], [0, -1]], prismEdges = [];
+      if (prism) for (let i = 0; i < 6; i++) { const A = hexV[i], Bq = hexV[(i + 1) % 6]; prismEdges.push([[A[0], A[1], 0], [Bq[0], Bq[1], 0]], [[A[0], A[1], 1], [Bq[0], Bq[1], 1]], [[A[0], A[1], 0], [A[0], A[1], 1]]); }
+      const pts = atoms.concat(...cellEdges, ...prismEdges).map(cart), mn = [0, 1, 2].map(i => Math.min(...pts.map(v => v[i]))), mx = [0, 1, 2].map(i => Math.max(...pts.map(v => v[i])));
+      const cen = mn.map((v, i) => (v + mx[i]) / 2), sc = 3.7 / Math.max(...mx.map((v, i) => v - mn[i]));
+      const F = { toC: q => { const v = cart(q); return new THREE.Vector3((v[0] - cen[0]) * sc, (v[2] - cen[2]) * sc, -(v[1] - cen[1]) * sc); } };
+      const lines = (edges, color, op) => { const arr = []; edges.forEach(e => e.forEach(q => { const v = F.toC(q); arr.push(v.x, v.y, v.z); })); addLines(g, arr, color, op); };
+      if (prism) lines(prismEdges, '--muted', .55);
+      lines(cellEdges, prism ? '--ink' : '--muted', 1);
+      const r = (L.st === 'diamond' ? .15 : .2) * (prism ? .8 : 1);
+      atoms.forEach(q => addSphere(g, F.toC(q), r, phaseOn ? phaseVar(frac1(h * q[0] + k * q[1] + l * q[2])) : '--cobalt'));
+      // düzlemler: tam sayılı aile + atom fazlarına karşılık gelen ara düzlemler (birim hücre içinde)
+      const lo = Math.min(0, h) + Math.min(0, k) + Math.min(0, l), hi = Math.max(0, h) + Math.max(0, k) + Math.max(0, l);
+      const plane = (val, color, op) => {
+        const poly = clipBox(h, k, l, val, 1); if (poly.length < 3) return;
+        const pos = []; poly.forEach(q => { const v = F.toC(q); pos.push(v.x, v.y, v.z); });
+        const idx = []; for (let i = 1; i < poly.length - 1; i++) idx.push(0, i, i + 1);
+        const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx);
+        const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: col(color), transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false }));
+        mesh.renderOrder = 2; g.add(mesh);
+        const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        g.add(new THREE.LineLoop(lg, new THREE.LineBasicMaterial({ color: col(color), transparent: true, opacity: Math.min(1, op * 2.2) })));
+      };
+      if (h || k || l) {
+        for (let m = lo; m <= hi; m++) plane(m, '--teal', .32);
+        if (halfOn) [...new Set(S.atoms.map(q => frac1(h * q[0] + k * q[1] + l * q[2])))].filter(ph => ph > 1e-6).forEach(ph => {
+          for (let m = lo - 1; m <= hi; m++) { const v = m + ph; if (v > lo + 1e-9 && v < hi - 1e-9) plane(v, phaseVar(ph), .16); }
+        });
+      }
+      const lab = (txt, q) => { const sp = makeLabel(txt, '--muted', .34); sp.position.copy(F.toC(q)); g.add(sp); };
+      lab(hex ? 'a₁' : 'a', [1.14, 0, 0]); lab(hex ? 'a₂' : 'b', [0, 1.14, 0]); lab('c', [0, 0, 1.1]);
+    }
+    let applyViewer = key => { current = key; host.querySelector(`.pe-3d[data-lab="${key}"] .pe-3d-slot`).appendChild(canvasBox); build3d(key); };
+    host.querySelectorAll('.pe-3d').forEach(box => {
+      const key = box.dataset.lab;
+      box.querySelectorAll('select, input').forEach(el => el.addEventListener('change', () => { info3d(key); if (key === current) build3d(key); }));
+    });
+    if (typeof onTheme === 'function') onTheme(() => build3d(current));
+    void G;
+
     /* ---------- sekmeler ---------- */
     const tabs = ids.map(id => host.querySelector('#pe-tab-' + id));
     const show = (k, focus) => {
       tabs.forEach((b, i) => { const on = i === k; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; host.querySelector('#pe-p' + ids[i]).hidden = !on; if (on && focus) b.focus(); });
+      applyViewer(ids[k]);
       try { localStorage.setItem('xrd-pe-tab', ids[k]); } catch (e) { /* özel mod */ }
     };
     tabs.forEach((b, i) => {
@@ -734,7 +910,12 @@ sort the list ; for each entry is |Δ| ≤ 0.0015 to the nearest observed?`) })
       const go = e.target.closest('[data-go]');
       if (go) { show(ids.indexOf(go.dataset.go)); host.querySelector('.pe-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
-    try { const saved = ids.indexOf(localStorage.getItem('xrd-pe-tab')); if (saved > 0) show(saved); } catch (e) { /* yok */ }
+    let start = 0;
+    try { const saved = ids.indexOf(localStorage.getItem('xrd-pe-tab')); if (saved > 0) start = saved; } catch (e) { /* yok */ }
+    show(start);
+    // Alt sekme ilk kez görünür olduğunda sahneyi yeniden kur (gizliyken boyut 0'dır).
+    const subTab = document.querySelector('[data-sub="s3ex"]');
+    if (subTab) subTab.addEventListener('click', () => requestAnimationFrame(() => build3d(current)));
 
     /* ---------- yazdırma: yalnız alıştırmalar ---------- */
     const rootEl = host.querySelector('.pe-root');
