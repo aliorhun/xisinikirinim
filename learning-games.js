@@ -135,7 +135,8 @@
   function E(tag,cls,txt){ var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=tr(txt);return n; }
   function cacheGet(key){try{return JSON.parse(localStorage.getItem(key)||"[]");}catch(e){return [];}}
   function cacheSet(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}
-  function labelFor(sub){var b=document.querySelector('[data-sub="'+sub+'"]');return b?b.textContent.trim():sub;}
+  // Bir alt başlık başka bir alt sekmenin içine taşınmışsa (ör. s3b → s3camera) kendi başlığını kullan.
+  function labelFor(sub){var b=document.querySelector('[data-sub="'+sub+'"]');if(b)return b.textContent.trim();var el=document.getElementById(sub),h=el&&el.querySelector("h3:not([hidden])");return h?h.textContent.trim():sub;}
   function drawSurface(cv,paint){
     var width=Math.max(280,cv.getBoundingClientRect().width||560);
     if(cv.closest('[hidden]'))return;
@@ -337,7 +338,11 @@
     }
     function lessonButton(sub){
       var go=E("button","xrd-lesson-link",tr("Anlatıma dön: ¦Back to lesson: ")+labelFor(sub));
-      go.type="button";go.addEventListener("click",function(){var navB=section.querySelector('[data-sub="'+sub+'"]');if(navB)navB.click();});
+      go.type="button";go.addEventListener("click",function(){
+        var navB=section.querySelector('[data-sub="'+sub+'"]');if(navB){navB.click();return;}
+        var el=document.getElementById(sub),host=el&&el.closest(".subp"),hostB=host&&section.querySelector('[data-sub="'+host.id+'"]');
+        if(hostB){hostB.click();requestAnimationFrame(function(){el.scrollIntoView({behavior:"smooth",block:"start"});});}
+      });
       return go;
     }
     function showFeedback(q,choice,correct,idx){

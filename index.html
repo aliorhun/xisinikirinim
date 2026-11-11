@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="./euler-lab.css">
 <link rel="stylesheet" href="./learning-games.css">
 <link rel="stylesheet" href="./debye-camera.css">
+<link rel="stylesheet" href="./powder-exercises.css">
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -1770,11 +1771,11 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
 
 <div class="subnav" role="tablist" aria-label="Toz yöntemi alt bölümleri">
     <button role="tab" data-sub="s3a" aria-selected="true">Rastgele yönelim</button>
-    <button role="tab" data-sub="s3b" aria-selected="false">Debye–Scherrer konileri</button>
-    <button role="tab" data-sub="s3camera" aria-selected="false"><span data-l="tr">Silindirik toz kamerası</span><span data-l="en">Cylindrical camera</span></button>
+    <button role="tab" data-sub="s3camera" aria-selected="false"><span data-l="tr">Debye–Scherrer kamerası</span><span data-l="en">Debye–Scherrer camera</span></button>
     <button role="tab" data-sub="s3c" aria-selected="false">Halka → 1B desen</button>
     <button role="tab" data-sub="s3d" aria-selected="false">Bragg–Brentano</button>
     <button role="tab" data-sub="s3e" aria-selected="false">2θ taraması</button>
+    <button role="tab" data-sub="s3ex" aria-selected="false"><span data-l="tr">Alıştırmalar</span><span data-l="en">Exercises</span></button>
   </div>
 
   <div class="subp" id="s3a">
@@ -1799,7 +1800,10 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
     </div>
   </div>
   </div>
-  <div class="subp" id="s3b" hidden>
+  <!-- Historic cylindrical-film camera, following the cone lesson and before flat-panel integration. -->
+  <div class="subp" id="s3camera" hidden>
+    <!-- Debye–Scherrer konileri: kamera sekmesinin üst kısmı (eski s3b alt sekmesi). -->
+    <div class="ds-cones" id="s3b">
 <div class="lab panel">
     <div class="lab-head"><h3>Debye–Scherrer konileri</h3><p>Her koni bir {hkl} ailesidir; yarı açısı 2θ'dır. 2θ &gt; 90° olan koniler geriye, tüpe doğru açılır. Düz dedektör konileri halka olarak keser.</p></div>
     <div class="lab-grid">
@@ -1815,18 +1819,15 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       </div>
     </div>
   </div>
-  </div>
-
-  <!-- Historic cylindrical-film camera, following the cone lesson and before flat-panel integration. -->
-  <div class="subp" id="s3camera" hidden>
+    </div>
     <div class="dc-intro">
       <div class="learn-box" data-l="tr">
         <b>Öğrenme hedefleri:</b> X-ışını tüpü, kolimatör, numune, ışın tutucu ve filmi tanımlamak; Debye–Scherrer konilerini silindirik filmdeki çizgilerle ilişkilendirmek; numune döndürmenin ve kamera yarıçapının rolünü açıklamak; filmden 2θ ve d aralığını hesaplamak.
-        <p class="cap" style="margin:8px 0 0"><b>Ön bilgi:</b> Bragg yasası ve bir önceki “Debye–Scherrer konileri” alt bölümü.</p>
+        <p class="cap" style="margin:8px 0 0"><b>Ön bilgi:</b> Bragg yasası ve bu sekmenin başındaki “Debye–Scherrer konileri” laboratuvarı.</p>
       </div>
       <div class="learn-box" data-l="en">
         <b>Learning goals:</b> Identify the X-ray tube, collimator, sample, beam stop and film; relate Debye–Scherrer cones to marks on cylindrical film; explain the roles of sample rotation and camera radius; derive 2θ and d from film distances.
-        <p class="cap" style="margin:8px 0 0"><b>Prerequisites:</b> Bragg's law and the preceding “Debye–Scherrer cones” lesson.</p>
+        <p class="cap" style="margin:8px 0 0"><b>Prerequisites:</b> Bragg's law and the “Debye–Scherrer cones” lab at the top of this tab.</p>
       </div>
       <h3 data-l="tr">Debye–Scherrer kamerası nasıl çalışır?</h3>
       <h3 data-l="en">How does a Debye–Scherrer camera work?</h3>
@@ -1996,6 +1997,10 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       <div class="sl"><label for="sp3" style="font-size:.9rem">hız</label><input type="range" id="sp3" min="1" max="15" step="0.5" value="5"><output id="sp3o"></output></div>
     </div>
   </div>
+  </div>
+  <!-- Toz yöntemi › Alıştırmalar: indisleme problemleri 10-1 – 10-6 (powder-exercises.js). -->
+  <div class="subp" id="s3ex" hidden>
+    <div id="powderExercises"></div>
   </div>
 </section>
 <section class="tab" id="t4" role="tabpanel" aria-labelledby="tb4" hidden>
@@ -6933,5 +6938,6 @@ requestAnimationFrame(loop);
 <script src="./euler-lab.js"></script>
 <script src="./learning-games.js"></script>
 <script src="./debye-camera.js"></script>
+<script src="./powder-exercises.js"></script>
 </body>
 </html>
