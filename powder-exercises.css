@@ -123,6 +123,29 @@
   .pe-formula{font-size:15px}
 }
 
+
+/* 3B birim hücre ve düzlem laboratuvarı */
+.pe-3d{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;margin:10px 0 6px;align-items:start}
+.pe-3d-canvas{position:relative;height:390px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);overflow:hidden}
+.pe-3d-canvas canvas{display:block;width:100%!important;height:100%!important;cursor:grab;outline:none}
+.pe-3d-canvas canvas:active{cursor:grabbing}
+.pe-3d-canvas canvas:focus-visible{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--cobalt) 45%,transparent)}
+.pe-3d-hint{position:absolute;left:10px;bottom:8px;font-size:11.5px;color:var(--muted);pointer-events:none}
+.pe-3d-off{padding:14px;margin:0}
+.pe-3d-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:7px 2px 0;font-size:12px;color:var(--muted)}
+.pe-3d-legend i,.pe-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.pe-3d-side{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pe-3d-lab{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.pe-3d-sel{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:var(--panel);color:var(--ink);font:inherit;font-size:14px}
+.pe-chk{display:flex;align-items:center;gap:7px;font-size:13.5px;cursor:pointer}
+.pe-kv{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.pe-kv th,.pe-kv td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+.pe-kv th{color:var(--muted);font-weight:600;width:38%}
+.pe-bad-t{color:var(--forbid)}
+.pe-ov{text-decoration:overline;text-decoration-thickness:1.5px}
+.pe-3d-side .pe-note{margin:4px 0 0;font-size:13px}
+@media(max-width:860px){.pe-3d{grid-template-columns:1fr}.pe-3d-canvas{height:330px}}
+
 /* Yazdırma: yalnız alıştırmalar, her problem ayrı sayfada */
 @page pe{size:A4 landscape;margin:11mm 10mm}
 @media print{
@@ -145,4 +168,6 @@
   .pe-print-host .pe-q,.pe-print-host .pe-algo,.pe-print-host .pe-note,.pe-print-host .pe-metrics,.pe-print-host .pe-formula,.pe-print-host tr{break-inside:avoid}
   .pe-print-host h5{break-after:avoid}
   .pe-print-host .pe-chart{max-height:190px}
+  .pe-print-host .pe-3d{grid-template-columns:1fr}
+  .pe-print-host .pe-3d-view{display:none!important}
 }
