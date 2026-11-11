@@ -1,0 +1,119 @@
+/* Crystal-system atlas: accessible, responsive unit-cell geometry cards. */
+.crystal-atlas{
+  margin:20px 0 30px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel);
+  min-width:0;
+}
+.crystal-atlas-intro{margin-bottom:15px}
+.crystal-atlas-intro h3{font-size:1.14rem;margin-bottom:5px}
+.crystal-atlas-intro p{font-size:13px;color:var(--muted);margin:0;max-width:78em}
+.crystal-atlas-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:11px;
+}
+.crystal-atlas-card{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  min-width:0;
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  padding:11px 10px 13px;
+}
+.crystal-cell-figure{
+  display:block;
+  width:100%;
+  max-width:260px;
+  height:auto;
+  margin:0 auto 7px;
+  overflow:visible;
+  color:var(--ink);
+}
+.crystal-cell-figure .cell-edge,
+.crystal-cell-figure .cell-axis{
+  fill:none;
+  stroke:currentColor;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-width:2.5;
+  vector-effect:non-scaling-stroke;
+}
+.crystal-cell-figure .cell-axis{
+  stroke-width:1.9;
+  opacity:.73;
+}
+.crystal-cell-figure .cell-node{fill:currentColor}
+.crystal-cell-figure .cell-axis-label{
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  text-anchor:middle;
+  dominant-baseline:central;
+  fill:var(--cobalt);
+  paint-order:stroke fill;
+  stroke:var(--bg);
+  stroke-width:4px;
+  stroke-linejoin:round;
+}
+.crystal-cell-figure .cell-angle{
+  fill:none;
+  stroke:var(--copper);
+  stroke-width:1.5;
+  stroke-linecap:round;
+}
+.crystal-cell-figure .cell-angle-label{
+  font-family:Georgia,serif;
+  font-size:12px;
+  fill:var(--copper);
+  text-anchor:middle;
+  dominant-baseline:middle;
+  paint-order:stroke fill;
+  stroke:var(--bg);
+  stroke-width:3.5px;
+}
+.crystal-atlas-card figcaption{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:2px;
+  line-height:1.35;
+}
+.crystal-atlas-card figcaption strong{
+  color:var(--ink);
+  font:600 14px/1.35 "IBM Plex Sans",system-ui,sans-serif;
+  margin-bottom:5px;
+}
+.crystal-atlas-card figcaption span{
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:12px;
+  color:var(--muted);
+}
+.crystal-atlas-note{
+  margin:13px 0 0;
+  border-top:1px solid var(--line);
+  padding-top:11px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+}
+@media(max-width:1030px){
+  .crystal-atlas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:690px){
+  .crystal-atlas{padding:12px}
+  .crystal-atlas-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .crystal-atlas-card{padding:8px 5px 11px}
+  .crystal-atlas-card figcaption strong{font-size:13px}
+  .crystal-atlas-card figcaption span{font-size:11px}
+}
+@media(max-width:350px){
+  .crystal-atlas-grid{grid-template-columns:minmax(0,1fr)}
+  .crystal-cell-figure{max-width:235px}
+}

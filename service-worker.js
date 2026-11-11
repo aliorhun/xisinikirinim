@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v10';
+const CACHE_NAME = 'xisinikirinim-offline-v11';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,8 @@ const APP_SHELL = [
   './debye-camera.js',
   './powder-exercises.css',
   './powder-exercises.js',
+  './crystal-systems.css',
+  './crystal-systems.js',
   './vendor/three-r128.min.js',
   './vendor/prism-1.29.0.js',
   './vendor/prism-python-1.29.0.js'
