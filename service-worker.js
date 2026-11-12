@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v10';
+const CACHE_NAME = 'xisinikirinim-offline-v12';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,6 +9,10 @@ const APP_SHELL = [
   './debye-camera.css',
   './debye-camera.js',
   './debye-camera.js?v=20261104-sample-refresh',
+  './powder-exercises.css',
+  './powder-exercises.js',
+  './crystal-systems.css',
+  './crystal-systems.js',
   './vendor/three-r128.min.js',
   './vendor/prism-1.29.0.js',
   './vendor/prism-python-1.29.0.js'
@@ -47,8 +51,7 @@ async function networkFirstNavigation(request) {
 }
 
 async function cacheFirstLocalAsset(request) {
-  // Match ONLY the activated shell. Looking across old caches can mix the new
-  // HTML sample list with a previous camera module lacking those samples.
+  // Only consult the active offline shell: older caches may contain obsolete camera code.
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
   if (cached) return cached;

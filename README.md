@@ -46,7 +46,7 @@ Ders özeti yedi ana bölümden oluşur:
 
 3. **Toz kırınım yöntemi**
    - Rastgele yönlenmiş kristalitler
-   - Debye–Scherrer konileri ve halkaları
+   - Debye–Scherrer konileri ve halkaları (3B koni laboratuvarı, **Debye–Scherrer kamerası** alt sekmesinin üst kısmında; alt sekme çubuğu daha az yer kaplasın diye ayrı sekme kaldırıldı)
    - Klasik silindirik Debye–Scherrer kamerasının çalışma sırası (ışınım seçimi, numune merkezleme, film yerleşimi, dönüş, pozlama, banyo)
    - Kesit ve açılmış film üzerinde eşzamanlı interaktif gösterim: 12 malzeme (YMK, HMK, elmas, kaya tuzu, SrTiO₃ kübik perovskit ve α-Al₂O₃ trigonal korundum); Cu/Co/Fe/Cr/Mo Kα kaynakları, Kβ filtresi, kamera çapı, ±s yay uzaklığı ve 2θ hesabı
    - **SrTiO₃ (Pm-3m):** a = 3,9053 Å (oda sıcaklığı), ilkel kübik örgü için (100)/(110)/(111) dahil seçilmiş yansımalar; [IUCr SrTiO₃ kafes parametresi](https://journals.iucr.org/paper?buy=yes&cnor=kd5054).
@@ -64,6 +64,14 @@ Ders özeti yedi ana bölümden oluşur:
    - Toz deseninin oluşumu
    - Pik konumu, şiddeti ve biçimini belirleyen etkenler
    - Atomik saçılma faktörü, çokluk, Lorentz–polarizasyon ve Debye–Waller etkileri
+   - **Alıştırmalar** alt sekmesi (`powder-exercises.js`, `powder-exercises.css`): toz desenlerinin indislenmesi, Problemler 10-1 – 10-6 (Cullity, *Elements of X-Ray Diffraction*)
+     - Altı problem sekmesi; her sekmede önce soru, altında adım adım çözüm: Al (YMK), filtresiz Cr ışınımında Kα/Kβ ayrımı ve α-Fe (HMK), In (I-merkezli tetragonal), Si (elmas kübik), W (HMK), Mg (HCP)
+     - Dokuz hesaplama algoritması ve sözde kod: radyan/derece çevrimi, d ve a, kübik oran yöntemi (m = 1, 2, 3; en yakın izinli N; eksik çizgi denetimi), analitik K, kübik olmayan A–C yöntemi, Nelson–Riley ekstrapolasyonu (θ radyan), iki parametreli en küçük kareler, Kα/Kβ eşleştirme, beklenen yansımaların üretilmesi
+     - Her problemde algoritmaların problemin kendi sayılarıyla çalıştırılmış izleri, aday element karşılaştırmaları (Fe/Cr, Si/Ge, W/Mo) ve beklenen-gözlenen yansıma denetimi
+     - Her problemde **3B birim hücre laboratuvarı** (sitenin Three.js görüntüleyicisi; tek WebGL bağlamı sekmeler arasında taşınır): YMK, HMK, I-tetragonal, elmas kübik ve HCP (isteğe bağlı altıgen prizma) hücreleri; gözlenen ya da sönen bir (hkl) seçilince düzlem ailesi çizilir, atomlar φ = 2π(hx+ky+lz) fazına göre renklenir ve faz kaymalı ara düzlemler gösterilir; yanında F/f = Σe^{2πiφ}, |F|², toz çokluğu p, d, hesaplanan/gözlenen sin²θ ve 2θ
+     - Hekzagonal 10-6 için dört indisli Miller–Bravais (hkil) gösterimi ve çokluklar
+     - 10-6'daki 0,0913 değeri hiçbir modele uymaz; Mg (101) ≈ 0,0989'da beklenir ve olası veri hatası olarak işaretlenir
+     - “Yazdır / PDF olarak kaydet” düğmesi yalnız alıştırmaları, her problem ayrı A4 yatay sayfada olacak şekilde yazdırır; TR/EN ve açık/koyu tema desteklenir
 
 4. **Desen simülatörü**
    - Farklı kristal yapıların hesaplanan toz desenleri

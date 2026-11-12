@@ -377,7 +377,7 @@ test('camera asset cache busting prevents mixed-version HTML and JS', () => {
   const worker = fs.readFileSync(path.join(__dirname, '..', 'service-worker.js'), 'utf8');
   assert.match(html, /src="\.\/debye-camera\.js\?v=20261104-sample-refresh"/);
   assert.match(worker, /'\.\/debye-camera\.js\?v=20261104-sample-refresh'/);
-  assert.match(worker, /xisinikirinim-offline-v10/);
+  assert.match(worker, /xisinikirinim-offline-v12/);
   assert.match(worker, /const cached = await cache\.match\(request\)/);
   assert.doesNotMatch(worker, /caches\.match\(request\)/);
 });
