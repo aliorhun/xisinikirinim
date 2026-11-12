@@ -98,6 +98,10 @@ test('compact comparison produces one shared-axis chart instead of 28 full-size 
   assert.equal((rows.match(/class="bp-chart-grid"/g) || []).length, 11);
   assert.equal((overlay.match(/class="bp-chart-grid"/g) || []).length, 11);
   assert.ok(overlay.length > 3000, 'all selected lines are in one chart');
+  const mini = A.miniSvg(sample[0], false);
+  assert.match(mini, /class="bp-mini-chart"/);
+  assert.match(mini, /bp-chart-peak/);
+  assert.match(mini, /2θ · Cu Kα₁/);
   // All materials use 10°–110° and the same x coordinate; changing
   // visualization mode must not alter the angle.
   const angle = 2 * Math.asin(A.LAMBDA / (2 * A.dSpacing(sample[0].example.cell, 1,1,0))) * 180 / Math.PI;
@@ -129,7 +133,8 @@ test('material filter chips, reset, empty state, overlay and language rerender a
   };
   vm.runInNewContext(source, { document:fakeDoc, MutationObserver:FakeObserver });
   const initial = host.innerHTML;
-  assert.equal((initial.match(/class="bp-chart"/g)||[]).length, 1);
+  assert.equal((initial.match(/class="bp-mini-chart"/g)||[]).length, 4);
+  assert.equal((initial.match(/class="bp-chart"/g)||[]).length, 0);
   assert.equal((initial.match(/data-bp-id="/g)||[]).length, 28);
   assert.match(initial, /4\/28 seçili/);
 
@@ -143,6 +148,9 @@ test('material filter chips, reset, empty state, overlay and language rerender a
       }
     } });
   };
+  click('data-bp-action','rows');
+  assert.equal((host.innerHTML.match(/class="bp-chart"/g)||[]).length, 1);
+  assert.equal((host.innerHTML.match(/class="bp-chart-label"/g)||[]).length, 4);
   click('data-bp-action','overlay');
   assert.match(host.innerHTML, /bp-overlay-series/);
   assert.match(host.innerHTML, /bp-legend-item/);
@@ -163,4 +171,6 @@ test('material filter chips, reset, empty state, overlay and language rerender a
   langChanged([{attributeName:'lang'}]);
   assert.match(host.innerHTML, /Material filters/);
   assert.match(host.innerHTML, /4\/28 selected/);
+  click('data-bp-action','grid');
+  assert.equal((host.innerHTML.match(/class="bp-mini-chart"/g)||[]).length, 4);
 });
