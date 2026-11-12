@@ -184,7 +184,7 @@
   ));
   const DEFAULT_IDS = ['cI-0', 'cF-0', 'tP-0', 'tI-0'];
   const selected = new Set(DEFAULT_IDS);
-  let mode = 'rows';
+  let mode = 'grid';
   let filtersVisible = true;
 
   function referenceSvg(samples, english, displayMode) {
@@ -253,6 +253,38 @@
     return svg;
   }
 
+
+  function miniSvg(sample, english) {
+    const W = 460, left = 22, right = 14, width = W-left-right;
+    const top = 10, baseline = 68, height = 107;
+    const x = angle => left + width*(angle-MIN_TWO_THETA)/(MAX_TWO_THETA-MIN_TWO_THETA);
+    const name = (english ? sample.example.en : sample.example.tr) +
+      ' · ' + sample.example.formula + ' · ' + sample.lattice.id;
+    const lines = powderLines(sample.example.cell, sample.lattice.centering);
+    let result = '<svg class="bp-mini-chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
+      W + ' ' + height + '" role="img" aria-label="' +
+      esc(name + (english ? ': 2 theta reference lines' : ': 2θ referans çizgileri')) + '">' +
+      '<rect class="bp-mini-bg" x="' + left + '" y="' + top + '" width="' + width +
+      '" height="' + (baseline-top) + '"/>';
+    for (let degree=10; degree<=110; degree+=20) {
+      const xx=x(degree).toFixed(2);
+      result += '<line class="bp-chart-grid" x1="' + xx + '" x2="' + xx + '" y1="' +
+        top + '" y2="' + baseline + '"/><text class="bp-chart-tick" x="' + xx +
+        '" y="88" text-anchor="middle">' + degree + '°</text>';
+    }
+    result += '<g class="bp-series bp-color-' + (SAMPLES.indexOf(sample)%8) + '">';
+    lines.forEach(line => {
+      const xx=x(line.twoTheta).toFixed(2);
+      result += '<line class="bp-chart-peak" x1="' + xx + '" x2="' + xx +
+        '" y1="' + (top+4) + '" y2="' + (baseline-1) + '"><title>' +
+        esc(name + ' · ' + reflectionLabel(line.h,line.k,line.l) + ' · 2θ ' +
+          line.twoTheta.toFixed(2) + '°') + '</title></line>';
+    });
+    result += '</g><text class="bp-chart-axis-title" x="' + (W-right) +
+      '" y="104" text-anchor="end">2θ · Cu Kα₁</text></svg>';
+    return result;
+  }
+
   function render() {
     const host = typeof document !== 'undefined' && document.getElementById('bravaisPowderAtlas');
     if (!host) return;
@@ -270,6 +302,8 @@
       ' ' + t('seçili', 'selected') + '</span></header>' +
       '<div class="bp-toolbar" role="group" aria-label="' +
         esc(t('Karşılaştırma görünümü', 'Comparison display')) + '">' +
+      '<button type="button" class="bp-view" data-bp-action="grid" aria-pressed="' +
+        (mode === 'grid') + '">' + t('Yan yana', 'Side by side') + '</button>' +
       '<button type="button" class="bp-view" data-bp-action="rows" aria-pressed="' +
         (mode === 'rows') + '">' + t('Satır satır', 'Separate rows') + '</button>' +
       '<button type="button" class="bp-view" data-bp-action="overlay" aria-pressed="' +
@@ -281,7 +315,18 @@
         t('Tümünü gizle', 'Hide all') + '</button></div>';
 
     if (active.length) {
-      html += '<div class="bp-chart-viewport">' + referenceSvg(active, english, mode) + '</div>';
+      if (mode === 'grid') {
+        html += '<div class="bp-mini-grid">';
+        active.forEach(sample => {
+          html += '<article class="bp-mini-card"><div class="bp-mini-heading"><strong>' +
+            esc((english ? sample.example.en : sample.example.tr) + ' · ' +
+              sample.example.formula) + '</strong><span>' + sample.lattice.id +
+            '</span></div>' + miniSvg(sample,english) + '</article>';
+        });
+        html += '</div>';
+      } else {
+        html += '<div class="bp-chart-viewport">' + referenceSvg(active, english, mode) + '</div>';
+      }
       if (mode === 'overlay') {
         html += '<div class="bp-legend" aria-label="' +
           esc(t('Seçili grafikler', 'Selected traces')) + '">';
@@ -346,7 +391,7 @@
       else selected.add(id);
     } else {
       const action = control.getAttribute('data-bp-action');
-      if (action === 'rows' || action === 'overlay') mode = action;
+      if (action === 'grid' || action === 'rows' || action === 'overlay') mode = action;
       else if (action === 'default') { selected.clear(); DEFAULT_IDS.forEach(id => selected.add(id)); }
       else if (action === 'clear') selected.clear();
       else if (action === 'filters') filtersVisible = !filtersVisible;
@@ -357,7 +402,7 @@
 
   if (typeof module === 'object' && module.exports) {
     module.exports = { ATLAS, LAMBDA, reciprocalBasis, dSpacing, allowedByCentering,
-      powderLines, SAMPLES, DEFAULT_IDS, referenceSvg };
+      powderLines, SAMPLES, DEFAULT_IDS, referenceSvg, miniSvg };
   }
   if (typeof document === 'undefined') return;
   function init() {
