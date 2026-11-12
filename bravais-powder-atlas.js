@@ -127,7 +127,7 @@
   function allowedByCentering(centering, h, k, l) {
     if (centering === 'P') return true;
     if (centering === 'I') return (h + k + l) % 2 === 0;
-    if (centering === 'F') return h % 2 === k % 2 && k % 2 === l % 2;
+    if (centering === 'F') return Math.abs(h) % 2 === Math.abs(k) % 2 && Math.abs(k) % 2 === Math.abs(l) % 2;
     if (centering === 'C') return (h + k) % 2 === 0;
     if (centering === 'R') return (-h + k + l) % 3 === 0;
     throw new RangeError('Unknown centering: ' + centering);
