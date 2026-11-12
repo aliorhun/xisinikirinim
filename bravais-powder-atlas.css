@@ -1,0 +1,29 @@
+.bp-root{margin:20px 0 0;min-width:0;--bp-paper:#fff;--bp-ink:#17202b}
+.bp-intro{padding:17px 20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+.bp-intro h3{font-size:1.18rem;margin:0 0 8px}
+.bp-intro p{margin:0 0 9px;line-height:1.6}
+.bp-intro p:last-child{margin-bottom:0}
+.bp-note{font-size:.89rem;color:var(--muted)}
+.bp-system{margin:22px 0;border-bottom:1px solid var(--line);padding-bottom:12px}
+.bp-system>h4{font-size:1.15rem;line-height:1.35;margin:0 0 12px}
+.bp-lattice{margin:0 0 18px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.bp-lattice>h5{font-size:1rem;margin:0 0 12px;color:var(--ink)}
+.bp-lattice>h5 span{font-size:.8rem;font-weight:400;color:var(--muted);margin-left:8px}
+.bp-material{padding:13px;background:var(--bg);border:1px solid var(--line);border-radius:9px;min-width:0}
+.bp-material+.bp-material{margin-top:12px}
+.bp-material-head{display:flex;gap:6px 16px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.bp-material-head strong{font-size:.94rem}
+.bp-material-head strong span{font-weight:500;color:var(--cobalt);margin-left:5px}
+.bp-material-head small{font-size:.73rem;color:var(--muted);line-height:1.5}
+.bp-film-scroll{overflow-x:auto;max-width:100%;margin-top:9px}
+.bp-film{display:block;min-width:620px;width:100%;height:auto}
+.bp-film-frame{fill:var(--bp-paper);stroke:var(--bp-ink);stroke-width:2.2}
+.bp-film-line{stroke:var(--bp-ink);stroke-width:2.4}
+.bp-film-hkl{font:10px Georgia,serif;fill:var(--muted)}
+.bp-film-tick{fill:none;stroke:var(--muted);stroke-width:1}
+.bp-film-axis,.bp-film-axis-title{font:11px system-ui,sans-serif;fill:var(--muted)}
+.bp-material details{margin:0 0 0 3px;font-size:.78rem;color:var(--muted)}
+.bp-material summary{cursor:pointer;display:list-item;width:fit-content}
+.bp-peak-list{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0}
+.bp-peak-list span{font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:650px){.bp-intro{padding:14px}.bp-lattice{padding:9px}.bp-material{padding:10px}.bp-material-head{display:block}.bp-material-head small{display:block;margin-top:3px}}
