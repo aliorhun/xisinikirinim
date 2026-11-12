@@ -81,3 +81,86 @@ test('the new atlas is below the active 2theta scanner and available offline', (
   assert.match(sw, /'\.\/bravais-powder-atlas\.css'/);
   assert.match(sw, /xisinikirinim-offline-v14/);
 });
+
+
+test('compact comparison produces one shared-axis chart instead of 28 full-size films', () => {
+  const sample = A.SAMPLES.filter(s => A.DEFAULT_IDS.includes(s.id));
+  assert.equal(A.SAMPLES.length, 28);
+  assert.equal(sample.length, 4);
+  const rows = A.referenceSvg(sample, false, 'rows');
+  const overlay = A.referenceSvg(sample, false, 'overlay');
+  assert.match(rows, /class="bp-chart"/);
+  assert.match(rows, /bp-chart-peak/);
+  assert.match(rows, /bp-chart-label/);
+  assert.doesNotMatch(rows, /bp-film/);
+  assert.equal((rows.match(/class="bp-chart-label"/g) || []).length, 4);
+  assert.equal((overlay.match(/class="bp-overlay-series/g) || []).length, 4);
+  assert.equal((rows.match(/class="bp-chart-grid"/g) || []).length, 11);
+  assert.equal((overlay.match(/class="bp-chart-grid"/g) || []).length, 11);
+  assert.ok(overlay.length > 3000, 'all selected lines are in one chart');
+  // All materials use 10°–110° and the same x coordinate; changing
+  // visualization mode must not alter the angle.
+  const angle = 2 * Math.asin(A.LAMBDA / (2 * A.dSpacing(sample[0].example.cell, 1,1,0))) * 180 / Math.PI;
+  const x = (142 + (970 - 142 - 20) * (angle-10)/100).toFixed(2);
+  if (angle >= 10 && angle <= 110 && A.allowedByCentering(sample[0].lattice.centering, 1,1,0)) {
+    assert.ok(rows.includes('x1="' + x + '"'));
+    assert.ok(overlay.includes('x1="' + x + '"'));
+  }
+});
+
+test('material filter chips, reset, empty state, overlay and language rerender all work', () => {
+  const vm = require('node:vm');
+  const source = fs.readFileSync(path.join(__dirname,'..','bravais-powder-atlas.js'), 'utf8');
+  const listeners = {};
+  const host = {
+    innerHTML: '',
+    addEventListener(name, callback) { listeners[name] = callback; }
+  };
+  const rootElement = { lang: 'tr' };
+  let langChanged;
+  class FakeObserver {
+    constructor(fn) { langChanged = fn; }
+    observe() {}
+  }
+  const fakeDoc = {
+    readyState: 'complete',
+    documentElement: rootElement,
+    getElementById(name) { return name === 'bravaisPowderAtlas' ? host : null; }
+  };
+  vm.runInNewContext(source, { document:fakeDoc, MutationObserver:FakeObserver });
+  const initial = host.innerHTML;
+  assert.equal((initial.match(/class="bp-chart"/g)||[]).length, 1);
+  assert.equal((initial.match(/data-bp-id="/g)||[]).length, 28);
+  assert.match(initial, /4\/28 seçili/);
+
+  const click = (attr,value) => {
+    listeners.click({ target:{
+      closest() {
+        return {
+          hasAttribute(name) { return name === attr; },
+          getAttribute(name) { return name === attr ? value : null; }
+        };
+      }
+    } });
+  };
+  click('data-bp-action','overlay');
+  assert.match(host.innerHTML, /bp-overlay-series/);
+  assert.match(host.innerHTML, /bp-legend-item/);
+  assert.match(host.innerHTML, /4\/28 seçili/);
+  click('data-bp-id','cI-0');
+  assert.match(host.innerHTML, /3\/28 seçili/);
+  click('data-bp-action','clear');
+  assert.match(host.innerHTML, /Grafik boş/);
+  assert.doesNotMatch(host.innerHTML, /class="bp-chart"/);
+  click('data-bp-action','default');
+  assert.match(host.innerHTML, /4\/28 seçili/);
+  click('data-bp-action','filters');
+  assert.doesNotMatch(host.innerHTML, /data-bp-id="/);
+  assert.match(host.innerHTML, /Filtreleri göster/);
+  click('data-bp-action','filters');
+  assert.equal((host.innerHTML.match(/data-bp-id="/g)||[]).length, 28);
+  rootElement.lang = 'en';
+  langChanged([{attributeName:'lang'}]);
+  assert.match(host.innerHTML, /Material filters/);
+  assert.match(host.innerHTML, /4\/28 selected/);
+});
