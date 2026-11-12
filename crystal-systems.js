@@ -20,7 +20,7 @@
       trAngles:'α = β = γ = 90°', enAngles:'α = β = γ = 90°',
       cell:[1.23,.96,1.39,90,90,90] },
     { id:'tetragonal', tr:'Tetragonal', en:'Tetragonal',
-      trLengths:'a = b ≠ c', enLengths:'a = b ≠ c',
+      trLengths:'a ≠ c · kare taban', enLengths:'a ≠ c · square base',
       trAngles:'α = β = γ = 90°', enAngles:'α = β = γ = 90°',
       cell:[1.02,1.02,1.56,90,90,90] },
     { id:'trigonal', tr:'Trigonal', en:'Trigonal',
@@ -90,7 +90,10 @@
           '" x1="'+p[i].x+'" y1="'+p[i].y+'" x2="'+p[j].x+'" y2="'+p[j].y+'"/>');
       }
     }
-    const marks=['a','b','c'].map((axis,index)=>{
+    // Tetragonal has a square basal plane (a = b), so display only independent a and c.
+    const axesToLabel=system.id==='tetragonal'?['a','c']:['a','b','c'];
+    const marks=axesToLabel.map(axis=>{
+      const index=['a','b','c'].indexOf(axis);
       const start=p[0],end=p[1<<index];
       const dx=end.x-start.x,dy=end.y-start.y;
       const n=Math.hypot(dx,dy)||1;
@@ -120,9 +123,11 @@
     const arcs=(system.arcs||[]).map(a=>angleArc(...a)).join('');
     const nodes=p.map(q=>'<circle class="cell-node" cx="'+q.x+'" cy="'+q.y+'" r="3.6"/>').join('');
     const title=english?system.en:system.tr;
-    const description=english
-      ? 'Representative unit cell; a, b and c are edge vectors.'
-      : 'Temsili birim hücre; a, b ve c kenar vektörleridir.';
+    const description=system.id==='tetragonal'
+      ? (english ? 'Square base with edge length a and height c.'
+                 : 'Kare tabanın kenar uzunluğu a, yüksekliği c.')
+      : (english ? 'Representative unit cell; a, b and c are edge vectors.'
+                 : 'Temsili birim hücre; a, b ve c kenar vektörleridir.');
     return '<svg class="crystal-cell-figure" viewBox="0 0 250 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+title+': '+description+'">'+
       '<g class="cell-lines">'+lines.join('')+'</g>'+arcs+nodes+marks+'</svg>';
   }

@@ -24,13 +24,15 @@ test('3D basis vectors reproduce the chosen cell lengths and crystallographic an
   }
 });
 
-test('every rendered diagram has 12 edges, 8 vertices and 3 axis labels', () => {
+test('every rendered diagram has 12 edges, 8 vertices and the appropriate axis labels', () => {
   for(const s of SYSTEMS){
     const svg=cellSvg(s,false);
     assert.match(svg,/^<svg /);
     assert.equal((svg.match(/<line /g)||[]).length,12,s.id);
     assert.equal((svg.match(/<circle /g)||[]).length,8,s.id);
-    for(const a of ['a','b','c']) assert.match(svg,new RegExp('>'+a+'</text>'));
+    const labels=s.id==='tetragonal'?['a','c']:['a','b','c'];
+    for(const axis of labels) assert.match(svg,new RegExp('>'+axis+'</text>'));
+    if(s.id==='tetragonal') assert.doesNotMatch(svg,/>b<\/text>/);
     assert.match(cellSvg(s,true),/role="img"/);
   }
 });
@@ -38,4 +40,19 @@ test('every rendered diagram has 12 edges, 8 vertices and 3 axis labels', () => 
 test('invalid cells are rejected instead of rendering fictitious geometry', () => {
   assert.throws(()=>cellVectors([1,1,1,90,90,0]),RangeError);
   assert.throws(()=>cellVectors([1,1,1,10,10,170]),RangeError);
+});
+
+test('tetragonal caption uses only independent a and c, while keeping a=b geometry', () => {
+  const tetragonal=SYSTEMS.find(system=>system.id==='tetragonal');
+  assert.ok(tetragonal);
+  assert.equal(tetragonal.cell[0],tetragonal.cell[1]);
+  assert.notEqual(tetragonal.cell[0],tetragonal.cell[2]);
+  assert.equal(tetragonal.trLengths,'a ≠ c · kare taban');
+  assert.equal(tetragonal.enLengths,'a ≠ c · square base');
+  for(const english of [false,true]) {
+    const svg=cellSvg(tetragonal,english);
+    assert.equal((svg.match(/class="cell-axis-label"/g)||[]).length,2);
+    assert.doesNotMatch(svg,/>b<\/text>/);
+    assert.doesNotMatch(svg,/aria-label="[^"]*a, b and c/);
+  }
 });
