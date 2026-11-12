@@ -176,9 +176,14 @@
   const esc = value => String(value).replace(/[&<>"']/g, ch =>
     ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
 
-  function filmSvg(lines, name, english) {
+  function filmSvg(lines, name, english, uniformScale) {
     const left = 31, width = 795, top = 10, height = 30;
-    const x = angle => left + width * (angle - MIN_TWO_THETA) / (MAX_TWO_THETA - MIN_TWO_THETA);
+    // Zoom to the selected low-angle lines for readability; users can choose
+    // the shared 10°–110° scale when comparing different materials.
+    const lastAngle = lines.length ? lines[lines.length - 1].twoTheta : MAX_TWO_THETA;
+    const upper = uniformScale ? MAX_TWO_THETA :
+      Math.min(MAX_TWO_THETA, Math.max(25, Math.ceil((lastAngle + 3) / 5) * 5));
+    const x = angle => left + width * (angle - MIN_TWO_THETA) / (upper - MIN_TWO_THETA);
     let svg = '<svg class="bp-film" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 106" role="img" aria-label="' +
       esc(name + (english ? ': ideal Bravais reflections by 2θ' : ': 2θ konumlarına göre ideal Bravais çizgileri')) + '">';
     svg += '<rect class="bp-film-frame" x="' + left + '" y="' + top + '" width="' + width + '" height="' + height + '"/>';
@@ -195,12 +200,13 @@
         lastLabelX = px;
       }
     });
-    for (const degree of [20, 40, 60, 80, 100]) {
+    const tickStep = upper <= 50 ? 5 : upper <= 80 ? 10 : 20;
+    for (let degree = MIN_TWO_THETA; degree <= upper; degree += tickStep) {
       const px = x(degree).toFixed(2);
       svg += '<path class="bp-film-tick" d="M' + px + ' 89v4"/>' +
         '<text class="bp-film-axis" x="' + px + '" y="104" text-anchor="middle">' + degree + '°</text>';
     }
-    svg += '<text class="bp-film-axis-title" x="' + left + '" y="104" text-anchor="start">2θ</text></svg>';
+    svg += '<text class="bp-film-axis-title" x="826" y="84" text-anchor="end">2θ</text></svg>';
     return svg;
   }
 
@@ -213,6 +219,7 @@
     return parts.join(' · ') + (english ? ' (Å)' : ' (Å)');
   }
 
+  let uniformScale = false;
   function render() {
     const host = typeof document !== 'undefined' && document.getElementById('bravaisPowderAtlas');
     if (!host) return;
@@ -224,9 +231,13 @@
         : 'Her Bravais örgüsü için iki farklı malzemenin çizgileri alt alta gösterilir. Konumlar Bragg yasası ve yaklaşık geleneksel hücre parametreleriyle hesaplanır.') +
       '</p><p class="bp-note"><strong>' + (english ? 'Important scientific limit:' : 'Önemli bilimsel sınır:') + '</strong> ' +
       (english
-        ? 'These are the first 18 distinct Bravais-allowed lines in 10°–110°, using Cu Kα₁ (λ = 1.5406 Å). Atomic bases, screw/glide absences, structure factors, intensities and instrumental broadening are not included; these are not measured or complete simulated XRD patterns.'
-        : 'Cu Kα₁ (λ = 1,5406 Å) için 10°–110° aralığındaki ilk 18 farklı Bravais-izinli çizgi gösterilir. Atomik baz, vida/kayma simetrisi sönümleri, yapı faktörü, şiddet ve cihaz genişlemesi hesaba katılmaz; bunlar ölçülmüş veya tam simüle edilmiş XRD desenleri değildir.') +
-      '</p></div>';
+        ? 'These are the first 18 distinct Bravais-allowed lines within 10°–110°, using Cu Kα₁ (λ = 1.5406 Å). Each diagram initially zooms to its lines; enable the shared scale to compare materials. Atomic bases, screw/glide absences, structure factors, intensities and instrumental broadening are not included; these are not measured or complete simulated XRD patterns.'
+        : 'Cu Kα₁ (λ = 1,5406 Å) için 10°–110° aralığındaki ilk 18 farklı Bravais-izinli çizgi gösterilir. Başlangıçta her grafik kendi çizgilerine yakınlaştırılır; karşılaştırma için ortak ekseni açabilirsiniz. Atomik baz, vida/kayma simetrisi sönümleri, yapı faktörü, şiddet ve cihaz genişlemesi hesaba katılmaz; bunlar ölçülmüş veya tam simüle edilmiş XRD desenleri değildir.') +
+      '</p><label class="bp-scale-option"><input type="checkbox" id="bpUniformScale"' +
+      (uniformScale ? ' checked' : '') + '> ' +
+      (english ? 'Use the same 10°–110° axis for all diagrams (comparison mode)' :
+        'Tüm grafiklerde ortak 10°–110° eksenini kullan (karşılaştırma modu)') +
+      '</label></div>';
     ATLAS.forEach(system => {
       html += '<section class="bp-system" data-crystal-system="' + system.id + '"><h4>' +
         esc(english ? system.en : system.tr) + '</h4>';
@@ -242,7 +253,7 @@
             esc(english ? example.en : example.tr) + ' <span>' + esc(example.formula) +
             '</span></strong><small>' + esc(example.sg) + ' · ' +
             esc(formatCell(example.cell, english)) + '</small></div>' +
-            '<div class="bp-film-scroll">' + filmSvg(lines, name, english) + '</div>' +
+            '<div class="bp-film-scroll">' + filmSvg(lines, name, english, uniformScale) + '</div>' +
             '<details><summary>' + (english ? 'hkl and 2θ values (' : 'hkl ve 2θ değerleri (') +
             lines.length + ')</summary><div class="bp-peak-list">' + details + '</div></details></article>';
         });
@@ -252,6 +263,11 @@
     });
     html += '</section>';
     host.innerHTML = html;
+    const scaleControl = host.querySelector('#bpUniformScale');
+    if (scaleControl) scaleControl.addEventListener('change', () => {
+      uniformScale = scaleControl.checked;
+      render();
+    });
   }
 
   if (typeof module === 'object' && module.exports) {
