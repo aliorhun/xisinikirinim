@@ -1,16 +1,25 @@
-# Toz yöntemi: 14 Bravais örgüsü için çizgi şemaları
+# Toz yöntemi: 14 Bravais örgüsünü tek grafikte karşılaştırma
 
-**Konum:** Toz Yöntemi → 2θ Taraması; aktif tarama simülasyonunun altında.
+**Konum:** Toz Yöntemi → 2θ Taraması; mevcut tarama animasyonunun hemen altında.
 
-## Kapsam
+## Tasarım
 
-- **7 kristal sistemi, 14 Bravais tipi ve 28 malzeme örneği** (tip başına iki örnek).
+- **7 kristal sistemindeki 14 Bravais örgüsü ve 28 malzeme örneği** için tek ortak 2θ grafiği.
+- Sayfa ilk açıldığında **α-Fe (cI), Cu (cF), rutil TiO₂ (tP), anataz TiO₂ (tI)** seçilidir. Bu sayede yükseklik düşüktür.
+- **Satır satır:** Malzemeler aynı 10°–110° yatay 2θ ekseninde, ince renkli satırlar halinde görünür. Dikey yansıma çizgilerinin konumları karşılaştırılabilir.
+- **Üst üste:** Seçili bütün yansıma çizgileri tek grafik alanına aktarılır. Pik konumları değiştirilmez; renkler ve alt lejant hangi malzemeye ait olduklarını belirtir.
+- Grafiğin **altındaki filtreler**, kristal sistemine göre gruplanmış 28 malzeme düğmesinden oluşur. Seçili düğmeler renkli, gizlenenler soluktur. Düğmelere tekrar basarak grafiğe ekleyip çıkarabilirsiniz.
+- **Örnek 4** başlangıçtaki dört örneği geri getirir; **Tümünü gizle** bütün çizgileri gizler; **Filtreleri gizle/göster** filtre panelini kapatıp açar.
+- TR/EN arayüz, açık/koyu temalar, mobilde yatay kaydırılabilir grafik ve çevrimdışı kullanım desteklenir.
+
+## Hesaplama
+
 - Her örnekte konvansiyonel örgü parametrelerinden türetilmiş **ilk 18 farklı** izinli yansımanın konumu, 10°–110° 2θ aralığında gösterilir.
-- Kullanılan ışınım: **Cu Kα₁, λ = 1,5406 Å**; kırınım koşulu **2d sin θ = λ**.
+- Işınım **Cu Kα₁, λ = 1,5406 Å**; kırınım koşulu **2d sin θ = λ**.
 - Eğik kristal sistemlerinde (monoklinik, triklinik) bütün eksen açılarını kullanan ters örgü metriği uygulanır.
 - Merkezleme kuralları: P (yok); I (h+k+l çift); F (h,k,l aynı paritede); C (h+k çift); R (hekzagonal eksenlerde −h+k+l = 3n).
-- Yakın konumlu yansımalar **0,065°** çözünürlükle bir çizgiye birleştirilir. Grafikteki hkl temsili bir indis, her çizgiye karşılık gelen tüm eşdeğer indisleri listelemez.
-- İlk görünüm, seçilmiş düşük açılı yansımaları daha rahat okumak için **örnek bazında 2θ yakınlaştırma** uygular. İşaretlenebilir **ortak 10°–110° ekseni** ise malzemelerin çizgi konumlarını aynı açısal ölçekte karşılaştırır.
+- Yakın konumlu yansımalar **0,065°** çözünürlükle bir çizgiye birleştirilir. Her çizginin SVG üzerine gelindiğinde görülen metninde temsili hkl, yaklaşık 2θ ve malzeme yer alır.
+- **Karşılaştırma kesinlikle ortak açısal ölçekte** yapılır; malzemeye göre otomatik yakınlaştırma artık yoktur.
 
 ## Bilimsel sınırlar
 
