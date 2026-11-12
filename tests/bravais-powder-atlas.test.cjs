@@ -27,7 +27,7 @@ test('reciprocal metrics work for cubic, tetragonal, hexagonal and skewed cells'
   near(A.dSpacing([3,3,5,90,90,90], 0,0,2), 2.5);
   near(A.dSpacing([3,3,5,90,90,120], 1,0,0), 3*Math.sqrt(3)/2);
   near(A.dSpacing([5,6,7,90,108,90], 0,0,1), 7*Math.sin(108*Math.PI/180));
-  near(A.dSpacing([4,4,4,90,90,90], 0,0,0), Infinity);
+  assert.equal(A.dSpacing([4,4,4,90,90,90], 0,0,0), Infinity);
   assert.throws(() => A.reciprocalBasis([0,2,3,90,90,90]), RangeError);
 });
 
