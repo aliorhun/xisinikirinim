@@ -291,7 +291,8 @@ test('information modal definitions cover all four Debye camera readouts in Turk
   const tag = '// Debye–Scherrer camera readout explanations (TR/EN)';
   const begin = html.indexOf(tag), end = html.indexOf('function infoLang(entry)', begin);
   assert.ok(begin > 0 && end > begin);
-  const code = html.slice(begin + tag.length, end);
+  // Begin after the complete comment line; trailing commentary is not JavaScript.
+  const code = html.slice(html.indexOf('\n', begin) + 1, end);
   const registry = {};
   Function('INFO', code)(registry);
   for (const key of ['dcTwoTheta', 'dcPlaneSpacing', 'dcFilmDistance', 'dcCameraRadius']) {
