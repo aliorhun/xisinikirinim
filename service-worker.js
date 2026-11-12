@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v11';
+const CACHE_NAME = 'xisinikirinim-offline-v12';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const APP_SHELL = [
   './learning-games.js',
   './debye-camera.css',
   './debye-camera.js',
+  './debye-camera.js?v=20261104-sample-refresh',
   './powder-exercises.css',
   './powder-exercises.js',
   './crystal-systems.css',
@@ -50,13 +51,14 @@ async function networkFirstNavigation(request) {
 }
 
 async function cacheFirstLocalAsset(request) {
-  const cached = await caches.match(request);
+  // Only consult the active offline shell: older caches may contain obsolete camera code.
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
   if (cached) return cached;
 
   try {
     const response = await fetch(request);
     if (response && response.status === 200 && response.type !== 'opaque') {
-      const cache = await caches.open(CACHE_NAME);
       await cache.put(request, response.clone());
     }
     return response;
