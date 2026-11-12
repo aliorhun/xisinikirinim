@@ -71,3 +71,13 @@
   .bp-filter-system{margin-bottom:5px}
   .bp-chart{min-width:635px}
 }
+
+/* Compact two-column small multiples share the same 10°–110° axis. */
+.bp-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.bp-mini-card{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px;min-width:0}
+.bp-mini-heading{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin:0 0 4px}
+.bp-mini-heading strong{font-size:.78rem;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.bp-mini-heading span{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.bp-mini-chart{width:100%;height:auto;display:block}
+.bp-mini-bg{fill:var(--panel)}
+@media(max-width:480px){.bp-mini-grid{grid-template-columns:1fr}}
