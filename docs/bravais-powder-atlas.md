@@ -9,7 +9,8 @@
 - Kullanılan ışınım: **Cu Kα₁, λ = 1,5406 Å**; kırınım koşulu **2d sin θ = λ**.
 - Eğik kristal sistemlerinde (monoklinik, triklinik) bütün eksen açılarını kullanan ters örgü metriği uygulanır.
 - Merkezleme kuralları: P (yok); I (h+k+l çift); F (h,k,l aynı paritede); C (h+k çift); R (hekzagonal eksenlerde −h+k+l = 3n).
-- Yakın konumlu yansımalar **0,065°** çözünürlükle bir çizgiye birleştirilir. Grafikteki hkl temsili bir indis, her çizgiye karşılık gelen tüm eşdeğer indisleri listelemez.\n- İlk görünüm, seçilmiş düşük açılı yansımaları daha rahat okumak için **örnek bazında 2θ yakınlaştırma** uygular. İşaretlenebilir **ortak 10°–110° ekseni** ise malzemelerin çizgi konumlarını aynı açısal ölçekte karşılaştırır.
+- Yakın konumlu yansımalar **0,065°** çözünürlükle bir çizgiye birleştirilir. Grafikteki hkl temsili bir indis, her çizgiye karşılık gelen tüm eşdeğer indisleri listelemez.
+- İlk görünüm, seçilmiş düşük açılı yansımaları daha rahat okumak için **örnek bazında 2θ yakınlaştırma** uygular. İşaretlenebilir **ortak 10°–110° ekseni** ise malzemelerin çizgi konumlarını aynı açısal ölçekte karşılaştırır.
 
 ## Bilimsel sınırlar
 
