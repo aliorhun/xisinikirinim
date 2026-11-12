@@ -27,3 +27,4 @@
 .bp-peak-list{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0}
 .bp-peak-list span{font-variant-numeric:tabular-nums;white-space:nowrap}
 @media (max-width:650px){.bp-intro{padding:14px}.bp-lattice{padding:9px}.bp-material{padding:10px}.bp-material-head{display:block}.bp-material-head small{display:block;margin-top:3px}}
+.bp-scale-option{display:inline-flex;gap:8px;align-items:center;font-size:.85rem;color:var(--ink);margin-top:5px;cursor:pointer;line-height:1.4}\n.bp-scale-option input{accent-color:var(--cobalt);width:16px;height:16px;flex:none}\n
