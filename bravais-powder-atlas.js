@@ -176,107 +176,244 @@
   const esc = value => String(value).replace(/[&<>"']/g, ch =>
     ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
 
-  function filmSvg(lines, name, english, uniformScale) {
-    const left = 31, width = 795, top = 10, height = 30;
-    // Zoom to the selected low-angle lines for readability; users can choose
-    // the shared 10°–110° scale when comparing different materials.
-    const lastAngle = lines.length ? lines[lines.length - 1].twoTheta : MAX_TWO_THETA;
-    const upper = uniformScale ? MAX_TWO_THETA :
-      Math.min(MAX_TWO_THETA, Math.max(25, Math.ceil((lastAngle + 3) / 5) * 5));
-    const x = angle => left + width * (angle - MIN_TWO_THETA) / (upper - MIN_TWO_THETA);
-    let svg = '<svg class="bp-film" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 106" role="img" aria-label="' +
-      esc(name + (english ? ': ideal Bravais reflections by 2θ' : ': 2θ konumlarına göre ideal Bravais çizgileri')) + '">';
-    svg += '<rect class="bp-film-frame" x="' + left + '" y="' + top + '" width="' + width + '" height="' + height + '"/>';
-    let lastLabelX = -100;
-    lines.forEach(line => {
-      const px = x(line.twoTheta);
-      const label = reflectionLabel(line.h, line.k, line.l);
-      svg += '<line class="bp-film-line" x1="' + px.toFixed(2) + '" x2="' + px.toFixed(2) +
-        '" y1="' + (top + 1) + '" y2="' + (top + height - 1) + '"><title>' + esc(label) + ' · 2θ = ' +
-        line.twoTheta.toFixed(2) + '°</title></line>';
-      if (px - lastLabelX >= 12) {
-        svg += '<text class="bp-film-hkl" x="' + px.toFixed(2) + '" y="45" transform="rotate(90 ' +
-          px.toFixed(2) + ' 45)">' + esc(label.replaceAll(' ', '')) + '</text>';
-        lastLabelX = px;
+  // Stable IDs and colors: filtering never changes an example's color.
+  const SAMPLES = ATLAS.flatMap(system => system.lattices.flatMap(lattice =>
+    lattice.examples.map((example, i) => ({
+      id: lattice.id + '-' + i, system, lattice, example
+    }))
+  ));
+  const DEFAULT_IDS = ['cI-0', 'cF-0', 'tP-0', 'tI-0'];
+  const selected = new Set(DEFAULT_IDS);
+  let mode = 'grid';
+  let filtersVisible = true;
+
+  function referenceSvg(samples, english, displayMode) {
+    const W = 970, left = 142, right = 20, xWidth = W - left - right;
+    const top = 24, rowHeight = 32;
+    const plotHeight = displayMode === 'overlay' ? 100 : samples.length * rowHeight;
+    const H = top + plotHeight + 35;
+    const x = angle => left + xWidth * (angle - MIN_TWO_THETA) / (MAX_TWO_THETA - MIN_TWO_THETA);
+    const xText = angle => x(angle).toFixed(2);
+    const plotBottom = top + plotHeight;
+    let svg = '<svg class="bp-chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
+      W + ' ' + H + '" role="img" aria-label="' +
+      esc(english ? 'Comparison of selected Bravais-allowed diffraction lines versus 2 theta' :
+        'Seçilen Bravais izinli kırınım çizgilerinin ortak 2θ ekseninde karşılaştırması') + '">' +
+      '<rect class="bp-chart-bg" x="' + left + '" y="' + top + '" width="' + xWidth +
+        '" height="' + plotHeight + '"/>';
+
+    // All traces always share precisely the same 10°–110° 2θ axis.
+    for (let degree = MIN_TWO_THETA; degree <= MAX_TWO_THETA; degree += 10) {
+      const xx = xText(degree);
+      svg += '<line class="bp-chart-grid" x1="' + xx + '" x2="' + xx + '" y1="' +
+        top + '" y2="' + plotBottom + '"/>' +
+        '<text class="bp-chart-tick" x="' + xx + '" y="' + (plotBottom + 19) +
+        '" text-anchor="middle">' + degree + '°</text>';
+    }
+    svg += '<text class="bp-chart-axis-title" x="' + (W-right) + '" y="' + (H-4) +
+      '" text-anchor="end">2θ · Cu Kα₁</text>';
+
+    samples.forEach((sample, i) => {
+      const className = 'bp-color-' + (SAMPLES.indexOf(sample) % 8);
+      const title = (english ? sample.example.en : sample.example.tr) + ' · ' +
+        sample.example.formula + ' · ' + sample.lattice.id;
+      const lines = powderLines(sample.example.cell, sample.lattice.centering);
+      if (displayMode === 'rows') {
+        const baseline = top + (i+1)*rowHeight - 5;
+        svg += '<g class="bp-series ' + className + '"><text class="bp-chart-label" x="' +
+          (left-11) + '" y="' + (baseline-7) + '" text-anchor="end">' +
+          esc(sample.example.formula + ' · ' + sample.lattice.id) + '</text>' +
+          '<title>' + esc(title) + '</title>' +
+          '<line class="bp-chart-base" x1="' + left + '" x2="' + (left+xWidth) +
+          '" y1="' + baseline + '" y2="' + baseline + '"/>';
+        lines.forEach(p => {
+          const xx = xText(p.twoTheta);
+          svg += '<line class="bp-chart-peak" x1="' + xx + '" x2="' + xx +
+            '" y1="' + (baseline-22) + '" y2="' + (baseline-1) + '"><title>' +
+            esc(title + ' · ' + reflectionLabel(p.h,p.k,p.l) + ' · 2θ ' +
+              p.twoTheta.toFixed(2) + '°') + '</title></line>';
+        });
+        svg += '</g>';
+      } else {
+        // Overlay: same angular positions, colored traces (no artificial x offset).
+        const baseline = plotBottom - 7;
+        svg += '<g class="bp-series bp-overlay-series ' + className + '">' +
+          '<title>' + esc(title) + '</title>';
+        lines.forEach(p => {
+          const xx = xText(p.twoTheta);
+          svg += '<line class="bp-chart-peak" x1="' + xx + '" x2="' + xx +
+            '" y1="' + (top + 8 + (i % 8)*2) + '" y2="' + baseline +
+            '"><title>' + esc(title + ' · ' + reflectionLabel(p.h,p.k,p.l) +
+              ' · 2θ ' + p.twoTheta.toFixed(2) + '°') + '</title></line>';
+        });
+        svg += '</g>';
       }
     });
-    const tickStep = upper <= 50 ? 5 : upper <= 80 ? 10 : 20;
-    for (let degree = MIN_TWO_THETA; degree <= upper; degree += tickStep) {
-      const px = x(degree).toFixed(2);
-      svg += '<path class="bp-film-tick" d="M' + px + ' 89v4"/>' +
-        '<text class="bp-film-axis" x="' + px + '" y="104" text-anchor="middle">' + degree + '°</text>';
-    }
-    svg += '<text class="bp-film-axis-title" x="826" y="84" text-anchor="end">2θ</text></svg>';
+    svg += '</svg>';
     return svg;
   }
 
-  function formatCell(cell, english) {
-    const [a, b, c, alpha, beta, gamma] = cell;
-    const parts = ['a=' + a.toFixed(3), 'b=' + b.toFixed(3), 'c=' + c.toFixed(3)];
-    if (Math.abs(alpha - 90) > 0.01) parts.push('α=' + alpha.toFixed(2) + '°');
-    if (Math.abs(beta - 90) > 0.01) parts.push('β=' + beta.toFixed(2) + '°');
-    if (Math.abs(gamma - 90) > 0.01) parts.push('γ=' + gamma.toFixed(2) + '°');
-    return parts.join(' · ') + (english ? ' (Å)' : ' (Å)');
+
+  function miniSvg(sample, english) {
+    const W = 460, left = 22, right = 14, width = W-left-right;
+    const top = 10, baseline = 68, height = 107;
+    const x = angle => left + width*(angle-MIN_TWO_THETA)/(MAX_TWO_THETA-MIN_TWO_THETA);
+    const name = (english ? sample.example.en : sample.example.tr) +
+      ' · ' + sample.example.formula + ' · ' + sample.lattice.id;
+    const lines = powderLines(sample.example.cell, sample.lattice.centering);
+    let result = '<svg class="bp-mini-chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
+      W + ' ' + height + '" role="img" aria-label="' +
+      esc(name + (english ? ': 2 theta reference lines' : ': 2θ referans çizgileri')) + '">' +
+      '<rect class="bp-mini-bg" x="' + left + '" y="' + top + '" width="' + width +
+      '" height="' + (baseline-top) + '"/>';
+    for (let degree=10; degree<=110; degree+=20) {
+      const xx=x(degree).toFixed(2);
+      result += '<line class="bp-chart-grid" x1="' + xx + '" x2="' + xx + '" y1="' +
+        top + '" y2="' + baseline + '"/><text class="bp-chart-tick" x="' + xx +
+        '" y="88" text-anchor="middle">' + degree + '°</text>';
+    }
+    result += '<g class="bp-series bp-color-' + (SAMPLES.indexOf(sample)%8) + '">';
+    lines.forEach(line => {
+      const xx=x(line.twoTheta).toFixed(2);
+      result += '<line class="bp-chart-peak" x1="' + xx + '" x2="' + xx +
+        '" y1="' + (top+4) + '" y2="' + (baseline-1) + '"><title>' +
+        esc(name + ' · ' + reflectionLabel(line.h,line.k,line.l) + ' · 2θ ' +
+          line.twoTheta.toFixed(2) + '°') + '</title></line>';
+    });
+    result += '</g><text class="bp-chart-axis-title" x="' + (W-right) +
+      '" y="104" text-anchor="end">2θ · Cu Kα₁</text></svg>';
+    return result;
   }
 
-  let uniformScale = false;
   function render() {
     const host = typeof document !== 'undefined' && document.getElementById('bravaisPowderAtlas');
     if (!host) return;
     const english = document.documentElement.lang.toLowerCase().startsWith('en');
-    let html = '<section aria-label="' + (english ? 'Reference diffraction lines for 14 Bravais lattices' : '14 Bravais örgüsü için örnek toz kırınım çizgileri') + '">' +
-      '<div class="bp-intro"><h3>' + (english ? 'Reference line diagrams for 14 Bravais lattices' : '14 Bravais örgüsü: örnek 2θ çizgi şemaları') + '</h3>' +
-      '<p>' + (english
-        ? 'Two material examples for each Bravais lattice, stacked vertically. Line positions use Bragg’s law and approximate conventional-cell dimensions.'
-        : 'Her Bravais örgüsü için iki farklı malzemenin çizgileri alt alta gösterilir. Konumlar Bragg yasası ve yaklaşık geleneksel hücre parametreleriyle hesaplanır.') +
-      '</p><p class="bp-note"><strong>' + (english ? 'Important scientific limit:' : 'Önemli bilimsel sınır:') + '</strong> ' +
-      (english
-        ? 'These are the first 18 distinct Bravais-allowed lines within 10°–110°, using Cu Kα₁ (λ = 1.5406 Å). Each diagram initially zooms to its lines; enable the shared scale to compare materials. Atomic bases, screw/glide absences, structure factors, intensities and instrumental broadening are not included; these are not measured or complete simulated XRD patterns.'
-        : 'Cu Kα₁ (λ = 1,5406 Å) için 10°–110° aralığındaki ilk 18 farklı Bravais-izinli çizgi gösterilir. Başlangıçta her grafik kendi çizgilerine yakınlaştırılır; karşılaştırma için ortak ekseni açabilirsiniz. Atomik baz, vida/kayma simetrisi sönümleri, yapı faktörü, şiddet ve cihaz genişlemesi hesaba katılmaz; bunlar ölçülmüş veya tam simüle edilmiş XRD desenleri değildir.') +
-      '</p><label class="bp-scale-option"><input type="checkbox" id="bpUniformScale"' +
-      (uniformScale ? ' checked' : '') + '> ' +
-      (english ? 'Use the same 10°–110° axis for all diagrams (comparison mode)' :
-        'Tüm grafiklerde ortak 10°–110° eksenini kullan (karşılaştırma modu)') +
-      '</label></div>';
-    ATLAS.forEach(system => {
-      html += '<section class="bp-system" data-crystal-system="' + system.id + '"><h4>' +
-        esc(english ? system.en : system.tr) + '</h4>';
-      system.lattices.forEach(lattice => {
-        html += '<div class="bp-lattice"><h5>' + lattice.id + ' <span>' +
-          esc(english ? 'centering: ' : 'merkezleme: ') + lattice.centering + '</span></h5>';
-        lattice.examples.forEach(example => {
-          const name = (english ? example.en : example.tr) + ' · ' + example.formula;
-          const lines = powderLines(example.cell, lattice.centering);
-          const details = lines.map(p => '<span>' + esc(reflectionLabel(p.h, p.k, p.l)) +
-            ' = ' + p.twoTheta.toFixed(2) + '°</span>').join('');
-          html += '<article class="bp-material"><div class="bp-material-head"><strong>' +
-            esc(english ? example.en : example.tr) + ' <span>' + esc(example.formula) +
-            '</span></strong><small>' + esc(example.sg) + ' · ' +
-            esc(formatCell(example.cell, english)) + '</small></div>' +
-            '<div class="bp-film-scroll">' + filmSvg(lines, name, english, uniformScale) + '</div>' +
-            '<details><summary>' + (english ? 'hkl and 2θ values (' : 'hkl ve 2θ değerleri (') +
-            lines.length + ')</summary><div class="bp-peak-list">' + details + '</div></details></article>';
+    const active = SAMPLES.filter(sample => selected.has(sample.id));
+    const t = (tr, en) => english ? en : tr;
+    let html = '<section class="bp-compare" aria-label="' +
+      esc(t('Bravais örgülerinin kırınım çizgilerini karşılaştır',
+        'Compare Bravais diffraction lines')) + '">' +
+      '<header class="bp-compare-head"><div><h3>' +
+      t('Kırınım çizgilerini karşılaştır', 'Compare diffraction lines') + '</h3>' +
+      '<p>' + t('Malzemeleri seçin; çizgi konumlarını ortak 2θ ekseninde karşılaştırın.',
+        'Select materials and compare their reflections on the same 2θ axis.') +
+      '</p></div><span class="bp-count" aria-live="polite">' + active.length + '/' + SAMPLES.length +
+      ' ' + t('seçili', 'selected') + '</span></header>' +
+      '<div class="bp-toolbar" role="group" aria-label="' +
+        esc(t('Karşılaştırma görünümü', 'Comparison display')) + '">' +
+      '<button type="button" class="bp-view" data-bp-action="grid" aria-pressed="' +
+        (mode === 'grid') + '">' + t('Yan yana', 'Side by side') + '</button>' +
+      '<button type="button" class="bp-view" data-bp-action="rows" aria-pressed="' +
+        (mode === 'rows') + '">' + t('Satır satır', 'Separate rows') + '</button>' +
+      '<button type="button" class="bp-view" data-bp-action="overlay" aria-pressed="' +
+        (mode === 'overlay') + '">' + t('Üst üste', 'Overlay') + '</button>' +
+      '<span class="bp-toolbar-spacer"></span>' +
+      '<button type="button" class="bp-subtle" data-bp-action="default">' +
+        t('Örnek 4', 'Default four') + '</button>' +
+      '<button type="button" class="bp-subtle" data-bp-action="clear">' +
+        t('Tümünü gizle', 'Hide all') + '</button></div>';
+
+    if (active.length) {
+      if (mode === 'grid') {
+        html += '<div class="bp-mini-grid">';
+        active.forEach(sample => {
+          html += '<article class="bp-mini-card"><div class="bp-mini-heading"><strong>' +
+            esc((english ? sample.example.en : sample.example.tr) + ' · ' +
+              sample.example.formula) + '</strong><span>' + sample.lattice.id +
+            '</span></div>' + miniSvg(sample,english) + '</article>';
         });
         html += '</div>';
+      } else {
+        html += '<div class="bp-chart-viewport">' + referenceSvg(active, english, mode) + '</div>';
+      }
+      if (mode === 'overlay') {
+        html += '<div class="bp-legend" aria-label="' +
+          esc(t('Seçili grafikler', 'Selected traces')) + '">';
+        active.forEach(sample => {
+          html += '<span class="bp-legend-item bp-color-' + (SAMPLES.indexOf(sample)%8) +
+            '"><span class="bp-legend-dot" aria-hidden="true"></span>' +
+            esc(sample.example.formula + ' · ' + sample.lattice.id) + '</span>';
+        });
+        html += '</div>';
+      }
+    } else {
+      html += '<p class="bp-empty" role="status">' +
+        t('Grafik boş. Alttaki filtrelerden karşılaştırmak istediğiniz malzemeleri seçin.',
+          'The chart is empty. Choose materials below to compare them.') + '</p>';
+    }
+
+    html += '<div class="bp-filter-head"><strong>' +
+      t('Malzeme filtreleri', 'Material filters') + '</strong>' +
+      '<button type="button" class="bp-subtle" data-bp-action="filters" aria-expanded="' +
+      filtersVisible + '">' + (filtersVisible ?
+        t('Filtreleri gizle', 'Hide filters') : t('Filtreleri göster', 'Show filters')) +
+      '</button></div>';
+
+    if (filtersVisible) {
+      html += '<div class="bp-filter-list" aria-label="' +
+        esc(t('Malzeme seçimi', 'Material selection')) + '">';
+      ATLAS.forEach(system => {
+        html += '<div class="bp-filter-group"><div class="bp-filter-system">' +
+          esc(english ? system.en : system.tr) + '</div><div class="bp-chip-row">';
+        system.lattices.forEach(lattice => {
+          lattice.examples.forEach((example, i) => {
+            const id = lattice.id + '-' + i;
+            const active = selected.has(id);
+            const sample = SAMPLES.find(s => s.id === id);
+            html += '<button type="button" class="bp-chip bp-color-' +
+              (SAMPLES.indexOf(sample)%8) + '" data-bp-id="' + id + '" aria-pressed="' +
+              active + '" title="' + esc((english ? example.en : example.tr) +
+                ' · ' + example.sg) + '"><span class="bp-chip-marker" aria-hidden="true"></span>' +
+              esc(example.formula + ' · ' + lattice.id) + '</button>';
+          });
+        });
+        html += '</div></div>';
       });
-      html += '</section>';
-    });
-    html += '</section>';
+      html += '</div>';
+    }
+    html += '<details class="bp-science"><summary>' +
+      t('Hesaplama ve bilimsel sınırlar', 'Calculation and scientific limits') +
+      '</summary><p>' +
+      t('Cu Kα₁ (λ = 1,5406 Å) için 10°–110° aralığındaki ilk 18 farklı Bravais-izinli çizgi hesaplanır. Yalnızca örgü merkezlemesi uygulanır; atomik baz, yapı faktörü, vida/kayma sönümleri, pik şiddetleri ve cihaz etkileri dahil değildir. Bunlar ölçülmüş XRD desenleri değildir.',
+        'The first 18 distinct Bravais-allowed lines in 10°–110° are calculated for Cu Kα₁ (λ = 1.5406 Å). Only lattice centering is applied; atomic bases, structure factors, screw/glide absences, intensities and instrumental effects are omitted. These are not measured XRD patterns.') +
+      '</p></details></section>';
     host.innerHTML = html;
-    const scaleControl = host.querySelector('#bpUniformScale');
-    if (scaleControl) scaleControl.addEventListener('change', () => {
-      uniformScale = scaleControl.checked;
-      render();
-    });
+  }
+
+  function onClick(event) {
+    const control = event.target.closest('button[data-bp-action],button[data-bp-id]');
+    if (!control) return;
+    if (control.hasAttribute('data-bp-id')) {
+      const id = control.getAttribute('data-bp-id');
+      if (!SAMPLES.some(sample => sample.id === id)) return;
+      if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+    } else {
+      const action = control.getAttribute('data-bp-action');
+      if (action === 'grid' || action === 'rows' || action === 'overlay') mode = action;
+      else if (action === 'default') { selected.clear(); DEFAULT_IDS.forEach(id => selected.add(id)); }
+      else if (action === 'clear') selected.clear();
+      else if (action === 'filters') filtersVisible = !filtersVisible;
+      else return;
+    }
+    render();
   }
 
   if (typeof module === 'object' && module.exports) {
-    module.exports = { ATLAS, LAMBDA, reciprocalBasis, dSpacing, allowedByCentering, powderLines };
+    module.exports = { ATLAS, LAMBDA, reciprocalBasis, dSpacing, allowedByCentering,
+      powderLines, SAMPLES, DEFAULT_IDS, referenceSvg, miniSvg };
   }
   if (typeof document === 'undefined') return;
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
-  else render();
-  new MutationObserver(changes => {
-    if (changes.some(change => change.attributeName === 'lang')) render();
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  function init() {
+    const host = document.getElementById('bravaisPowderAtlas');
+    if (!host) return;
+    host.addEventListener('click', onClick);
+    render();
+    new MutationObserver(changes => {
+      if (changes.some(change => change.attributeName === 'lang')) render();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
 })(typeof globalThis !== 'undefined' ? globalThis : this);
