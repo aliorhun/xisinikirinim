@@ -77,7 +77,11 @@
 .bp-mini-card{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px;min-width:0}
 .bp-mini-heading{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin:0 0 4px}
 .bp-mini-heading strong{font-size:.78rem;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
-.bp-mini-heading span{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.bp-mini-heading span{font-size:.72rem;color:var(--muted);white-space:normal;text-align:right;line-height:1.3;overflow-wrap:anywhere}
 .bp-mini-chart{width:100%;height:auto;display:block}
 .bp-mini-bg{fill:var(--panel)}
+.bp-hkl-label{font:10px Georgia,"Times New Roman",serif;fill:currentColor;stroke:none}
+.bp-hkl-leader{fill:none;stroke:currentColor;stroke-width:.85;stroke-opacity:.5;stroke-linecap:round}
+.bp-hkl-mark{color:inherit}
+
 @media(max-width:480px){.bp-mini-grid{grid-template-columns:1fr}}
