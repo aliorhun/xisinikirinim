@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="./debye-camera.css">
 <link rel="stylesheet" href="./powder-exercises.css">
 <link rel="stylesheet" href="./crystal-systems.css">
+<link rel="stylesheet" href="./bravais-powder-atlas.css">
 <style>
 :root{
   --bg:#EAEEF2; --panel:#F8FAFB; --panel2:#E1E7ED; --ink:#142030; --muted:#566273; --line:#CBD4DE;
@@ -2004,6 +2005,8 @@ html[lang="tr"] [data-l="en"], html[lang="en"] [data-l="tr"]{display:none!import
       <div class="sl"><label for="sp3" style="font-size:.9rem">hız</label><input type="range" id="sp3" min="1" max="15" step="0.5" value="5"><output id="sp3o"></output></div>
     </div>
   </div>
+    <!-- Ideal, centering-only diffraction line references (separate from the active scanner). -->
+    <div id="bravaisPowderAtlas" class="bp-root"></div>
   </div>
   <!-- Toz yöntemi › Alıştırmalar: indisleme problemleri 10-1 – 10-6 (powder-exercises.js). -->
   <div class="subp" id="s3ex" hidden>
@@ -6951,5 +6954,6 @@ requestAnimationFrame(loop);
 <script src="./debye-camera.js?v=20261104-sample-refresh"></script>
 <script src="./powder-exercises.js"></script>
 <script src="./crystal-systems.js"></script>
+<script src="./bravais-powder-atlas.js"></script>
 </body>
 </html>

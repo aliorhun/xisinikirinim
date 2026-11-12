@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xisinikirinim-offline-v13';
+const CACHE_NAME = 'xisinikirinim-offline-v14';
 const APP_SHELL = [
   './',
   './index.html',
@@ -13,6 +13,8 @@ const APP_SHELL = [
   './powder-exercises.js',
   './crystal-systems.css',
   './crystal-systems.js',
+  './bravais-powder-atlas.css',
+  './bravais-powder-atlas.js',
   './vendor/three-r128.min.js',
   './vendor/prism-1.29.0.js',
   './vendor/prism-python-1.29.0.js'
