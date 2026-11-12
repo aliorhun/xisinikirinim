@@ -174,3 +174,65 @@ test('material filter chips, reset, empty state, overlay and language rerender a
   click('data-bp-action','grid');
   assert.equal((host.innerHTML.match(/class="bp-mini-chart"/g)||[]).length, 4);
 });
+
+
+test('all 14 Bravais codes have explicit TR/EN lattice names', () => {
+  const expected = {
+    cP:'Basit kübik', cI:'Hacim merkezli kübik', cF:'Yüzey merkezli kübik',
+    tP:'Basit tetragonal', tI:'Hacim merkezli tetragonal',
+    oP:'Basit ortorombik', oC:'Taban merkezli ortorombik',
+    oI:'Hacim merkezli ortorombik', oF:'Yüzey merkezli ortorombik',
+    hP:'Basit hekzagonal', hR:'Rombohedral (R-merkezli)',
+    mP:'Basit monoklinik', mC:'Taban merkezli monoklinik',
+    aP:'Basit triklinik'
+  };
+  assert.equal(Object.keys(A.LATTICE_NAMES).length, 14);
+  for (const [id, turkish] of Object.entries(expected)) {
+    assert.equal(A.latticeName(id,false), turkish);
+    assert.ok(A.latticeName(id,true).length > 8);
+  }
+});
+
+test('each visible mini-plot Bragg line has a vertical hkl label and a leader', () => {
+  for (const sample of A.SAMPLES) {
+    const actual = A.powderLines(sample.example.cell,sample.lattice.centering);
+    const svg = A.miniSvg(sample,false);
+    const count = pattern => (svg.match(pattern)||[]).length;
+    assert.equal(count(/class="bp-hkl-label"/g),actual.length, sample.id+' hkl');
+    assert.equal(count(/class="bp-hkl-leader"/g),actual.length, sample.id+' leader');
+    assert.equal(count(/class="bp-chart-peak"/g),actual.length, sample.id+' peak');
+    assert.equal(count(/rotate\(-90 /g),actual.length, sample.id+' label orientation');
+    assert.match(svg,/2θ · Cu Kα₁/);
+    for (const line of actual) {
+      const hkl = '(' + [line.h,line.k,line.l].join('') + ')';
+      assert.ok(svg.includes(hkl), sample.id+': missing '+hkl);
+    }
+    const left=22, right=14, W=460, width=W-left-right;
+    const calcX=a=>left+width*(a-10)/100;
+    const shifted=A.placeHklLabels(actual.map(p=>p.twoTheta),calcX,left+3,W-right-3);
+    for(let i=0;i<shifted.length;i++) {
+      assert.ok(shifted[i]>=25-1e-9 && shifted[i]<=443+1e-9);
+      if(i) assert.ok(shifted[i]-shifted[i-1]>=11.49,sample.id+' overlap');
+    }
+  }
+});
+
+test('lattice headings are fully named in TR and EN without changing selections', () => {
+  const vm = require('node:vm');
+  const source = fs.readFileSync(path.join(__dirname,'..','bravais-powder-atlas.js'), 'utf8');
+  let observer;
+  const host={innerHTML:'',addEventListener(){}};
+  const document={readyState:'complete',documentElement:{lang:'tr'},getElementById(id){
+    return id==='bravaisPowderAtlas'?host:null;
+  }};
+  class FakeObserver{constructor(callback){observer=callback;} observe(){}}
+  vm.runInNewContext(source,{document,MutationObserver:FakeObserver});
+  assert.match(host.innerHTML,/Hacim merkezli kübik \(cI\)/);
+  assert.match(host.innerHTML,/Yüzey merkezli kübik \(cF\)/);
+  assert.match(host.innerHTML,/class="bp-hkl-label"/);
+  document.documentElement.lang='en';
+  observer([{attributeName:'lang'}]);
+  assert.match(host.innerHTML,/Body-centered cubic \(cI\)/);
+  assert.match(host.innerHTML,/Face-centered cubic \(cF\)/);
+  assert.match(host.innerHTML,/4\/28 selected/);
+});

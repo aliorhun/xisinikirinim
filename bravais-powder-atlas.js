@@ -182,6 +182,37 @@
       id: lattice.id + '-' + i, system, lattice, example
     }))
   ));
+  // Full crystallographic lattice names. R is expressed in hexagonal axes.
+  const LATTICE_NAMES = {
+    cP:['Basit kübik','Primitive cubic'],
+    cI:['Hacim merkezli kübik','Body-centered cubic'],
+    cF:['Yüzey merkezli kübik','Face-centered cubic'],
+    tP:['Basit tetragonal','Primitive tetragonal'],
+    tI:['Hacim merkezli tetragonal','Body-centered tetragonal'],
+    oP:['Basit ortorombik','Primitive orthorhombic'],
+    oC:['Taban merkezli ortorombik','Base-centered orthorhombic'],
+    oI:['Hacim merkezli ortorombik','Body-centered orthorhombic'],
+    oF:['Yüzey merkezli ortorombik','Face-centered orthorhombic'],
+    hP:['Basit hekzagonal','Primitive hexagonal'],
+    hR:['Rombohedral (R-merkezli)','Rhombohedral (R-centered)'],
+    mP:['Basit monoklinik','Primitive monoclinic'],
+    mC:['Taban merkezli monoklinik','Base-centered monoclinic'],
+    aP:['Basit triklinik','Primitive triclinic']
+  };
+  const latticeName = (id, english) =>
+    ((LATTICE_NAMES[id] || [id,id])[english ? 1 : 0]);
+
+  // Allocate distinct label columns when reflections are close together.
+  // Connecting lines keep each vertically rotated hkl tied to its true peak.
+  function placeHklLabels(angles, x, left, right, minGap = 11.5) {
+    const positions = angles.map(a => x(a));
+    const n = positions.length;
+    const out = positions.map((p,i) =>
+      Math.max(left+i*minGap, Math.min(right-(n-1-i)*minGap,p)));
+    for (let i=1;i<n;i++) out[i]=Math.max(out[i],out[i-1]+minGap);
+    return out;
+  }
+
   const DEFAULT_IDS = ['cI-0', 'cF-0', 'tP-0', 'tI-0'];
   const selected = new Set(DEFAULT_IDS);
   let mode = 'grid';
@@ -256,32 +287,46 @@
 
   function miniSvg(sample, english) {
     const W = 460, left = 22, right = 14, width = W-left-right;
-    const top = 10, baseline = 68, height = 107;
+    // The hkl label area shares the same compact SVG as the line chart.
+    // Rotated text points upward; leaders join labels to the original 2θ x.
+    const top = 12, labelBase = 63, peakTop = 71, baseline = 107, height = 148;
     const x = angle => left + width*(angle-MIN_TWO_THETA)/(MAX_TWO_THETA-MIN_TWO_THETA);
     const name = (english ? sample.example.en : sample.example.tr) +
-      ' · ' + sample.example.formula + ' · ' + sample.lattice.id;
+      ' · ' + sample.example.formula + ' · ' + latticeName(sample.lattice.id,english);
     const lines = powderLines(sample.example.cell, sample.lattice.centering);
+    const columns = placeHklLabels(lines.map(line=>line.twoTheta),x,left+3,W-right-3);
     let result = '<svg class="bp-mini-chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
       W + ' ' + height + '" role="img" aria-label="' +
-      esc(name + (english ? ': 2 theta reference lines' : ': 2θ referans çizgileri')) + '">' +
-      '<rect class="bp-mini-bg" x="' + left + '" y="' + top + '" width="' + width +
-      '" height="' + (baseline-top) + '"/>';
+      esc(name + (english ? ': hkl labels and 2 theta reference lines' :
+        ': hkl indisleri ve 2θ referans çizgileri')) + '">' +
+      '<rect class="bp-mini-bg" x="' + left + '" y="' + peakTop + '" width="' + width +
+      '" height="' + (baseline-peakTop) + '"/>';
     for (let degree=10; degree<=110; degree+=20) {
       const xx=x(degree).toFixed(2);
       result += '<line class="bp-chart-grid" x1="' + xx + '" x2="' + xx + '" y1="' +
-        top + '" y2="' + baseline + '"/><text class="bp-chart-tick" x="' + xx +
-        '" y="88" text-anchor="middle">' + degree + '°</text>';
+        peakTop + '" y2="' + baseline + '"/><text class="bp-chart-tick" x="' + xx +
+        '" y="125" text-anchor="middle">' + degree + '°</text>';
     }
     result += '<g class="bp-series bp-color-' + (SAMPLES.indexOf(sample)%8) + '">';
-    lines.forEach(line => {
-      const xx=x(line.twoTheta).toFixed(2);
-      result += '<line class="bp-chart-peak" x1="' + xx + '" x2="' + xx +
-        '" y1="' + (top+4) + '" y2="' + (baseline-1) + '"><title>' +
-        esc(name + ' · ' + reflectionLabel(line.h,line.k,line.l) + ' · 2θ ' +
-          line.twoTheta.toFixed(2) + '°') + '</title></line>';
+    lines.forEach((line,i) => {
+      const peakX=x(line.twoTheta).toFixed(2);
+      const labelX=columns[i].toFixed(2);
+      const hkl=reflectionLabel(line.h,line.k,line.l).replaceAll(' ','');
+      const tooltip=name + ' · ' + reflectionLabel(line.h,line.k,line.l) +
+        ' · 2θ ' + line.twoTheta.toFixed(2) + '°';
+      // The label can shift sideways to maintain 11.5px horizontal separation.
+      // The leader reveals where the underlying calculated reflection lies.
+      result += '<g class="bp-hkl-mark"><title>' + esc(tooltip) + '</title>' +
+        '<path class="bp-hkl-leader" d="M' + labelX + ' ' + (labelBase+3) +
+        ' L' + peakX + ' ' + (peakTop+1) + '"/>' +
+        '<text class="bp-hkl-label" x="' + labelX + '" y="' + labelBase +
+        '" transform="rotate(-90 ' + labelX + ' ' + labelBase +
+        ')" text-anchor="start">' + esc(hkl) + '</text>' +
+        '<line class="bp-chart-peak" x1="' + peakX + '" x2="' + peakX +
+        '" y1="' + (peakTop+2) + '" y2="' + (baseline-1) + '"/></g>';
     });
     result += '</g><text class="bp-chart-axis-title" x="' + (W-right) +
-      '" y="104" text-anchor="end">2θ · Cu Kα₁</text></svg>';
+      '" y="144" text-anchor="end">2θ · Cu Kα₁</text></svg>';
     return result;
   }
 
@@ -320,7 +365,8 @@
         active.forEach(sample => {
           html += '<article class="bp-mini-card"><div class="bp-mini-heading"><strong>' +
             esc((english ? sample.example.en : sample.example.tr) + ' · ' +
-              sample.example.formula) + '</strong><span>' + sample.lattice.id +
+              sample.example.formula) + '</strong><span>' +
+              esc(latticeName(sample.lattice.id,english) + ' (' + sample.lattice.id + ')') +
             '</span></div>' + miniSvg(sample,english) + '</article>';
         });
         html += '</div>';
@@ -364,7 +410,7 @@
             html += '<button type="button" class="bp-chip bp-color-' +
               (SAMPLES.indexOf(sample)%8) + '" data-bp-id="' + id + '" aria-pressed="' +
               active + '" title="' + esc((english ? example.en : example.tr) +
-                ' · ' + example.sg) + '"><span class="bp-chip-marker" aria-hidden="true"></span>' +
+                ' · ' + latticeName(lattice.id,english) + ' (' + lattice.id + ') · ' + example.sg) + '"><span class="bp-chip-marker" aria-hidden="true"></span>' +
               esc(example.formula + ' · ' + lattice.id) + '</button>';
           });
         });
@@ -402,7 +448,7 @@
 
   if (typeof module === 'object' && module.exports) {
     module.exports = { ATLAS, LAMBDA, reciprocalBasis, dSpacing, allowedByCentering,
-      powderLines, SAMPLES, DEFAULT_IDS, referenceSvg, miniSvg };
+      powderLines, SAMPLES, DEFAULT_IDS, referenceSvg, miniSvg, LATTICE_NAMES, latticeName, placeHklLabels };
   }
   if (typeof document === 'undefined') return;
   function init() {

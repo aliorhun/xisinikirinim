@@ -7,6 +7,8 @@
 - **7 kristal sistemindeki 14 Bravais örgüsü ve 28 malzeme örneği** için tek ortak 2θ grafiği.
 - Sayfa ilk açıldığında **α-Fe (cI), Cu (cF), rutil TiO₂ (tP), anataz TiO₂ (tI)** seçilidir. Dört küçük grafik iki sütunda karşılaştırılır; 28 ayrı grafik birden çizilmez.
 - **Yan yana (varsayılan):** Seçilen malzemeler iki sütunlu küçük grafiklerde gösterilir. Her grafik ortak 10°–110° 2θ ölçeğini kullanır; dikey yansıma çizgileri aynı açıları temsil eder.
+- **(hkl) çizgi etiketleri:** Yan yana görünümde her hesaplanmış yansımanın Miller indisleri grafiğin üst kısmında 90° döndürülerek yazılır. Yakın yansımalarda etiketler yatay olarak ayrılır; ince bağlantı çizgisi, her indisin fiziksel 2θ konumuna karşılık gelen piki işaretler. Çizginin üzerine gelinince hkl ve hassas 2θ değeri gösterilir.
+- **Tam Bravais adları:** Her mini grafiğin başlığında kısa kod yanında örgü adı Türkçe/İngilizce açıkça gösterilir: ör. 'Basit kübik (cP)', 'Hacim merkezli kübik (cI)', 'Yüzey merkezli kübik (cF)'.
 - **Satır satır:** Malzemeler tek ortak 10°–110° yatay 2θ ekseninde ince renkli satırlar halinde görünür. Çizgi konumları doğrudan hizalanır.
 - **Üst üste:** Seçili bütün yansıma çizgileri tek grafik alanına aktarılır. Pik konumları değiştirilmez; renkler ve alt lejant hangi malzemeye ait olduklarını belirtir.
 - Grafiğin **altındaki filtreler**, kristal sistemine göre gruplanmış 28 malzeme düğmesinden oluşur. Seçili düğmeler renkli, gizlenenler soluktur. Düğmelere tekrar basarak grafiğe ekleyip çıkarabilirsiniz.
