@@ -94,7 +94,7 @@ test('compact comparison produces one shared-axis chart instead of 28 full-size 
   assert.match(rows, /bp-chart-label/);
   assert.doesNotMatch(rows, /bp-film/);
   assert.equal((rows.match(/class="bp-chart-label"/g) || []).length, 4);
-  assert.equal((overlay.match(/class="bp-overlay-series/g) || []).length, 4);
+  assert.equal((overlay.match(/bp-overlay-series bp-color-/g) || []).length, 4);
   assert.equal((rows.match(/class="bp-chart-grid"/g) || []).length, 11);
   assert.equal((overlay.match(/class="bp-chart-grid"/g) || []).length, 11);
   assert.ok(overlay.length > 3000, 'all selected lines are in one chart');
